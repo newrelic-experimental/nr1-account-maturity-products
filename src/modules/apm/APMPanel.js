@@ -52,7 +52,8 @@ export class APMPanelTag extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
 
     const { appContext } = this.props;
@@ -75,7 +76,10 @@ export class APMPanelTag extends React.Component {
 
   async componentDidMount() {
     console.time('fetchAPMData');
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
     console.timeEnd('fetchAPMData');
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
@@ -117,6 +121,7 @@ export class APMPanelTag extends React.Component {
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
       >
         {({ filteredData }) => (
           <APMAccountTable data={filteredData} columns={this.tableColHeader} />

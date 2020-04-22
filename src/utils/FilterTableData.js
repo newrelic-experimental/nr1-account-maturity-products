@@ -1,20 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Popup from 'reactjs-popup';
 
 export class FilterTableData extends React.Component {
   static propTypes = {
     children: PropTypes.func,
     tableData: PropTypes.array,
-    filterKeys: PropTypes.array
+    filterKeys: PropTypes.array,
+    hasErrors: PropTypes.bool
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      hideNoData: true
+      hideNoData: true,
+      openPopup: false
     };
 
     this._handleCheckboxChange = this._handleCheckboxChange.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.renderModal = this.renderModal.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ openPopup: this.props.hasErrors });
+  }
+
+  closeModal() {
+    this.setState({ openPopup: false });
   }
 
   _handleCheckboxChange(event) {
@@ -75,6 +88,7 @@ export class FilterTableData extends React.Component {
     return (
       <div>
         <div>
+          {this.renderModal(this.state.openPopup)}
           {this.props.children({ filteredData, tableData, filterKeys })}
         </div>
 
