@@ -1,0 +1,315 @@
+export const FETCH_ACCOUNTS_GQL = {
+  query: `
+    {
+      actor {
+        accounts {
+          id
+          name
+        }
+      }
+    }
+  `
+};
+
+export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
+  query: `query ($id: Int!, $withFragment: Boolean!,$EVENT_TYPES_INCLUDE: Boolean!, $PROGRAMMABILITY_SUBSCRIBED: Boolean!, $APM_SUBSCRIBED: Boolean!, $BROWSER_SUBSCRIBED: Boolean!, $MOBILE_SUBSCRIBED: Boolean!, $INFRA_SUBSCRIBED: Boolean!, $LOGGING_SUBSCRIBED: Boolean!, $SYNTHETICS_SUBSCRIBED: Boolean!, $INSIGHTS_SUBSCRIBED: Boolean!) {
+    actor {
+      account(id: $id) {
+        id
+        name
+
+        ...EVENT_TYPES @include(if: $EVENT_TYPES_INCLUDE)
+
+        ...PROGRAM_Fragments @include(if: $PROGRAMMABILITY_SUBSCRIBED)
+
+        ...APM_Fragments @include(if: $APM_SUBSCRIBED)
+        ...BROWSER_Fragments @include(if: $BROWSER_SUBSCRIBED)
+        ...MOBILE_Fragments @include(if: $MOBILE_SUBSCRIBED)
+        ...LOGGING_Fragments @include(if: $LOGGING_SUBSCRIBED)
+        ...INFRA_Fragments @include(if: $INFRA_SUBSCRIBED)
+        ...SYNTHETICS_Fragments @include(if: $SYNTHETICS_SUBSCRIBED)
+        ...INSIGHTS_Fragments @include(if: $INSIGHTS_SUBSCRIBED)
+
+        ...NRQLFragment @include(if: $withFragment)
+
+      }
+    }
+  }
+
+  fragment EVENT_TYPES on Account{
+    eventType: nrql(query: "SHOW EVENT TYPES since 1 hour ago", timeout: 120) {
+      results
+    }
+  }
+  fragment PROGRAM_Fragments on Account{
+    programDeployCount: nrql(query: "SELECT count(*) as 'count' FROM NrAuditEvent  WHERE targetType = 'nerdpack' and actionIdentifier ='nerdpack.subscribe' SINCE 7 days ago", timeout: 120) {
+      results
+    }
+    programUniqUserDeployment: nrql(query: "SELECT uniquecount(actorEmail) as 'uniqueCount' FROM NrAuditEvent WHERE actorEmail != 'New Relic Employee' SINCE 7 days ago WHERE targetType = 'nerdpack'  ", timeout: 120) {
+      results
+    }
+  }
+  fragment INSIGHTS_Fragments on Account {
+		INSIGHTS_PLACEHOLDER:id
+  }
+  fragment SYNTHETICS_Fragments on Account {
+		SYNTHETICS_PLACEHOLDER:id
+  }
+
+  fragment BROWSER_Fragments on Account {
+    pageActionData: nrql(query: "SELECT uniques(appName) FROM PageAction SINCE 1 week ago", timeout: 120) {
+      results
+    }
+    pageViewKeyset: nrql(query: "SELECT keyset() FROM PageView since 7 days ago", timeout: 120) {
+      results
+    }
+  }
+
+  fragment INFRA_Fragments on Account {
+    systemSampleKeyset: nrql(query: "SELECT keyset() FROM SystemSample facet hostname since 7 days ago", timeout: 120) {
+      results
+    }
+    processSampleKeyset: nrql(query: "SELECT keyset() FROM ProcessSample facet hostname since 7 days ago ", timeout: 120) {
+      results
+    }
+    infraDeployedVersions: nrql(query: "SELECT uniqueCount(agentHostname ) as 'count'   from NrDailyUsage facet  infrastructureAgentVersion   since 7 days ago where productLine ='Infrastructure' ", timeout: 120) {
+      results
+    }
+    infraHostCount: nrql(query: "SELECT uniqueCount(agentHostname) as 'count' FROM NrDailyUsage  where productLine='Infrastructure'  SINCE 7 days AGO ", timeout: 120) {
+      results
+    }
+    contained: nrql(query: "SELECT count(contained) as 'count' FROM ProcessSample where contained='true'", timeout: 120) {
+      results
+    }
+    awsBilling: nrql(query: "SELECT count(*) as 'count' FROM FinanceSample ", timeout: 120) {
+      results
+    }
+  }
+
+  fragment LOGGING_Fragments on Account {
+    logMessageCount: nrql(query: "SELECT count(*) as 'count' FROM Log since 12 hours ago ", timeout: 120) {
+      results
+    }
+  }
+
+  fragment APM_Fragments on Account {
+    dtData: nrql(query: "SELECT uniques(appName) from Span", timeout: 120) {
+      results
+    }
+    throughputData: nrql(query: "SELECT count(*) from Transaction facet appId", timeout: 120) {
+      results
+    }
+    transactionKeyset: nrql(query: "SELECT keyset() FROM Transaction since 7 days ago", timeout: 120) {
+      results
+    }
+    apmDeployedVersions: nrql(query: "SELECT uniqueCount(apmAppId) as 'count' FROM NrDailyUsage  SINCE 1 DAY AGO  where productLine='APM' facet apmLanguage, apmAgentVersion", timeout: 120) {
+      results
+    }
+  }
+
+  fragment MOBILE_Fragments on Account {
+    mobileBreadcrumbs: nrql(query: "SELECT  count(*) FROM MobileBreadcrumb SINCE 1 day ago facet appName ", timeout: 120) {
+      results
+    }
+    mobileHandledExceptions: nrql(query: "SELECT count(*) FROM MobileHandledException SINCE 1 day ago facet appName ", timeout: 120) {
+      results
+    }
+    mobileEvents: nrql(query: "SELECT count(*) FROM Mobile SINCE 30 minutes ago facet appName", timeout: 120) {
+      results
+    }
+    mobileAppLaunch: nrql(query: "SELECT uniqueCount(sessionId) as 'uniqueSessions' from Mobile SINCE 7 days ago  ", timeout: 120) {
+      results
+    }
+    mobileDeployedVersions: nrql(query: "SELECT uniqueCount(appId) as 'appCount', latest(osName) as 'osName' FROM Mobile SINCE 7 days ago FACET  newRelicVersion", timeout: 120) {
+      results
+    }
+  }
+
+  # Dynamically generated by createQuery()
+  # fragment NRQLFragment on Account {
+  #	 NRQL_PLACEHOLDER:id
+  # }
+  `,
+  variables: {
+    id: 0,
+    withFragment: false,
+    EVENT_TYPES_INCLUDE: false,
+    PROGRAMMABILITY_SUBSCRIBED: false,
+    APM_SUBSCRIBED: false,
+    BROWSER_SUBSCRIBED: false,
+    MOBILE_SUBSCRIBED: false,
+    INFRA_SUBSCRIBED: false,
+    LOGGING_SUBSCRIBED: false,
+    SYNTHETICS_SUBSCRIBED: false,
+    INSIGHTS_SUBSCRIBED: false
+  },
+  createQuery: function(fragment = null) {
+    const withFragment = fragment !== null && fragment.length > 0;
+    const placeholder = 'transaction:nrql(query:""){results}';
+    fragment = fragment || placeholder;
+    return  {
+      query: `
+              ${this.query}
+              fragment NRQLFragment on Account {
+                  ${fragment}
+              }`,
+      variables: {
+        ...this.variables,
+        withFragment
+      }
+    };
+  }
+};
+
+export const DOC_AGENT_RELEASES_GQL = {
+  query: `
+    {
+      androidReleases: docs {
+        agentReleases(agentName: ANDROID) {
+          version
+          date
+        }
+      }
+      browserReleases: docs {
+        agentReleases(agentName: BROWSER) {
+          version
+          date
+        }
+      }
+      dotnetReleases: docs {
+        agentReleases(agentName: DOTNET) {
+          version
+          date
+        }
+      }
+      elixirReleases: docs {
+        agentReleases(agentName: ELIXIR) {
+          version
+          date
+        }
+      }
+      goReleases: docs {
+        agentReleases(agentName: GO) {
+          version
+          date
+        }
+      }
+      infraReleases: docs {
+        agentReleases(agentName: INFRASTRUCTURE) {
+          version
+          date
+        }
+      }
+      iosReleases: docs {
+        agentReleases(agentName: IOS) {
+          version
+          date
+        }
+      }
+      javaReleases: docs {
+        agentReleases(agentName: JAVA) {
+          version
+          date
+        }
+      }
+      nodejsReleases: docs {
+        agentReleases(agentName: NODEJS) {
+          version
+          date
+        }
+      }
+      phpReleases: docs {
+        agentReleases(agentName: PHP) {
+          version
+          date
+        }
+      }
+      pythonReleases: docs {
+        agentReleases(agentName: PYTHON) {
+          version
+          date
+        }
+      }
+      rubyReleases: docs {
+        agentReleases(agentName: RUBY) {
+          version
+          date
+        }
+      }
+      sdkReleases: docs {
+        agentReleases(agentName: SDK) {
+          version
+          date
+        }
+      }
+    }
+  `
+};
+
+export const CLOUD_LINKED_ACCTS_GQL = {
+  query: `
+    query {
+      actor {
+        cloud {
+          linkedAccounts {
+            disabled
+            name
+            id
+            nrAccountId
+            provider {
+              id
+              name
+            }
+          }
+        }
+      }
+    }`
+};
+
+export const CLOUD_LINKED_ACCTS_WITH_ID_GQL = {
+  query: `
+    query ($id: Int!) {
+      actor {
+        account(id: $id) {
+          cloud {
+            linkedAccounts {
+              disabled
+              name
+              id
+              nrAccountId
+              provider {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }`,
+  variables: {
+    // id
+  }
+};
+
+export const APM_DEPLOYMENTS_GQL = {
+  query: `
+            query($guids:[EntityGuid]!, $endTime:EpochMilliseconds!, $startTime:EpochMilliseconds!){
+              actor {
+                  entities(guids: $guids) {
+                      ... on ApmApplicationEntity {
+                          deployments(timeWindow: {endTime: $endTime, startTime: $startTime}) {
+                              timestamp
+                          }
+                          accountId
+                          applicationId
+                          name
+                      }
+                  }
+              }
+          }`,
+  variables: {
+    // endTime,
+    // startTime,
+    // guids
+  }
+};

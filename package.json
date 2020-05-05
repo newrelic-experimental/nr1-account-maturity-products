@@ -1,0 +1,90 @@
+{
+  "private": true,
+  "name": "maturity-products",
+  "description": "React components for Maturity Nerdlet",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "npm run build",
+    "mocha-debug": "mocha --inspect-brk --watch 'src/**/*.test.js' --recursive --require @babel/register",
+    "mocha-test": "mocha 'src/**/*.test.js' --recursive --require @babel/register",
+    "mocha-watch": "mocha --watch 'src/**/*.test.js' --recursive --require @babel/register",
+    "build": "rm -rf dist && babel -d dist src",
+    "dev": "watch 'npm run build' src",
+    "eslint-check": "eslint src/",
+    "eslint-fix": "eslint src/ --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://source.datanerd.us/CSE/maturity-products"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "boilerplate",
+    "react",
+    "shared",
+    "components",
+    "maturity"
+  ],
+  "author": "New Relic ES",
+  "license": "UNLICENSED",
+  "bugs": {
+    "email": "acuffe@newrelic.com"
+  },
+  "contributors": [
+    {
+      "name": "Aidan Cuffe",
+      "email": "acuffe@newrelic.com"
+    },
+    {
+      "name": "Jo Ann De Leon",
+      "email": "jdeleon@newrelic.com"
+    },
+    {
+      "name": "Sean Winters",
+      "email": "swinters@newrelic.com"
+    },
+    {
+      "name": "Benedicto Tan",
+      "email": "btan@newrelic.com"
+    }
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/register": "^7.9.0",
+    "@newrelic/eslint-plugin-newrelic": "^0.3.0",
+    "babel-eslint": "^10.1.0",
+    "btoa": "^1.2.1",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "mocha": "^7.1.1",
+    "node-fetch": "^2.6.0",
+    "prettier": "^1.19.1",
+    "watch": "^1.0.2"
+  },
+  "dependencies": {
+    "es6-promise-pool": "^2.5.0",
+    "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "lodash": "^4.17.15",
+    "match-sorter": "^4.1.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-csv": "^2.0.3",
+    "react-dom": "^16.6.3",
+    "react-spinners": "^0.6.1",
+    "react-table": "^6.10.3",
+    "react-table-v6": "^6.8.6",
+    "react-tabs": "^3.1.0",
+    "reactjs-popup": "^1.5.0",
+    "semver": "^6.3.0"
+  }
+}
