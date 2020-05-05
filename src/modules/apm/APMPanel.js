@@ -62,6 +62,7 @@ export class APMPanelTag extends React.Component {
     this.docAgentLatestVersion = appContext.docAgentLatestVersion;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.fetchData = this.props.fetchData || fetchAPMData;
     this.createTableData = this.props.createTableData || createAPMTableData;
@@ -84,7 +85,8 @@ export class APMPanelTag extends React.Component {
 
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
     this.maturityCtxUpdateScore('APM', scores, tableData);
   }

@@ -11,6 +11,7 @@ export async function fetchSynthData(
     poolMaxConcurreny: 50
   }
 ) {
+  let hasErrors = false;
   const options = {
     fetchEntities: overrides.fetchEntities || _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: overrides.poolOnFulfilled || _onFulFilledHandler,
@@ -26,13 +27,18 @@ export async function fetchSynthData(
   const pool = new PromisePool(_getEntities(), options.poolMaxConcurreny);
 
   pool.addEventListener('fulfilled', event => {
-    options.poolOnFulfilled(event, accountMap);
+    const acctErrors = options.poolOnFulfilled(event, accountMap);
+    if (!hasErrors) {
+      hasErrors = acctErrors;
+    }
   });
   await pool.start();
+  return hasErrors;
 }
 
 function _onFulFilledHandler(event, accountMap) {
-  for (const entity of event.data.result) {
+  const { entityArr, hasErrors } = event.data.result;
+  for (const entity of entityArr) {
     const { accountId } = entity;
     const account = accountMap.get(accountId);
     const monitor = new Monitor(entity);
@@ -43,12 +49,14 @@ function _onFulFilledHandler(event, accountMap) {
 
     account.synthMonitors.set(monitor.guid, monitor);
   }
+  return hasErrors;
 }
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
   entityArr = [],
-  cursor = null
+  cursor = null,
+  hasErrors = false
 ) {
   const accountId = account.id;
   const query = {
@@ -60,20 +68,31 @@ async function _fetchEntitiesWithAcctIdGQL(
   };
 
   const response = await gqlAPI(query);
+  if (!hasErrors) {
+    const { errors } = response;
+    hasErrors = errors != null;
+  }
+
   if (
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
   ) {
-    return entityArr;
+    return { entityArr, hasErrors };
   }
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
 
   entityArr = entityArr.concat(entities);
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
-    return entityArr;
+    return { entityArr, hasErrors };
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(
+      gqlAPI,
+      account,
+      entityArr,
+      nextCursor,
+      hasErrors
+    );
   }
 }
 

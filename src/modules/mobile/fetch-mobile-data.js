@@ -10,6 +10,7 @@ export async function fetchMobileData(
     poolMaxConcurreny: 50
   }
 ) {
+  let hasErrors = false;
   const options = {
     fetchEntities: overrides.fetchEntities || _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: overrides.poolOnFulfilled || _onFulFilledHandler,
@@ -24,18 +25,28 @@ export async function fetchMobileData(
 
   const pool = new PromisePool(_getEntities(), options.poolMaxConcurreny);
   pool.addEventListener('fulfilled', event => {
-    options.poolOnFulfilled(event, accountMap);
+    const acctErrors = options.poolOnFulfilled(event, accountMap);
+    if (!hasErrors) {
+      hasErrors = acctErrors;
+    }
   });
 
   await pool.start();
+  return hasErrors;
 }
 
 // eslint-disable-next-line no-unused-vars
 function _onFulFilledHandler(event, accountMap) {
-  return null;
+  const { hasErrors } = event.data.result;
+  return hasErrors;
 }
 
-async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, cursor = null) {
+async function _fetchEntitiesWithAcctIdGQL(
+  gqlAPI,
+  account,
+  cursor = null,
+  hasErrors = false
+) {
   const { id } = account;
   const query = {
     ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
@@ -46,12 +57,16 @@ async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, cursor = null) {
   };
 
   const response = await gqlAPI(query);
+  if (!hasErrors) {
+    const { errors } = response;
+    hasErrors = errors != null;
+  }
 
   if (
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
   ) {
-    return account;
+    return { account, hasErrors };
   }
 
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
@@ -60,9 +75,9 @@ async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, cursor = null) {
   account.mobileApps = account.mobileApps.concat(entities);
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
-    return account;
+    return { account, hasErrors };
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, nextCursor, hasErrors);
   }
 }
 

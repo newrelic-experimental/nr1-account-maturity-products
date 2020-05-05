@@ -53,7 +53,8 @@ export class SynthPanelTag extends React.Component {
 
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
 
     const { appContext } = this.props;
@@ -62,6 +63,7 @@ export class SynthPanelTag extends React.Component {
     this.docEventTypes = appContext.docEventTypes;
     this.docAgentLatestVersion = appContext.docAgentLatestVersion;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
 
@@ -76,13 +78,17 @@ export class SynthPanelTag extends React.Component {
 
   async componentDidMount() {
     console.time('fetchSynthData');
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
     console.timeEnd('fetchSynthData');
     const tableData = this.createTableData(this.ctxAcctMap);
     const scores = this.addMaturityScoreToTable(tableData, this.ctxAcctMap);
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
 
     this.maturityCtxUpdateScore('SYNTHETICS', scores, tableData);
@@ -119,6 +125,7 @@ export class SynthPanelTag extends React.Component {
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
       >
         {({ filteredData }) => (
           <SynthAccountTable

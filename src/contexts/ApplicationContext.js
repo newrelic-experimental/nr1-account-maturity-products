@@ -24,6 +24,7 @@ export class ApplicationCtxProvider extends React.Component {
     this.state = {
       loading: true,
       accountMap: null,
+      hasErrors: false,
       docEventTypes: null, // { "Transaction" : { attributes:[{ name:< Attribute name>, label: "<Attribute label>"}, ... ]},name:"Transaction", dataSources:["APM"] }
       docAgentLatestVersion: {} // {java:"0.0.0", ios:"0.0.0", infrastructure:"0.0.0",...}
     };
@@ -55,7 +56,7 @@ export class ApplicationCtxProvider extends React.Component {
     );
 
     console.time('createAccountMap');
-    const accountMap = await this.createAccountMap(
+    const { accountMap, hasErrors } = await this.createAccountMap(
       accounts,
       cloudLinkedAccounts,
       this.nerdGraphQuery,
@@ -66,6 +67,7 @@ export class ApplicationCtxProvider extends React.Component {
     this.setState({
       loading: false,
       accountMap,
+      hasErrors,
       docEventTypes,
       docAgentLatestVersion
     });
@@ -124,6 +126,7 @@ export class ApplicationCtxProvider extends React.Component {
           nerdGraphQuery: this.nerdGraphQuery,
           loading: this.state.loading,
           accountMap: this.state.accountMap,
+          hasErrors: this.state.hasErrors,
           docEventTypes: this.state.docEventTypes,
           docAgentLatestVersion: this.state.docAgentLatestVersion
         }}

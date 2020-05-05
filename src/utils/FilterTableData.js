@@ -38,6 +38,36 @@ export class FilterTableData extends React.Component {
     return filteredTable;
   }
 
+  renderModal(openPopup) {
+    if (openPopup) {
+      return (
+        <Popup open={openPopup} closeOnDocumentClick onClose={this.closeModal}>
+          <div style={{ fontSize: '14px' }}>
+            <a
+              style={{
+                position: 'absolute',
+                display: 'block',
+                padding: '2px 5px',
+                right: '-10px',
+                top: '-10px',
+                opacity: '0.5',
+                fontSize: '24px',
+                borderRadius: '18px',
+                border: '1px solid #cfcece',
+                background: '#fff',
+                lineHeight: '20px'
+              }}
+              onClick={this.closeModal}
+            >
+              &times;
+            </a>
+            <b>Warning:</b> Some errors happened while retrieving your metrics. Scores may be inaccurate. Please try again.
+          </div>
+        </Popup>
+      );
+    }
+  }
+
   render() {
     const { tableData, filterKeys } = this.props;
     const filteredData = this._filterNoData(tableData, filterKeys);
