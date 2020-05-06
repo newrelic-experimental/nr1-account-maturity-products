@@ -9,5 +9,5 @@
 1. Update the version number in package.json
 2. Push the src folder to the repo
 3. In the dependent project:
-   - Make sure that maturity-products points to git+ssh://git@source.datanerd.us:CSE/maturity-products
+   - Make sure that maturity-products points to git+ssh://git@github.com:newrelic-experimental/nr1-account-maturity-products
    - Do an 'npm update maturity-products'
