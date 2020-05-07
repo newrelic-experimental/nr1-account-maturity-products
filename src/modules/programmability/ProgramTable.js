@@ -40,7 +40,7 @@ export const ProgramSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Deployments %',
+        Header: 'Are Users Deploying Nerdpacks (Last 7 days)',
         accessor: 'programmabilityDeploymentsAttemptedPercentage',
         Cell: row => cellRenderer(row),
         filterable: false

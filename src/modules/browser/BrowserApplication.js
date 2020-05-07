@@ -16,7 +16,8 @@ class BrowserApplication {
         : 0;
 
     this.maxVersion = entity.runningAgentVersions
-      ? entity.runningAgentVersions.maxVersion
+      ? entity.runningAgentVersions.maxVersion ||
+        entity.runningAgentVersions.minVersion
       : '0.0.1';
 
     this.healthStatus = entity.alertSeverity

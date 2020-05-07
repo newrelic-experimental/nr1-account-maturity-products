@@ -13,7 +13,8 @@ class Application {
     this.apdexT = entity.settings ? entity.settings.apdexTarget : 0;
 
     this.maxVersion = entity.runningAgentVersions
-      ? entity.runningAgentVersions.maxVersion
+      ? entity.runningAgentVersions.maxVersion ||
+        entity.runningAgentVersions.minVersion
       : '0.0.0';
 
     this.language = entity.language;
