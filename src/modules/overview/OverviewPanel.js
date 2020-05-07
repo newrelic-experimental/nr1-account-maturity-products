@@ -63,6 +63,7 @@ export class OverviewPanelTag extends React.Component {
           tableData={tableData}
           filterKeys={scoreKeys}
           hasErrors={hasErrors}
+          contactInfo="opensource+maturity@newrelic.com"
         >
           {({ filteredData, filterKeys }) => (
             <OverviewTable

@@ -122,6 +122,7 @@ export class APMPanelTag extends React.Component {
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo="opensource+maturity@newrelic.com"
       >
         {({ filteredData }) => (
           <APMAccountTable data={filteredData} columns={this.tableColHeader} />

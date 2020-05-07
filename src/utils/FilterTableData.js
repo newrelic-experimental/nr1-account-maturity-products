@@ -7,7 +7,8 @@ export class FilterTableData extends React.Component {
     children: PropTypes.func,
     tableData: PropTypes.array,
     filterKeys: PropTypes.array,
-    hasErrors: PropTypes.bool
+    hasErrors: PropTypes.bool,
+    contactInfo: PropTypes.string
   };
 
   constructor(props) {
@@ -51,7 +52,7 @@ export class FilterTableData extends React.Component {
     return filteredTable;
   }
 
-  renderModal(openPopup) {
+  renderModal(openPopup, contactInfo) {
     if (openPopup) {
       return (
         <Popup open={openPopup} closeOnDocumentClick onClose={this.closeModal}>
@@ -74,7 +75,14 @@ export class FilterTableData extends React.Component {
             >
               &times;
             </a>
-            <b>Warning:</b> Some errors happened while retrieving your metrics. Scores may be inaccurate. Please try again.
+            <b>Warning:</b> Some API errors happened while retrieving your
+            metrics. It may have been due to server timeouts, and so scores may
+            be inaccurate. Please try refreshing your browser to gather data
+            again, hopefully without issue this time.
+            <br />
+            <br />
+            If issues persist, please check your browser console for errors and
+            reach out to {contactInfo}
           </div>
         </Popup>
       );
@@ -82,13 +90,13 @@ export class FilterTableData extends React.Component {
   }
 
   render() {
-    const { tableData, filterKeys } = this.props;
+    const { tableData, filterKeys, contactInfo } = this.props;
     const filteredData = this._filterNoData(tableData, filterKeys);
 
     return (
       <div>
         <div>
-          {this.renderModal(this.state.openPopup)}
+          {this.renderModal(this.state.openPopup, contactInfo)}
           {this.props.children({ filteredData, tableData, filterKeys })}
         </div>
 
