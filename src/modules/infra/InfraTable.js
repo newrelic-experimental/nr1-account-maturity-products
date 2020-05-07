@@ -39,7 +39,7 @@ export const InfraSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Latest Version %',
+        Header: 'Using Recent Agent %',
         accessor: 'infrastructureLatestAgentPercentage',
         Cell: row => cellRenderer(row),
         filterable: false

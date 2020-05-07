@@ -66,19 +66,19 @@ export const APMSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Latest Agent %',
+        Header: 'Using Recent Agent %',
         accessor: 'apmLatestAgentPercentage',
         Cell: row => cellRenderer(row, APMListCols),
         filterable: false
       },
       {
-        Header: 'DT Capable',
+        Header: 'DT Capable %',
         accessor: 'apmUsingDTCapableAgentPercentage',
         Cell: row => cellRenderer(row, APMListCols),
         filterable: false
       },
       {
-        Header: 'Distributed Tracing %',
+        Header: 'DT Enabled %',
         accessor: 'apmDistributedTracingEnabledPercentage',
         Cell: row => cellRenderer(row, APMListCols),
         filterable: false
