@@ -81,8 +81,7 @@ export class FilterTableData extends React.Component {
             again, hopefully without issue this time.
             <br />
             <br />
-            If issues persist, please check your browser console for errors and
-            reach out to {contactInfo}
+            If issues persist, please reach out to {contactInfo}.
           </div>
         </Popup>
       );

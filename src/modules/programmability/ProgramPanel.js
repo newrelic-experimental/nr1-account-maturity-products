@@ -116,11 +116,14 @@ export class ProgramPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Programability Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <ProgramTable data={filteredData} columns={this.tableColHeader} />

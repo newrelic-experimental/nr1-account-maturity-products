@@ -131,11 +131,15 @@ export class InfraPanelTag extends React.Component {
     if (this.state.loading) {
       return <CustomCircleLoader message="Loading Infrastructure Data" />;
     }
+
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <InfraTable data={filteredData} columns={this.tableColHeader} />

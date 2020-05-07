@@ -48,7 +48,7 @@ export class OverviewPanelTag extends React.Component {
 
   render() {
     const { appContext, maturityScores } = this.props;
-    const { accountMap, hasErrors } = appContext;
+    const { accountMap, hasErrors, contactInfo } = appContext;
 
     if (Object.keys(maturityScores).length === 0) {
       return <CustomCircleLoader message="Loading Overview" />;
@@ -63,7 +63,7 @@ export class OverviewPanelTag extends React.Component {
           tableData={tableData}
           filterKeys={scoreKeys}
           hasErrors={hasErrors}
-          contactInfo="opensource+maturity@newrelic.com"
+          contactInfo={contactInfo}
         >
           {({ filteredData, filterKeys }) => (
             <OverviewTable

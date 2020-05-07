@@ -38,6 +38,7 @@ export class ApplicationCtxProvider extends React.Component {
     this.nr1graph = props.nr1graph;
     this.name = this.props.name || '';
     this.isEUDatacenter = DataCenterUtils.isEUDatacenter();
+    this.contactInfo = 'opensource+maturity@newrelic.com';
   }
 
   async componentDidMount() {
@@ -128,7 +129,8 @@ export class ApplicationCtxProvider extends React.Component {
           accountMap: this.state.accountMap,
           hasErrors: this.state.hasErrors,
           docEventTypes: this.state.docEventTypes,
-          docAgentLatestVersion: this.state.docAgentLatestVersion
+          docAgentLatestVersion: this.state.docAgentLatestVersion,
+          contactInfo: this.contactInfo
         }}
       >
         {this.props.children}

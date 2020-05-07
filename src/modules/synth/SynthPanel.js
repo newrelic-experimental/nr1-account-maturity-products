@@ -121,11 +121,14 @@ export class SynthPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Synthetics Monitor Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <SynthAccountTable

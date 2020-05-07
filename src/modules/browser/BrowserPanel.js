@@ -120,11 +120,14 @@ export class BrowserPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Browser Application Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <BrowserAccountTable

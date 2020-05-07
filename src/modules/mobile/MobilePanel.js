@@ -122,11 +122,14 @@ export class MobilePanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Mobile Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <MobileTable data={filteredData} columns={this.tableColHeader} />

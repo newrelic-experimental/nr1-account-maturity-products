@@ -117,12 +117,15 @@ export class APMPanelTag extends React.Component {
     if (this.state.loading) {
       return <CustomCircleLoader message="Loading APM Application Data" />;
     }
+
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
-        contactInfo="opensource+maturity@newrelic.com"
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <APMAccountTable data={filteredData} columns={this.tableColHeader} />

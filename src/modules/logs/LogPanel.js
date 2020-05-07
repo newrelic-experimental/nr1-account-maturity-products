@@ -117,11 +117,14 @@ export class LogPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Log Event Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
         hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <LogTable data={filteredData} columns={this.tableColHeader} />
