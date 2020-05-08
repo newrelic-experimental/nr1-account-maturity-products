@@ -72,10 +72,10 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     processSampleKeyset: nrql(query: "SELECT keyset() FROM ProcessSample facet entityName since 7 days ago  LIMIT MAX", timeout: 120) {
       results
     }
-    infraDeployedVersions: nrql(query: "SELECT uniqueCount(agentHostname ) as 'count'   from NrDailyUsage facet  infrastructureAgentVersion   since 25 hours ago where productLine ='Infrastructure' ", timeout: 120) {
+    infraDeployedVersions: nrql(query: "SELECT uniqueCount(agentHostname ) as 'count'   from NrDailyUsage facet  infrastructureAgentVersion since 7 days ago where productLine ='Infrastructure' ", timeout: 120) {
       results
     }
-    infraHostCount: nrql(query: "SELECT uniqueCount(agentHostname) as 'count' FROM NrDailyUsage  where productLine='Infrastructure'  since 25 hours ago ", timeout: 120) {
+    infraHostCount: nrql(query: "SELECT uniqueCount(agentHostname) as 'count' FROM NrDailyUsage  where productLine='Infrastructure' since 7 days ago", timeout: 120) {
       results
     }
     contained: nrql(query: "SELECT count(contained) as 'count' FROM ProcessSample where contained='true' since 7 days ago", timeout: 120) {
