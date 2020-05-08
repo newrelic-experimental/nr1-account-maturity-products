@@ -72,13 +72,18 @@ function _processInfraAccountData(
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
 
-  const systemSampleDefaultCount = docEventTypes.SystemSample
+  const systemSampleDefaultList = docEventTypes.SystemSample
     ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)
     : 0;
 
   const hostsWithCustomAttr = account.systemSampleKeyset.filter(
     ({ allKeys }) => {
-      return allKeys.filter(key => !systemSampleDefaultCount.includes(key)).length > 0
+      return allKeys.filter(key => {
+        if (key.startsWith('nr.')){
+          return false
+        }
+        return !systemSampleDefaultList.includes(key)
+      }).length > 0
     }
   );
 

@@ -11417,10 +11417,6 @@ export const EventTypes = {
                 name: 'instanceType'
               },
               {
-                label: 'NR Entity Type',
-                name: 'nr.entityType'
-              },
-              {
                 label: 'Processor Count',
                 name: 'processorCount'
               },
@@ -11431,14 +11427,6 @@ export const EventTypes = {
               {
                 label: 'APM Application Names',
                 name: 'apmApplicationNames'
-              },
-              {
-                label: 'NR APM Application Ids',
-                name: 'nr.apmApplicationIds'
-              },
-              {
-                label: 'NR APM Application Ids',
-                name: 'nr.apmApplicationNames'
               },
               {
                 label: 'System Memory Bytes',
