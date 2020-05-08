@@ -7,11 +7,14 @@ export const GET_MOBILE_APP_SUBSCRIBER_ID_GQL = {
                         entities {
                           name
                           ... on MobileApplicationEntityOutline {
+                            applicationId
                             guid
                             name
                             alertSeverity
                             reporting
-
+                            mobileSummary {
+                              appLaunchCount
+                            }
                           }
                           accountId
                         }
