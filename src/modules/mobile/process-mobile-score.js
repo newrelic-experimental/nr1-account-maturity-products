@@ -42,7 +42,7 @@ function _processMobileData(account, docMobileLatestVersionHash) {
   row.accountName = name;
   row.accountID = id;
   // eslint-disable-next-line no-unused-vars
-  debugger
+
   const { value, _ } = _computeVersionPercent(
     account,
     docMobileLatestVersionHash
@@ -73,7 +73,6 @@ function _processMobileData(account, docMobileLatestVersionHash) {
   })(mobileEvents, totalApps);
 
   row.appsWithAlertsPercentage = ((entities, totalApps) => {
-    debugger
     // entities is [{"accountId":1606862,"alertSeverity":"NOT_CONFIGURED","guid":"MTYwNjg2MnxNT0JJTEV8QVBQTElDQVRJT058NjE2OTA3Nzg","name":"Acme Telco -Android","reporting":true}]
     if (!entities || (entities && entities.length === 0)) {
       return 0;
