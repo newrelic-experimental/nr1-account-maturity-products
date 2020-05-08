@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import ReactTable from 'react-table-v6';
-import { cellRenderer, CreateCSVLink } from '../../utilities';
+import { CreateCSVLink } from '../../utilities';
+import {InfraCellRenderer as cellRenderer} from './InfraCellRenderer'
 import matchSorter from 'match-sorter';
 
 export function InfraTable(props) {
@@ -39,7 +40,7 @@ export const InfraSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Using Recent Agent %',
+        Header: 'Latest Version %',
         accessor: 'infrastructureLatestAgentPercentage',
         Cell: row => cellRenderer(row),
         filterable: false
