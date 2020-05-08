@@ -42,6 +42,7 @@ function _processMobileData(account, docMobileLatestVersionHash) {
   row.accountName = name;
   row.accountID = id;
   // eslint-disable-next-line no-unused-vars
+  debugger
   const { value, _ } = _computeVersionPercent(
     account,
     docMobileLatestVersionHash
@@ -72,19 +73,21 @@ function _processMobileData(account, docMobileLatestVersionHash) {
   })(mobileEvents, totalApps);
 
   row.appsWithAlertsPercentage = ((entities, totalApps) => {
+    debugger
     // entities is [{"accountId":1606862,"alertSeverity":"NOT_CONFIGURED","guid":"MTYwNjg2MnxNT0JJTEV8QVBQTElDQVRJT058NjE2OTA3Nzg","name":"Acme Telco -Android","reporting":true}]
     if (!entities || (entities && entities.length === 0)) {
       return 0;
     }
     const appWithAlerts = entities
-      .filter(e => e.reporting === true)
-      .filter(e => e.alertSeverity !== 'NOT_CONFIGURED');
+      .filter(e => e[1].reporting === true)
+      .filter(e => e[1].healthStatus !== 'NOT_CONFIGURED');
     return appWithAlerts.length > 0
       ? Math.round((appWithAlerts.length / totalApps) * 100)
       : 0;
   })(entities, totalApps);
   row.mobileAppLaunchCount = mobileAppLaunch;
   row.mobileAppLaunch = mobileAppLaunch > 0;
+  row.LIST = createMobileAppList(account.mobileApps);
   return row;
 }
 
@@ -151,4 +154,24 @@ function _computeVersionPercent(account, latestMobileVerHash) {
 
   const value = Math.round((totalLatestVer / totalUsers) * 100);
   return { value, totalUsers };
+}
+
+export function createMobileAppList(mobileAppMap) {
+  if (!mobileAppMap || (mobileAppMap && mobileAppMap.size === 0)) {
+    return [];
+  }
+  const itr = mobileAppMap.values();
+  let mobileApp = itr.next();
+  const mobileAppList = [];
+
+  while (!mobileApp.done) {
+    const mobileAppObj = { ...mobileApp.value };
+
+    mobileAppObj.isAlerting = mobileApp.value.isAlerting();
+    mobileAppObj.hasLabels = mobileApp.value.hasLabels();
+    mobileAppList.push(mobileAppObj);
+    mobileApp = itr.next();
+  }
+
+  return mobileAppList;
 }
