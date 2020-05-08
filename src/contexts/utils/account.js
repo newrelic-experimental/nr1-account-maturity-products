@@ -213,16 +213,16 @@ export function createAccount(event) {
   accountDetail.pageViewKeyset = pageViewKeyset ? pageViewKeyset.results : [];
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
   accountDetail.processSampleKeyset = processSampleKeyset
-    ? processSampleKeyset.results.map(({ hostname, allKeys }) => ({
-        hostname,
+    ? processSampleKeyset.results.map(({ entityName, allKeys }) => ({
+      entityName,
         allKeys
       }))
     : [];
 
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
   accountDetail.systemSampleKeyset = systemSampleKeyset
-    ? systemSampleKeyset.results.map(({ hostname, allKeys }) => ({
-        hostname,
+    ? systemSampleKeyset.results.map(({ entityName, allKeys }) => ({
+      entityName,
         allKeys
       }))
     : [];

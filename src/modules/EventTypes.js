@@ -11387,7 +11387,75 @@ export const EventTypes = {
               {
                 label: 'Full Hostname',
                 name: 'fullHostname'
-              }
+              },
+              {
+                label: 'Cluster Name',
+                name: 'clusterName'
+              },
+              {
+                label: 'Core Count',
+                name: 'coreCount'
+              },
+              {
+                label: 'CPU IO Wait Percent',
+                name: 'cpuIOWaitPercent'
+              },
+              {
+                label: 'Display Name',
+                name: 'displayName'
+              },
+              {
+                label: 'Entity GUID',
+                name: 'entityGuid'
+              },
+              {
+                label: 'Entity Key',
+                name: 'entityKey'
+              },
+              {
+                label: 'Instance Type',
+                name: 'instanceType'
+              },
+              {
+                label: 'NR Entity Type',
+                name: 'nr.entityType'
+              },
+              {
+                label: 'Processor Count',
+                name: 'processorCount'
+              },
+              {
+                label: 'APM Application Ids',
+                name: 'apmApplicationIds'
+              },
+              {
+                label: 'APM Application Names',
+                name: 'apmApplicationNames'
+              },
+              {
+                label: 'NR APM Application Ids',
+                name: 'nr.apmApplicationIds'
+              },
+              {
+                label: 'NR APM Application Ids',
+                name: 'nr.apmApplicationNames'
+              },
+              {
+                label: 'System Memory Bytes',
+                name: 'systemMemoryBytes'
+              },
+              {
+                label: 'Critical Violation Count',
+                name: 'criticalViolationCount'
+              },
+              {
+                label: 'Warning Violation Count',
+                name: 'warningViolationCount'
+              },
+              {
+                label: 'External Key',
+                name: 'externalKey'
+              },
             ],
             dataSources: ['Infrastructure'],
             name: 'SystemSample'
