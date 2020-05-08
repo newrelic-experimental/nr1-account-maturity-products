@@ -100,7 +100,12 @@ export class InfraDrilldownPanelTag extends React.Component {
       //Checks if the keyset attributes exist in the default list and returns the ones that are not
       const customAttributes = 
         hostSystemSampleKeyset ? 
-        hostSystemSampleKeyset['allKeys'].filter(key => !systemSampleDefaultList.includes(key)) 
+        hostSystemSampleKeyset['allKeys'].filter(key => {
+          if (key.startsWith('nr.')){
+            return false
+          }
+          return !systemSampleDefaultList.includes(key)
+        }) 
         : []
 
       //using length for now may include array later for troubleshooting
