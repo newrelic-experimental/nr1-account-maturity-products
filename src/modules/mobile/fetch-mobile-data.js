@@ -37,10 +37,7 @@ function _onFulFilledHandler(event, accountMap) {
     const { accountId } = entity;
     const account = accountMap.get(accountId);
     const mobileApplication = new MobileApplication(entity)
-    if (accountId === 143510){
-      debugger;
-    }
-
+    
     const breadcrumbs = account.mobileBreadcrumbs.find(app => app.appName == entity.name)
     const handledExceptions =  account.mobileHandledExceptions.find(app => app.appName == entity.name)
     const mobileEvents = account.mobileEvents.find(app => app.appName == entity.name)
