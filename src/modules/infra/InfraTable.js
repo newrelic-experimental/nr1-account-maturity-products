@@ -68,7 +68,7 @@ export const InfraSummaryCols = [
       {
         Header: 'Custom Attributes %',
         accessor: 'infrastructureCustomAttributesHostPercentage',
-        Cell: row => cellRenderer(row),
+        Cell: row => cellRenderer(row, InfraListCols, renderFn),
         filterable: false
       },
       {
