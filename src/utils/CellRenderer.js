@@ -4,14 +4,16 @@
 import Popup from 'reactjs-popup';
 import ReactTable from 'react-table-v6';
 import { CreateCSVLink } from './CreateCSVLink';
+import semver from 'semver';
 
-export const cellRenderer = function(rowData, popupColHeaders) {
-  return main(rowData, popupColHeaders);
+export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
+  return main(rowData, popupColHeaders, renderFn);
 
   // -----------------------------------
-  function main(row, popupColHeaders) {
+  function main(row, popupColHeaders, renderFn) {
     const { value } = row;
     let fn;
+
     switch (typeof value) {
       case 'boolean':
         fn = BooleanCellRender;
@@ -21,10 +23,13 @@ export const cellRenderer = function(rowData, popupColHeaders) {
         break;
       case 'string':
         fn = StringCellRender;
+        if (semver.valid(value)) {
+          fn = VersionCellRender;
+        }
         break;
     }
 
-    return fn ? fn(row, popupColHeaders) : null;
+    return fn ? fn(row, popupColHeaders, renderFn) : null;
   }
 
   function StringCellRender(row) {
@@ -45,9 +50,9 @@ export const cellRenderer = function(rowData, popupColHeaders) {
     );
   }
 
-  function NumberCellRender(row, popupColHeaders) {
+  function NumberCellRender(row, popupColHeaders, renderFn) {
     const { value } = row;
-    const appList = row.original.LIST;
+    const tableData = row.original.LIST;
     const bar = (
       <div
         style={{
@@ -72,26 +77,48 @@ export const cellRenderer = function(rowData, popupColHeaders) {
       </div>
     );
 
-    return popupColHeaders ? renderPopup(appList, popupColHeaders, bar) : bar;
+    if (renderFn) {
+      return renderFn(row, popupColHeaders, bar);
+    }
+
+    return popupColHeaders ? renderPopup(tableData, popupColHeaders, bar) : bar;
   }
 
-  function renderPopup(tableData, popupColHeaders, trigger) {
-    const contentStyle = {
-      maxWidth: '1500x',
-      width: '90%'
-    };
+  function VersionCellRender(row, latestVersion) {
+    const { value } = row;
+    const agentVer = semver.clean(value);
+    const isLatestVersion = semver.satisfies(
+      agentVer,
+      `${semver.major(latestVersion)}.${semver.minor(latestVersion)}.x`
+    );
     return (
-      <Popup
-        trigger={trigger}
-        position="right center"
-        modal
-        contentStyle={contentStyle}
+      <div
+        style={{
+          backgroundColor: isLatestVersion === true ? '#85cc00' : '#ff7878'
+        }}
       >
-        <div>
-          <ReactTable data={tableData} columns={popupColHeaders} />
-          {CreateCSVLink(popupColHeaders, tableData)}
-        </div>
-      </Popup>
+        {String(value)}
+      </div>
     );
   }
 };
+
+function renderPopup(tableData, popupColHeaders, trigger) {
+  const contentStyle = {
+    maxWidth: '1500x',
+    width: '90%'
+  };
+  return (
+    <Popup
+      trigger={trigger}
+      position="right center"
+      modal
+      contentStyle={contentStyle}
+    >
+      <div>
+        <ReactTable data={tableData} columns={popupColHeaders} />
+        {CreateCSVLink(popupColHeaders, tableData)}
+      </div>
+    </Popup>
+  );
+}

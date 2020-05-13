@@ -66,19 +66,19 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
   }
 
   fragment INFRA_Fragments on Account {
-    systemSampleKeyset: nrql(query: "SELECT keyset() FROM SystemSample facet hostname since 7 days ago", timeout: 120) {
+    systemSampleKeyset: nrql(query: "SELECT keyset() FROM SystemSample since 7 days ago facet entityName LIMIT MAX", timeout: 120) {
       results
     }
-    processSampleKeyset: nrql(query: "SELECT keyset() FROM ProcessSample facet hostname since 7 days ago ", timeout: 120) {
+    processSampleKeyset: nrql(query: "SELECT keyset() FROM ProcessSample facet entityName since 7 days ago  LIMIT MAX", timeout: 120) {
       results
     }
-    infraDeployedVersions: nrql(query: "SELECT uniqueCount(agentHostname ) as 'count'   from NrDailyUsage facet  infrastructureAgentVersion   since 7 days ago where productLine ='Infrastructure' ", timeout: 120) {
+    infraDeployedVersions: nrql(query: "SELECT uniqueCount(agentHostname ) as 'count'   from NrDailyUsage facet  infrastructureAgentVersion since 7 days ago where productLine ='Infrastructure' ", timeout: 120) {
       results
     }
-    infraHostCount: nrql(query: "SELECT uniqueCount(agentHostname) as 'count' FROM NrDailyUsage  where productLine='Infrastructure'  SINCE 7 days AGO ", timeout: 120) {
+    infraHostCount: nrql(query: "SELECT uniqueCount(agentHostname) as 'count' FROM NrDailyUsage  where productLine='Infrastructure' since 7 days ago", timeout: 120) {
       results
     }
-    contained: nrql(query: "SELECT count(contained) as 'count' FROM ProcessSample where contained='true'", timeout: 120) {
+    contained: nrql(query: "SELECT count(contained) as 'count' FROM ProcessSample where contained='true' since 7 days ago", timeout: 120) {
       results
     }
     awsBilling: nrql(query: "SELECT count(*) as 'count' FROM FinanceSample ", timeout: 120) {
@@ -147,7 +147,7 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     const withFragment = fragment !== null && fragment.length > 0;
     const placeholder = 'transaction:nrql(query:""){results}';
     fragment = fragment || placeholder;
-    return  {
+    return {
       query: `
               ${this.query}
               fragment NRQLFragment on Account {

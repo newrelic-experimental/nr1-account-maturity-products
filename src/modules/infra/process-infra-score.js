@@ -66,18 +66,29 @@ function _processInfraAccountData(
   row.accountName = name;
   row.accountID = id;
 
+  row.infrastructureLatestAgentValue = docInfraLatestVersion;
+
   const hostPercentage = _computeVersionPercent(account, docInfraLatestVersion);
 
   row.entityCount = hostPercentage.total;
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
 
-  const systemSampleDefaultCount = docEventTypes.SystemSample
-    ? docEventTypes.SystemSample.attributes.length
+  const systemSampleDefaultList = docEventTypes.SystemSample
+    ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)
     : 0;
 
   const hostsWithCustomAttr = account.systemSampleKeyset.filter(
-    ({ allKeys }) => allKeys.length > systemSampleDefaultCount
+    ({ allKeys }) => {
+      return (
+        allKeys.filter(key => {
+          if (key.startsWith('nr.')) {
+            return false;
+          }
+          return !systemSampleDefaultList.includes(key);
+        }).length > 0
+      );
+    }
   );
 
   row.usingCustomAttributes =

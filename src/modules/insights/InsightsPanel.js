@@ -71,8 +71,10 @@ export class InsightsPanelTag extends React.Component {
   }
 
   async componentDidMount() {
+    // eslint-disable-next-line no-console
     console.time('fetchInsightsData');
     await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    // eslint-disable-next-line no-console
     console.timeEnd('fetchInsightsData');
 
     const tableData = this.createTableData(this.ctxAcctMap, {
