@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import Popup from 'reactjs-popup';
 import ReactTable from 'react-table-v6';
-import { CreateCSVLink } from '../../utilities';
-import {InfraCellRenderer as cellRenderer} from './InfraCellRenderer'
+import { cellRenderer, CreateCSVLink } from '../../utilities';
+//import {InfraCellRenderer as cellRenderer} from './InfraCellRenderer'
 import matchSorter from 'match-sorter';
+import {InfraDrilldownPanel} from './InfraDrilldownPanel'
 
 export function InfraTable(props) {
   return (
@@ -42,7 +44,7 @@ export const InfraSummaryCols = [
       {
         Header: 'Using Recent Agent %',
         accessor: 'infrastructureLatestAgentPercentage',
-        Cell: row => cellRenderer(row),
+        Cell: row => cellRenderer(row, InfraListCols, renderFn),
         filterable: false
       },
       {
@@ -90,3 +92,34 @@ export const InfraSummaryCols = [
     ]
   }
 ];
+
+const InfraListCols = [
+  {
+    Header: 'Recent Account Host Info',
+    columns: [
+      { Header: 'Host Name', accessor: 'name' },
+      { Header: 'Agent Version', accessor: 'maxVersion',Cell: row => cellRenderer(row, row.original.infrastructureLatestAgentValue)},
+      //{ Header: 'Health Status', accessor: 'healthStatus' },
+      { Header: 'Custom Attributes', accessor: 'customAttributes', Cell: row => cellRenderer(row) },
+    ]
+  }
+];
+
+function renderFn(row, columns, trigger) {
+  const contentStyle = {
+    maxWidth: '1500x',
+    width: '90%'
+  };
+  return (
+    <Popup
+      trigger={trigger}
+      position="right center"
+      modal
+      contentStyle={contentStyle}
+    >
+      <div>
+         <InfraDrilldownPanel row={row} columns = {columns}/>
+      </div>
+    </Popup>
+  );
+}

@@ -1,7 +1,7 @@
 export const INFRA_DRILLDOWN_ENTITIES_GQL = {
-    query: `query ($cursor: String, $accountId: Int) {
+    query: `query ($cursor: String, $entitySearchQuery: String) {
       actor {
-        entitySearch(query: "domain = 'INFRA' and type = 'HOST' and accountId= $accountId") {
+        entitySearch(query: $entitySearchQuery) {
           results(cursor: $cursor) {
             nextCursor
             entities {
@@ -10,11 +10,6 @@ export const INFRA_DRILLDOWN_ENTITIES_GQL = {
               name
               reporting
               ... on InfrastructureHostEntityOutline {
-                guid
-                name
-                hostSummary {
-                  servicesCount
-                }
                 reporting
                 alertSeverity
                 tags {

@@ -1,5 +1,5 @@
 class Host {
-  constructor(entity, account) {
+  constructor(entity) {
     // entity, entitySearch result model see apm-gql.js
     this.id = entity.guid;
     this.name = entity.name;
