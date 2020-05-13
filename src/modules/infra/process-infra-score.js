@@ -66,11 +66,15 @@ function _processInfraAccountData(
   row.accountName = name;
   row.accountID = id;
 
+  row.infrastructureLatestAgentValue = docInfraLatestVersion;
+  
   const hostPercentage = _computeVersionPercent(account, docInfraLatestVersion);
 
   row.entityCount = hostPercentage.total;
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
+  
+  
 
   const systemSampleDefaultList = docEventTypes.SystemSample
     ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)

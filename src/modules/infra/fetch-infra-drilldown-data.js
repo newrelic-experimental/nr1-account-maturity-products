@@ -8,15 +8,15 @@ export async function fetchInfraDrilldownData(
   gqlAPI,
 ) {
   const result = await _fetchEntitiesWithAcctIdGQL(gqlAPI, accountMap.get(accountId));
-  _onFulFilledHandler(result, accountMap)
+
+  const account = accountMap.get(accountId);
+
+  _onFulFilledHandler(result, account)
 }
 
-function _onFulFilledHandler(result, accountMap) {
+function _onFulFilledHandler(result, account) {
   for (const entity of result) {
-    const { accountId } = entity;
-
-    const account = accountMap.get(accountId);
-    const host = new Host(entity, account);
+    const host = new Host(entity);
 
     if (!account.infraHosts) {
       account.infraHosts = new Map();
@@ -31,11 +31,14 @@ async function _fetchEntitiesWithAcctIdGQL(
   entityArr = [],
   cursor = null
 ) {
+  
   const accountId = account.id;
+  const entitySearchQuery = `domain = 'INFRA' and type = 'HOST' and accountId= ${accountId}`
+
   const query = {
     ...INFRA_DRILLDOWN_ENTITIES_GQL,
     variables: {
-        accountId,
+        entitySearchQuery,
         cursor,
     }
   };
