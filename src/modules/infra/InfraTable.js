@@ -3,9 +3,8 @@ import React from 'react';
 import Popup from 'reactjs-popup';
 import ReactTable from 'react-table-v6';
 import { cellRenderer, CreateCSVLink } from '../../utilities';
-//import {InfraCellRenderer as cellRenderer} from './InfraCellRenderer'
 import matchSorter from 'match-sorter';
-import {InfraDrilldownPanel} from './InfraDrilldownPanel'
+import { InfraDrilldownPanel } from './InfraDrilldownPanel';
 
 export function InfraTable(props) {
   return (
@@ -98,9 +97,18 @@ const InfraListCols = [
     Header: 'Recent Account Host Info',
     columns: [
       { Header: 'Host Name', accessor: 'name' },
-      { Header: 'Agent Version', accessor: 'maxVersion',Cell: row => cellRenderer(row, row.original.infrastructureLatestAgentValue)},
-      //{ Header: 'Health Status', accessor: 'healthStatus' },
-      { Header: 'Custom Attributes', accessor: 'customAttributes', Cell: row => cellRenderer(row) },
+      {
+        Header: 'Agent Version',
+        accessor: 'maxVersion',
+        Cell: row =>
+          cellRenderer(row, row.original.infrastructureLatestAgentValue)
+      },
+      // { Header: 'Health Status', accessor: 'healthStatus' },
+      {
+        Header: 'Custom Attributes',
+        accessor: 'customAttributes',
+        Cell: row => cellRenderer(row)
+      }
     ]
   }
 ];
@@ -118,7 +126,7 @@ function renderFn(row, columns, trigger) {
       contentStyle={contentStyle}
     >
       <div>
-         <InfraDrilldownPanel row={row} columns = {columns}/>
+        <InfraDrilldownPanel row={row} columns={columns} />
       </div>
     </Popup>
   );

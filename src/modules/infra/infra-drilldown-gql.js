@@ -1,5 +1,5 @@
 export const INFRA_DRILLDOWN_ENTITIES_GQL = {
-    query: `query ($cursor: String, $entitySearchQuery: String) {
+  query: `query ($cursor: String, $entitySearchQuery: String) {
       actor {
         entitySearch(query: $entitySearchQuery) {
           results(cursor: $cursor) {
@@ -23,10 +23,7 @@ export const INFRA_DRILLDOWN_ENTITIES_GQL = {
         }
       }
     }`,
-    variables: {
-      // cursor: null
-    }
-  };
-
-
-  
+  variables: {
+    // cursor: null
+  }
+};

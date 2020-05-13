@@ -7,7 +7,6 @@ import { CreateCSVLink } from './CreateCSVLink';
 import semver from 'semver';
 
 export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
-  debugger
   return main(rowData, popupColHeaders, renderFn);
 
   // -----------------------------------
@@ -24,8 +23,8 @@ export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
         break;
       case 'string':
         fn = StringCellRender;
-        if (semver.valid(value)){
-          fn = VersionCellRender
+        if (semver.valid(value)) {
+          fn = VersionCellRender;
         }
         break;
     }
@@ -51,9 +50,7 @@ export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
     );
   }
 
-  
-
-  function NumberCellRender(row, popupColHeaders,renderFn) {
+  function NumberCellRender(row, popupColHeaders, renderFn) {
     const { value } = row;
     const tableData = row.original.LIST;
     const bar = (
@@ -80,15 +77,14 @@ export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
       </div>
     );
 
-    if (renderFn){
-      return renderFn(row, popupColHeaders, bar)
+    if (renderFn) {
+      return renderFn(row, popupColHeaders, bar);
     }
 
     return popupColHeaders ? renderPopup(tableData, popupColHeaders, bar) : bar;
   }
 
-  function VersionCellRender(row,latestVersion) {
-    debugger
+  function VersionCellRender(row, latestVersion) {
     const { value } = row;
     const agentVer = semver.clean(value);
     const isLatestVersion = semver.satisfies(
@@ -105,9 +101,6 @@ export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
       </div>
     );
   }
-
-  
-
 };
 
 function renderPopup(tableData, popupColHeaders, trigger) {
