@@ -14,7 +14,7 @@ export const InfraDrilldownPanel = ({row, columns}) => (
     {appContext => {
       return (
               <InfraDrilldownPanelTag
-                appContext={appContext} fetchData = {fetchInfraDrilldownData} row = {row} columns = {columns}
+                appContext={appContext} row = {row} columns = {columns}
               />
 
       );
@@ -44,7 +44,7 @@ export class InfraDrilldownPanelTag extends React.Component {
     this.docEventTypes = appContext.docEventTypes;
     this.infraAgentLatestVersion = appContext.docAgentLatestVersion.infrastructure;
 
-    this.fetchData = this.props.fetchData;
+    this.fetchData = fetchInfraDrilldownData;
 
     this.tableColHeader = this.props.tableColHeader;
 
