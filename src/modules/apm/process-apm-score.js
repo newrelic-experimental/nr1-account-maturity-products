@@ -114,7 +114,10 @@ export function createAPMApplicationList(appMap) {
  * @param {*} apmDeployedVersions - deployed agent version for an account  , {java: { versions: [  { version: "1.1.0",  count: 4} ] }
  * @param {*} docAgentLatestVersion ,  {"android":"5.24.3","browser":"1167","dotnet":"8.24.244.0","elixir":"0.0.0","go":"3.3.0","infrastructure":"1.10.26","ios":"3.53.1","java":"5.10.0","nodejs":"6.4.2","php":"9.7.0.258","python":"5.8.0.136","ruby":"V6.9.0","skd":"1.3.0"}
  */
-function _computeLatestAgentPercent(apmDeployedVersions, docAgentLatestVersion) {
+function _computeLatestAgentPercent(
+  apmDeployedVersions,
+  docAgentLatestVersion
+) {
   let totalLatest = 0;
   let totalDeployed = 0;
 

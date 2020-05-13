@@ -214,7 +214,7 @@ export function createAccount(event) {
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
   accountDetail.processSampleKeyset = processSampleKeyset
     ? processSampleKeyset.results.map(({ entityName, allKeys }) => ({
-      entityName,
+        entityName,
         allKeys
       }))
     : [];
@@ -222,7 +222,7 @@ export function createAccount(event) {
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
   accountDetail.systemSampleKeyset = systemSampleKeyset
     ? systemSampleKeyset.results.map(({ entityName, allKeys }) => ({
-      entityName,
+        entityName,
         allKeys
       }))
     : [];

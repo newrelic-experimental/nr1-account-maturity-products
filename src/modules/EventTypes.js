@@ -11443,7 +11443,7 @@ export const EventTypes = {
               {
                 label: 'External Key',
                 name: 'externalKey'
-              },
+              }
             ],
             dataSources: ['Infrastructure'],
             name: 'SystemSample'
