@@ -67,14 +67,12 @@ function _processInfraAccountData(
   row.accountID = id;
 
   row.infrastructureLatestAgentValue = docInfraLatestVersion;
-  
+
   const hostPercentage = _computeVersionPercent(account, docInfraLatestVersion);
 
   row.entityCount = hostPercentage.total;
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
-  
-  
 
   const systemSampleDefaultList = docEventTypes.SystemSample
     ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)
@@ -82,12 +80,14 @@ function _processInfraAccountData(
 
   const hostsWithCustomAttr = account.systemSampleKeyset.filter(
     ({ allKeys }) => {
-      return allKeys.filter(key => {
-        if (key.startsWith('nr.')){
-          return false
-        }
-        return !systemSampleDefaultList.includes(key)
-      }).length > 0
+      return (
+        allKeys.filter(key => {
+          if (key.startsWith('nr.')) {
+            return false;
+          }
+          return !systemSampleDefaultList.includes(key);
+        }).length > 0
+      );
     }
   );
 
