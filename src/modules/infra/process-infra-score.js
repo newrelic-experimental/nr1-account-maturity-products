@@ -185,8 +185,10 @@ function _computeVersionPercent(account, latestVersion) {
   return { value, total: totalAgents };
 }
 
-function _getIntegrations(account) {
+export function _getIntegrations(account) {
   const { reportingEventTypes } = account;
+
+  const excludeList = ['ApplicationAgentContext'];
 
   // https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/jmx-monitoring-integration
   // None or uses custom event:
@@ -233,7 +235,7 @@ function _getIntegrations(account) {
     let match = false;
 
     for (const integration of integrations) {
-      match = event.startsWith(integration);
+      match = event.startsWith(integration) && !excludeList.includes(event);
       if (match) {
         break;
       }
