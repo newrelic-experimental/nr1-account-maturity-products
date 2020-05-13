@@ -8,9 +8,10 @@ class Host {
 
     this.reporting = entity.reporting;
 
-    this.maxVersion = entity.tags && entity.tags.find(tag => tag.key == 'agentVersion')
-      ? entity.tags.find(tag => tag.key == 'agentVersion').values[0]
-      : '0.0.0';
+    this.maxVersion =
+      entity.tags && entity.tags.find(tag => tag.key === 'agentVersion')
+        ? entity.tags.find(tag => tag.key === 'agentVersion').values[0]
+        : '0.0.0';
 
     this.healthStatus = entity.alertSeverity;
     this.alertConditions = [];

@@ -5,8 +5,6 @@ import ReactTable from 'react-table-v6';
 import { cellRenderer, CreateCSVLink } from '../../utilities';
 import matchSorter from 'match-sorter';
 
-
-
 export function APMAccountTable(props) {
   return (
     <div>

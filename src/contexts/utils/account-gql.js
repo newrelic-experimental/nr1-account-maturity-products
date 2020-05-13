@@ -147,7 +147,7 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     const withFragment = fragment !== null && fragment.length > 0;
     const placeholder = 'transaction:nrql(query:""){results}';
     fragment = fragment || placeholder;
-    return  {
+    return {
       query: `
               ${this.query}
               fragment NRQLFragment on Account {
