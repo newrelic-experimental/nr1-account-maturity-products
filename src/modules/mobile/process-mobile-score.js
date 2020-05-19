@@ -47,7 +47,7 @@ function _processMobileData(account, docMobileLatestVersionHash) {
     account,
     docMobileLatestVersionHash
   );
-  const entities = [...mobileApps];
+  const entities = Array.from(mobileApps.values());
   const totalApps = entities ? entities.length : 0;
 
   row.entityCount = totalApps;
@@ -72,21 +72,13 @@ function _processMobileData(account, docMobileLatestVersionHash) {
       : 0;
   })(mobileEvents, totalApps);
 
-  row.appsWithAlertsPercentage = ((entities, totalApps) => {
-    // entities is [{"accountId":1606862,"alertSeverity":"NOT_CONFIGURED","guid":"MTYwNjg2MnxNT0JJTEV8QVBQTElDQVRJT058NjE2OTA3Nzg","name":"Acme Telco -Android","reporting":true}]
-    if (!entities || (entities && entities.length === 0)) {
-      return 0;
-    }
-    const appWithAlerts = entities
-      .filter(e => e[1].reporting === true)
-      .filter(e => e[1].healthStatus !== 'NOT_CONFIGURED');
-    return appWithAlerts.length > 0
-      ? Math.round((appWithAlerts.length / totalApps) * 100)
-      : 0;
-  })(entities, totalApps);
+  const appWithAlerts = entities.filter(entity => entity.isAlerting())
+
+  row.appsWithAlertsPercentage = appWithAlerts.length > 0 ? Math.round((appWithAlerts.length / totalApps) * 100) : 0
+
   row.mobileAppLaunchCount = mobileAppLaunch;
   row.mobileAppLaunch = mobileAppLaunch > 0;
-  row.LIST = createMobileAppList(account.mobileApps);
+  row.LIST = createMobileAppList(mobileApps);
   return row;
 }
 
@@ -167,7 +159,6 @@ export function createMobileAppList(mobileAppMap) {
     const mobileAppObj = { ...mobileApp.value };
 
     mobileAppObj.isAlerting = mobileApp.value.isAlerting();
-    mobileAppObj.hasLabels = mobileApp.value.hasLabels();
     mobileAppList.push(mobileAppObj);
     mobileApp = itr.next();
   }
