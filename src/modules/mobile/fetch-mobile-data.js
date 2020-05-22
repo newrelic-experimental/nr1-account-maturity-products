@@ -1,3 +1,4 @@
+import { MobileApplication } from './MobileApplication';
 import PromisePool from 'es6-promise-pool';
 import { GET_MOBILE_APP_SUBSCRIBER_ID_GQL } from './mobile-gql';
 
@@ -32,10 +33,29 @@ export async function fetchMobileData(
 
 // eslint-disable-next-line no-unused-vars
 function _onFulFilledHandler(event, accountMap) {
-  return null;
+  for (const entity of event.data.result) {
+    const { accountId } = entity;
+    const account = accountMap.get(accountId);
+    const mobileApplication = new MobileApplication(entity)
+    
+    const breadcrumbs = account.mobileBreadcrumbs.find(app => app.appName == entity.name)
+    const handledExceptions =  account.mobileHandledExceptions.find(app => app.appName == entity.name)
+    const mobileEvents = account.mobileEvents.find(app => app.appName == entity.name)
+
+    mobileApplication.breadcrumbs = breadcrumbs ? breadcrumbs.count : 0
+    mobileApplication.handledExceptions = handledExceptions ? handledExceptions.count : 0
+    mobileApplication.mobileEvents = mobileEvents ? mobileEvents.count : 0
+    
+
+    if (!account.mobileApps) {
+      account.mobileApps = new Map();
+    }
+
+    account.mobileApps.set(mobileApplication.guid, mobileApplication);
+  }
 }
 
-async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, cursor = null) {
+async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr = [], cursor = null) {
   const { id } = account;
   const query = {
     ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
@@ -55,14 +75,14 @@ async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, cursor = null) {
   }
 
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
-
   // eslint-disable-next-line require-atomic-updates
-  account.mobileApps = account.mobileApps.concat(entities);
+  entityArr = entityArr.concat(entities);
+
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
-    return account;
+    return entityArr;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
   }
 }
 

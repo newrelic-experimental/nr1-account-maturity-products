@@ -42,11 +42,12 @@ function _processMobileData(account, docMobileLatestVersionHash) {
   row.accountName = name;
   row.accountID = id;
   // eslint-disable-next-line no-unused-vars
+
   const { value, _ } = _computeVersionPercent(
     account,
     docMobileLatestVersionHash
   );
-  const entities = [...mobileApps];
+  const entities = Array.from(mobileApps.values());
   const totalApps = entities ? entities.length : 0;
 
   row.entityCount = totalApps;
@@ -71,20 +72,13 @@ function _processMobileData(account, docMobileLatestVersionHash) {
       : 0;
   })(mobileEvents, totalApps);
 
-  row.appsWithAlertsPercentage = ((entities, totalApps) => {
-    // entities is [{"accountId":1606862,"alertSeverity":"NOT_CONFIGURED","guid":"MTYwNjg2MnxNT0JJTEV8QVBQTElDQVRJT058NjE2OTA3Nzg","name":"Acme Telco -Android","reporting":true}]
-    if (!entities || (entities && entities.length === 0)) {
-      return 0;
-    }
-    const appWithAlerts = entities
-      .filter(e => e.reporting === true)
-      .filter(e => e.alertSeverity !== 'NOT_CONFIGURED');
-    return appWithAlerts.length > 0
-      ? Math.round((appWithAlerts.length / totalApps) * 100)
-      : 0;
-  })(entities, totalApps);
+  const appWithAlerts = entities.filter(entity => entity.isAlerting())
+
+  row.appsWithAlertsPercentage = appWithAlerts.length > 0 ? Math.round((appWithAlerts.length / totalApps) * 100) : 0
+
   row.mobileAppLaunchCount = mobileAppLaunch;
   row.mobileAppLaunch = mobileAppLaunch > 0;
+  row.LIST = createMobileAppList(mobileApps);
   return row;
 }
 
@@ -151,4 +145,23 @@ function _computeVersionPercent(account, latestMobileVerHash) {
 
   const value = Math.round((totalLatestVer / totalUsers) * 100);
   return { value, totalUsers };
+}
+
+export function createMobileAppList(mobileAppMap) {
+  if (!mobileAppMap || (mobileAppMap && mobileAppMap.size === 0)) {
+    return [];
+  }
+  const itr = mobileAppMap.values();
+  let mobileApp = itr.next();
+  const mobileAppList = [];
+
+  while (!mobileApp.done) {
+    const mobileAppObj = { ...mobileApp.value };
+
+    mobileAppObj.isAlerting = mobileApp.value.isAlerting();
+    mobileAppList.push(mobileAppObj);
+    mobileApp = itr.next();
+  }
+
+  return mobileAppList;
 }
