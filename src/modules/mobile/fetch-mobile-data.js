@@ -31,21 +31,27 @@ export async function fetchMobileData(
   await pool.start();
 }
 
-// eslint-disable-next-line no-unused-vars
 function _onFulFilledHandler(event, accountMap) {
   for (const entity of event.data.result) {
     const { accountId } = entity;
     const account = accountMap.get(accountId);
-    const mobileApplication = new MobileApplication(entity)
-    
-    const breadcrumbs = account.mobileBreadcrumbs.find(app => app.appName == entity.name)
-    const handledExceptions =  account.mobileHandledExceptions.find(app => app.appName == entity.name)
-    const mobileEvents = account.mobileEvents.find(app => app.appName == entity.name)
+    const mobileApplication = new MobileApplication(entity);
 
-    mobileApplication.breadcrumbs = breadcrumbs ? breadcrumbs.count : 0
-    mobileApplication.handledExceptions = handledExceptions ? handledExceptions.count : 0
-    mobileApplication.mobileEvents = mobileEvents ? mobileEvents.count : 0
-    
+    const breadcrumbs = account.mobileBreadcrumbs.find(
+      app => app.appName === entity.name
+    );
+    const handledExceptions = account.mobileHandledExceptions.find(
+      app => app.appName === entity.name
+    );
+    const mobileEvents = account.mobileEvents.find(
+      app => app.appName === entity.name
+    );
+
+    mobileApplication.breadcrumbs = breadcrumbs ? breadcrumbs.count : 0;
+    mobileApplication.handledExceptions = handledExceptions
+      ? handledExceptions.count
+      : 0;
+    mobileApplication.mobileEvents = mobileEvents ? mobileEvents.count : 0;
 
     if (!account.mobileApps) {
       account.mobileApps = new Map();
@@ -55,7 +61,12 @@ function _onFulFilledHandler(event, accountMap) {
   }
 }
 
-async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr = [], cursor = null) {
+async function _fetchEntitiesWithAcctIdGQL(
+  gqlAPI,
+  account,
+  entityArr = [],
+  cursor = null
+) {
   const { id } = account;
   const query = {
     ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
@@ -75,9 +86,7 @@ async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr = [], curs
   }
 
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
-  // eslint-disable-next-line require-atomic-updates
   entityArr = entityArr.concat(entities);
-
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return entityArr;

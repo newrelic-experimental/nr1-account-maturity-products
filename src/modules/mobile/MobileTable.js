@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import ReactTable from 'react-table-v6';
@@ -112,7 +111,7 @@ export const MobileListCols = [
         Header: 'Mobile Events',
         accessor: 'mobileEvents',
         Cell: row => cellRenderer(row)
-      },
+      }
       /* {
         Header: 'Custom Labels',
         accessor: 'hasLabels',

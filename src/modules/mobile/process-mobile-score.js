@@ -42,7 +42,6 @@ function _processMobileData(account, docMobileLatestVersionHash) {
   row.accountName = name;
   row.accountID = id;
   // eslint-disable-next-line no-unused-vars
-
   const { value, _ } = _computeVersionPercent(
     account,
     docMobileLatestVersionHash
@@ -72,9 +71,12 @@ function _processMobileData(account, docMobileLatestVersionHash) {
       : 0;
   })(mobileEvents, totalApps);
 
-  const appWithAlerts = entities.filter(entity => entity.isAlerting())
+  const appWithAlerts = entities.filter(entity => entity.isAlerting());
 
-  row.appsWithAlertsPercentage = appWithAlerts.length > 0 ? Math.round((appWithAlerts.length / totalApps) * 100) : 0
+  row.appsWithAlertsPercentage =
+    appWithAlerts.length > 0
+      ? Math.round((appWithAlerts.length / totalApps) * 100)
+      : 0;
 
   row.mobileAppLaunchCount = mobileAppLaunch;
   row.mobileAppLaunch = mobileAppLaunch > 0;
