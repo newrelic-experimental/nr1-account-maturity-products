@@ -66,18 +66,29 @@ function _processInfraAccountData(
   row.accountName = name;
   row.accountID = id;
 
+  row.infrastructureLatestAgentValue = docInfraLatestVersion;
+
   const hostPercentage = _computeVersionPercent(account, docInfraLatestVersion);
 
   row.entityCount = hostPercentage.total;
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
 
-  const systemSampleDefaultCount = docEventTypes.SystemSample
-    ? docEventTypes.SystemSample.attributes.length
+  const systemSampleDefaultList = docEventTypes.SystemSample
+    ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)
     : 0;
 
   const hostsWithCustomAttr = account.systemSampleKeyset.filter(
-    ({ allKeys }) => allKeys.length > systemSampleDefaultCount
+    ({ allKeys }) => {
+      return (
+        allKeys.filter(key => {
+          if (key.startsWith('nr.')) {
+            return false;
+          }
+          return !systemSampleDefaultList.includes(key);
+        }).length > 0
+      );
+    }
   );
 
   row.usingCustomAttributes =
@@ -174,8 +185,10 @@ function _computeVersionPercent(account, latestVersion) {
   return { value, total: totalAgents };
 }
 
-function _getIntegrations(account) {
+export function _getIntegrations(account) {
   const { reportingEventTypes } = account;
+
+  const excludeList = ['ApplicationAgentContext'];
 
   // https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/jmx-monitoring-integration
   // None or uses custom event:
@@ -222,7 +235,7 @@ function _getIntegrations(account) {
     let match = false;
 
     for (const integration of integrations) {
-      match = event.startsWith(integration);
+      match = event.startsWith(integration) && !excludeList.includes(event);
       if (match) {
         break;
       }

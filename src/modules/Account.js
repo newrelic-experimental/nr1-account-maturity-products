@@ -12,6 +12,7 @@ class Account {
     this.browserApps = new Map();
     this.synthMonitors = new Map();
     this.mobileApps = new Map();
+    this.infraHosts = new Map();
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
 
