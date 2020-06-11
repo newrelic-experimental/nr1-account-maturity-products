@@ -178,14 +178,14 @@ export function createAccount(event) {
     transactionKeyset,
     pageViewKeyset,
     systemSampleKeyset,
-    processSampleKeyset,
+    containerSampleKeyset,
     infraDeployedVersions,
     infraHostCount,
     mobileDeployedVersions,
     apmDeployedVersions,
-    contained,
     awsBilling,
     logMessageCount,
+    nrqlLoggingAlertCount,
     programDeployCount,
     programUniqUserDeployment,
     mobileBreadcrumbs,
@@ -211,13 +211,13 @@ export function createAccount(event) {
     : [];
   accountDetail.pageViewKeyset = pageViewKeyset ? pageViewKeyset.results : [];
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
-  accountDetail.processSampleKeyset = processSampleKeyset
-    ? processSampleKeyset.results.map(({ entityName, allKeys }) => ({
+  accountDetail.containerSampleKeyset = containerSampleKeyset
+    ? containerSampleKeyset.results.map(({ entityName, allKeys }) => ({
         entityName,
         allKeys
       }))
     : [];
-
+  accountDetail.contained = accountDetail.containerSampleKeyset ? accountDetail.containerSampleKeyset.length > 0 : false;
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
   accountDetail.systemSampleKeyset = systemSampleKeyset
     ? systemSampleKeyset.results.map(({ entityName, allKeys }) => ({
@@ -245,13 +245,16 @@ export function createAccount(event) {
     ? apmDeployedVersions.results
     : [];
 
-  accountDetail.contained = contained ? contained.results[0].count > 0 : false;
   accountDetail.awsBilling = awsBilling
     ? awsBilling.results[0].count > 0
     : false;
   accountDetail.logMessageCount = logMessageCount
     ? logMessageCount.results[0].count
     : 0;
+  accountDetail.nrqlLoggingAlertCount = nrqlLoggingAlertCount
+    ? nrqlLoggingAlertCount.nrqlConditionsSearch.totalCount
+    : 0;
+
   accountDetail.programDeployCount = programDeployCount
     ? programDeployCount.results[0].count
     : 0;

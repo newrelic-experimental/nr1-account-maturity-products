@@ -40,6 +40,11 @@ export function computeInfraMaturityScore({ rowData, scoreWeights }) {
       throw new Error(`computeMaturityScore() key not found. key =${key}`);
     }
 
+    if (key === 'infrastructureLatestAgentPercentage' && value === 0){
+      // don't include Docker score weight if no Docker containers deployed
+      continue;
+    }
+
     if (typeof value === 'boolean') {
       value = value ? 100 : 0;
     }
@@ -49,7 +54,6 @@ export function computeInfraMaturityScore({ rowData, scoreWeights }) {
   }
 
   overallPercentage = overallPercentage <= 100 ? overallPercentage : 100;
-
   return {
     score: Math.round((score / overallPercentage) * 100),
     overallPercentage
@@ -73,7 +77,6 @@ function _processInfraAccountData(
   row.entityCount = hostPercentage.total;
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
-
   const systemSampleDefaultList = docEventTypes.SystemSample
     ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)
     : 0;
@@ -103,14 +106,11 @@ function _processInfraAccountData(
   row.infrastructureUsingDocker = account.contained;
   row.infrastructureDockerLabels = false;
   row.infrastructureDockerLabelsPercentage = 0;
-
-  const hostWithDockerLabels = account.processSampleKeyset
-    .filter(({ allKeys }) => allKeys.includes('contained'))
+  const hostWithDockerLabels = account.containerSampleKeyset
     .filter(
       ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('containerLabel')).length > 0
+        allKeys.filter(key => key.startsWith('label.')).length > 0
     );
-
   row.infrastructureDockerLabels =
     hostWithDockerLabels && hostWithDockerLabels.length > 0;
 
@@ -129,12 +129,13 @@ function _processInfraAccountData(
       return (
         acc +
         curr.allKeys.reduce(
-          (total, key) => total + key.startsWith('containerLabel'),
+          (total, key) => total + key.startsWith('label.'),
           0
         )
       );
     }, 0);
-    return labelCount > 3 ? 1 : labelCount / 3;
+
+    return labelCount > 3 ? 100 :  Math.round((labelCount / 3) * 100);
   })(hostWithDockerLabels);
 
   row.infrastructureCloudIntegrationEnabled =

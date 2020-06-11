@@ -40,8 +40,8 @@ export const LogSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Logging Usage %',
-        accessor: 'loggingLogVolumePercentage',
+        Header: 'Logging Alert Enabled',
+        accessor: 'loggingAlertEnabled',
         Cell: row => cellRenderer(row),
         filterable: false
       },
