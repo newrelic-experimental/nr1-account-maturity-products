@@ -1,8 +1,9 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import * as TEST_PROCESS_INFRA_SCORE from './process-infra-score';
+import {InfraModel} from './fetch-infra-data';
 
-describe('Unit Tests for process-infra-score', function() {
+describe('Unit Tests for _getIntegrations', function() {
   it('should include events that are prefixed with prefixes in the include list', async () => {
     assert.deepEqual(
       TEST_PROCESS_INFRA_SCORE._getIntegrations({
@@ -52,5 +53,37 @@ describe('Unit Tests for process-infra-score', function() {
       }),
       ['VarnishEventType']
     );
+  });
+});
+
+describe('Unit Tests for computeInfraMaturityScore', function() {
+  it('should not include infrastructureDockerLabelsPercentage weight if value ==0',  (done) => {
+    const {scoreWeights} = InfraModel;
+    const rowData= {
+      infrastructureLatestAgentPercentage: 100,
+      infrastructureCustomAttributesHostPercentage: 100,
+      infrastructureDockerLabelsPercentage: 100,
+      infrastructureCloudIntegrationEnabled: 100,
+      infrastructureAWSBillingEnabled: 100,
+      infrastructureUsingOHIs: 100
+    };
+
+    let overallPercentage = 0;
+    for (const key in scoreWeights){
+      overallPercentage += scoreWeights[key] * 100;
+    }
+
+    let result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore( {rowData, scoreWeights});
+    assert.equal(result.overallPercentage, overallPercentage);
+
+    // should not include infrastructureLatestAgentPercentage score weight
+    rowData.infrastructureLatestAgentPercentage =0;
+    result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore( {rowData, scoreWeights});
+    assert.equal( result.overallPercentage,
+                  (overallPercentage -  (scoreWeights.infrastructureLatestAgentPercentage * 100))
+                );
+
+
+    done();
   });
 });

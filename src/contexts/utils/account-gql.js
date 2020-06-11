@@ -69,16 +69,13 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     systemSampleKeyset: nrql(query: "SELECT keyset() FROM SystemSample since 7 days ago facet entityName LIMIT MAX", timeout: 120) {
       results
     }
-    processSampleKeyset: nrql(query: "SELECT keyset() FROM ProcessSample facet entityName since 7 days ago  LIMIT MAX", timeout: 120) {
+    containerSampleKeyset: nrql(query: "SELECT keyset() FROM ContainerSample facet entityName since 7 days ago  LIMIT MAX", timeout: 120) {
       results
     }
     infraDeployedVersions: nrql(query: "SELECT uniqueCount(agentHostname ) as 'count'   from NrDailyUsage facet  infrastructureAgentVersion since 7 days ago where productLine ='Infrastructure' ", timeout: 120) {
       results
     }
     infraHostCount: nrql(query: "SELECT uniqueCount(agentHostname) as 'count' FROM NrDailyUsage  where productLine='Infrastructure' since 7 days ago", timeout: 120) {
-      results
-    }
-    contained: nrql(query: "SELECT count(contained) as 'count' FROM ProcessSample where contained='true' since 7 days ago", timeout: 120) {
       results
     }
     awsBilling: nrql(query: "SELECT count(*) as 'count' FROM FinanceSample ", timeout: 120) {
@@ -89,6 +86,11 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
   fragment LOGGING_Fragments on Account {
     logMessageCount: nrql(query: "SELECT count(*) as 'count' FROM Log since 12 hours ago ", timeout: 120) {
       results
+    }
+    nrqlLoggingAlertCount:alerts {
+      nrqlConditionsSearch(searchCriteria: {queryLike: "FROM log"}) {
+        totalCount
+      }
     }
   }
 
