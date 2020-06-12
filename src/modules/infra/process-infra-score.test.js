@@ -88,9 +88,69 @@ describe('Unit Tests for computeInfraMaturityScore', function() {
     });
     assert.equal(
       result.overallPercentage,
-      overallPercentage - scoreWeights.infrastructureDockerLabelsPercentage * 100
+      overallPercentage -
+        scoreWeights.infrastructureDockerLabelsPercentage * 100
     );
 
+    done();
+  });
+});
+
+describe('Unit Tests for computeDockerLabelCount', function() {
+  /*
+    If using Docker,
+    If no labels 0 points
+    if using 1 label 5 points
+    if using 2 labels 10 points
+    if using 3+ labels 15 points
+    */
+  it('should compute per instance value  == 0%', done => {
+    const host = [
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] }
+    ];
+
+    const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 0);
+    done();
+  });
+
+  it('should compute per instance value  == 25%', done => {
+    const host = [
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] }
+    ];
+
+    const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 25);
+    done();
+  });
+  it('should compute per instance value  == 50%', done => {
+    const host = [
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] }
+    ];
+
+    const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 50);
+    done();
+  });
+  it('should compute per instance value  == 100%', done => {
+    const host = [
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['label.1', 'label.1', 'label.1'] }
+    ];
+
+    const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 100);
     done();
   });
 });

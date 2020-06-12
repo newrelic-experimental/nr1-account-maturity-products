@@ -119,19 +119,9 @@ function _processInfraAccountData(
     if using 2 labels 10 points
     if using 3+ labels 15 points
     */
-  row.infrastructureDockerLabelsPercentage = (hosts => {
-    if (!hosts || hosts.length === 0) {
-      return 0;
-    }
-    const labelCount = hostWithDockerLabels.reduce((acc, curr) => {
-      return (
-        acc +
-        curr.allKeys.reduce((total, key) => total + key.startsWith('label.'), 0)
-      );
-    }, 0);
-
-    return labelCount > 3 ? 100 : Math.round((labelCount / 3) * 100);
-  })(hostWithDockerLabels);
+  row.infrastructureDockerLabelsPercentage = computeDockerLabelCount(
+    hostWithDockerLabels
+  );
 
   row.infrastructureCloudIntegrationEnabled =
     account.cloudLinkedAccounts &&
@@ -143,6 +133,25 @@ function _processInfraAccountData(
 
   return row;
 }
+
+export function computeDockerLabelCount(hosts) {
+  if (!hosts || hosts.length === 0) {
+    return 0;
+  }
+  const labelCount = hosts.reduce((acc, curr) => {
+    return (
+      acc +
+      curr.allKeys.reduce((total, key) => total + key.startsWith('label.'), 0)
+    );
+  }, 0);
+
+  const perInstanceLabelCount = labelCount / hosts.length;
+
+  return perInstanceLabelCount > 3
+    ? 100
+    : Math.round((perInstanceLabelCount / 3) * 100);
+}
+
 function _computeVersionPercent(account, latestVersion) {
   const { infraDeployedVersions } = account;
   if (
