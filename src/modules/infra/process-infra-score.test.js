@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import * as TEST_PROCESS_INFRA_SCORE from './process-infra-score';
-import {InfraModel} from './fetch-infra-data';
+import { InfraModel } from './fetch-infra-data';
 
 describe('Unit Tests for _getIntegrations', function() {
   it('should include events that are prefixed with prefixes in the include list', async () => {
@@ -57,9 +57,9 @@ describe('Unit Tests for _getIntegrations', function() {
 });
 
 describe('Unit Tests for computeInfraMaturityScore', function() {
-  it('should not include infrastructureDockerLabelsPercentage weight if value ==0',  (done) => {
-    const {scoreWeights} = InfraModel;
-    const rowData= {
+  it('should not include infrastructureDockerLabelsPercentage weight if value ==0', done => {
+    const { scoreWeights } = InfraModel;
+    const rowData = {
       infrastructureLatestAgentPercentage: 100,
       infrastructureCustomAttributesHostPercentage: 100,
       infrastructureDockerLabelsPercentage: 100,
@@ -69,20 +69,27 @@ describe('Unit Tests for computeInfraMaturityScore', function() {
     };
 
     let overallPercentage = 0;
-    for (const key in scoreWeights){
+    // eslint-disable-next-line guard-for-in
+    for (const key in scoreWeights) {
       overallPercentage += scoreWeights[key] * 100;
     }
 
-    let result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore( {rowData, scoreWeights});
+    let result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore({
+      rowData,
+      scoreWeights
+    });
     assert.equal(result.overallPercentage, overallPercentage);
 
-    // should not include infrastructureLatestAgentPercentage score weight
-    rowData.infrastructureLatestAgentPercentage =0;
-    result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore( {rowData, scoreWeights});
-    assert.equal( result.overallPercentage,
-                  (overallPercentage -  (scoreWeights.infrastructureLatestAgentPercentage * 100))
-                );
-
+    // should not include infrastructureDockerLabelsPercentage score weight
+    rowData.infrastructureDockerLabelsPercentage = 0;
+    result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore({
+      rowData,
+      scoreWeights
+    });
+    assert.equal(
+      result.overallPercentage,
+      overallPercentage - scoreWeights.infrastructureDockerLabelsPercentage * 100
+    );
 
     done();
   });
