@@ -98,57 +98,71 @@ describe('Unit Tests for computeInfraMaturityScore', function() {
 
 describe('Unit Tests for computeDockerLabelCount', function() {
   /*
+    Test Docker instances for labels
     If using Docker,
     If no labels 0 points
     if using 1 label 5 points
     if using 2 labels 10 points
     if using 3+ labels 15 points
-    */
+  */
   it('should compute per instance value  == 0%', done => {
-    const host = [
+    let host = [
       { allKeys: ['blah'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] }
     ];
-
+    host = host.filter(
+      ({ allKeys }) =>
+        allKeys.filter(key => key.startsWith('label.')).length > 0
+    );
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 0);
     done();
   });
 
-  it('should compute per instance value  == 25%', done => {
-    const host = [
-      { allKeys: ['label.1', 'label.1', 'label.1'] },
+  it('should compute per instance value  == 33%', done => {
+    let host = [
+      { allKeys: ['label.1'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] }
     ];
-
+    host = host.filter(
+      ({ allKeys }) =>
+        allKeys.filter(key => key.startsWith('label.')).length > 0
+    );
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
-    assert.equal(value, 25);
+    assert.equal(value, 33);
     done();
   });
+
   it('should compute per instance value  == 50%', done => {
-    const host = [
+    let host = [
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1'] },
       { allKeys: ['label.1'] },
       { allKeys: ['label.1'] }
     ];
-
+    host = host.filter(
+      ({ allKeys }) =>
+        allKeys.filter(key => key.startsWith('label.')).length > 0
+    );
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 50);
     done();
   });
   it('should compute per instance value  == 100%', done => {
-    const host = [
+    let host = [
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1', 'label.1', 'label.1'] }
     ];
-
+    host = host.filter(
+      ({ allKeys }) =>
+        allKeys.filter(key => key.startsWith('label.')).length > 0
+    );
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 100);
     done();
