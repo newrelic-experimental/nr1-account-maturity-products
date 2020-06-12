@@ -167,7 +167,6 @@ export function createFetchAccountNRQLFragment({
 }
 export function createAccount(event) {
   const { response, account } = event;
-  const { data, errors } = response;
 
   const {
     id,
@@ -193,7 +192,7 @@ export function createAccount(event) {
     mobileHandledExceptions,
     mobileEvents,
     mobileAppLaunch
-  } = !errors ? data.actor.account : account;
+  } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
   accountDetail.id = id;
@@ -496,36 +495,32 @@ export function assembleResults(results) {
     }
   };
 
+  let ctr = 0;
   for (const result of results) {
     if (result.errors) {
-      if (
-        result.errors.length > 0 &&
-        Object.keys(result.errors[0]).length === 0
-      ) {
-        // catch result.errors=[{}]
-        continue;
-      }
-
       console.log(
-        `warning: assembleResults() Error found in results skipping. Error=`,
+        `warning: assembleResults() Error found in results. Error=`,
         result.errors,
         ` result=`,
         result
       );
-      continue;
     }
+
+    // we need to continue/check if partial results were returned even if there were errors
     if (
       result.data &&
       result.data.actor &&
       result.data.actor.account !== null
     ) {
+      ctr++;
       response.data.actor.account = {
         ...response.data.actor.account,
         ...result.data.actor.account
       };
     }
   }
-  return response;
+  // return null if all nrql fragments for the account had errors
+  return ctr > 0 ? response : null;
 }
 
 export function fetchAccountDetailsByProduct(
