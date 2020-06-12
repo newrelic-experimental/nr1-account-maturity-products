@@ -106,37 +106,72 @@ describe('Unit Tests for computeDockerLabelCount', function() {
     if using 3+ labels 15 points
   */
   it('should compute per instance value  == 0%', done => {
-    let host = [
+    const host = [
       { allKeys: ['blah'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] }
     ];
-    host = host.filter(
-      ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('label.')).length > 0
-    );
+
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 0);
     done();
   });
 
-  it('should compute per instance value  == 33%', done => {
-    let host = [
+  it('should compute per instance value  == 8%', done => {
+    const host = [
       { allKeys: ['label.1'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] },
       { allKeys: ['blah'] }
     ];
-    host = host.filter(
-      ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('label.')).length > 0
-    );
+
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
-    assert.equal(value, 33);
+    assert.equal(value, 8);
     done();
   });
+  it('should compute per instance value  == 25%', done => {
+    const host = [
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['blah'] }
+    ];
 
+    const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 25);
+    done();
+  });
+  it('should compute per instance value  == 33%', done => {
+    let host = [
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['label.1'] }
+    ];
+
+    let value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 33);
+
+    host = [
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] }
+    ];
+
+    value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 33);
+    host = [
+      { allKeys: ['label.1', 'label.1', 'label.1', 'label.1', 'label.1'] },
+      { allKeys: ['blah'] },
+      { allKeys: ['blah'] }
+    ];
+
+    value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 33);
+
+    done();
+  });
   it('should compute per instance value  == 50%', done => {
     let host = [
       { allKeys: ['label.1', 'label.1', 'label.1'] },
@@ -144,25 +179,42 @@ describe('Unit Tests for computeDockerLabelCount', function() {
       { allKeys: ['label.1'] },
       { allKeys: ['label.1'] }
     ];
-    host = host.filter(
-      ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('label.')).length > 0
-    );
-    const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+
+    let value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 50);
+
+    host = [
+      { allKeys: ['label.1', 'label.1', 'label.1', 'label.1'] },
+      { allKeys: ['blah'] }
+    ];
+
+    value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 50);
+
+    host = [
+      { allKeys: ['label.1', 'label.1', 'label.1'] },
+      { allKeys: ['label.1', 'label.1'] },
+      { allKeys: ['label.1'] },
+      { allKeys: ['blah'] }
+    ];
+    // total pts: 15pts + 10pts + 5pts + 0pts = 30 pts
+    // average pts: 30pts / 4 instances = 7.5 pts avg
+    // overall percentage : 7.5 /15 * 100 = 50%
+
+    value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
+    assert.equal(value, 50);
+
+
     done();
   });
   it('should compute per instance value  == 100%', done => {
-    let host = [
+    const host = [
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1', 'label.1', 'label.1'] },
       { allKeys: ['label.1', 'label.1', 'label.1'] }
     ];
-    host = host.filter(
-      ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('label.')).length > 0
-    );
+
     const value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 100);
     done();

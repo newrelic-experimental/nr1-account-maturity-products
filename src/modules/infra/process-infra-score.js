@@ -106,23 +106,11 @@ function _processInfraAccountData(
   row.infrastructureUsingDocker = account.contained;
   row.infrastructureDockerLabels = false;
   row.infrastructureDockerLabelsPercentage = 0;
-  const hostWithDockerLabels = account.containerSampleKeyset.filter(
-    ({ allKeys }) => allKeys.filter(key => key.startsWith('label.')).length > 0
-  );
-  row.infrastructureDockerLabels =
-    hostWithDockerLabels && hostWithDockerLabels.length > 0;
 
-  /*
-    If using Docker,
-    If no labels 0 points
-    if using 1 label 5 points
-    if using 2 labels 10 points
-    if using 3+ labels 15 points
-    */
   row.infrastructureDockerLabelsPercentage = computeDockerLabelCount(
-    hostWithDockerLabels
+    account.containerSampleKeyset
   );
-
+  row.infrastructureDockerLabels = row.infrastructureDockerLabelsPercentage > 0;
   row.infrastructureCloudIntegrationEnabled =
     account.cloudLinkedAccounts &&
     typeof account.cloudLinkedAccounts[id] !== 'undefined';
@@ -134,19 +122,27 @@ function _processInfraAccountData(
   return row;
 }
 
+/*
+    If using Docker,
+    If no labels 0 points
+    if using 1 label 5 points
+    if using 2 labels 10 points
+    if using 3+ labels 15 points
+  */
 export function computeDockerLabelCount(hosts) {
   if (!hosts || hosts.length === 0) {
     return 0;
   }
   const labelCount = hosts.reduce((acc, curr) => {
-    return (
-      acc +
-      curr.allKeys.reduce((total, key) => total + key.startsWith('label.'), 0)
+    let val = curr.allKeys.reduce(
+      (total, key) => total + key.startsWith('label.'),
+      0
     );
+    val = val > 3 ? 3 : val;
+    return acc + val;
   }, 0);
 
   const perInstanceLabelCount = labelCount / hosts.length;
-
   return perInstanceLabelCount > 3
     ? 100
     : Math.round((perInstanceLabelCount / 3) * 100);
