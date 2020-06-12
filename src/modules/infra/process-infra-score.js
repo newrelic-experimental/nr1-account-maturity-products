@@ -40,7 +40,7 @@ export function computeInfraMaturityScore({ rowData, scoreWeights }) {
       throw new Error(`computeMaturityScore() key not found. key =${key}`);
     }
 
-    if (key === 'infrastructureLatestAgentPercentage' && value === 0){
+    if (key === 'infrastructureDockerLabelsPercentage' && value === 0) {
       // don't include Docker score weight if no Docker containers deployed
       continue;
     }
@@ -106,11 +106,9 @@ function _processInfraAccountData(
   row.infrastructureUsingDocker = account.contained;
   row.infrastructureDockerLabels = false;
   row.infrastructureDockerLabelsPercentage = 0;
-  const hostWithDockerLabels = account.containerSampleKeyset
-    .filter(
-      ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('label.')).length > 0
-    );
+  const hostWithDockerLabels = account.containerSampleKeyset.filter(
+    ({ allKeys }) => allKeys.filter(key => key.startsWith('label.')).length > 0
+  );
   row.infrastructureDockerLabels =
     hostWithDockerLabels && hostWithDockerLabels.length > 0;
 
@@ -128,14 +126,11 @@ function _processInfraAccountData(
     const labelCount = hostWithDockerLabels.reduce((acc, curr) => {
       return (
         acc +
-        curr.allKeys.reduce(
-          (total, key) => total + key.startsWith('label.'),
-          0
-        )
+        curr.allKeys.reduce((total, key) => total + key.startsWith('label.'), 0)
       );
     }, 0);
 
-    return labelCount > 3 ? 100 :  Math.round((labelCount / 3) * 100);
+    return labelCount > 3 ? 100 : Math.round((labelCount / 3) * 100);
   })(hostWithDockerLabels);
 
   row.infrastructureCloudIntegrationEnabled =
