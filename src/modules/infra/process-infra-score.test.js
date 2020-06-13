@@ -1,4 +1,4 @@
-import { describe, it } from 'mocha';
+import { describe, it, before } from 'mocha';
 import { assert } from 'chai';
 import * as TEST_PROCESS_INFRA_SCORE from './process-infra-score';
 import { InfraModel } from './fetch-infra-data';
@@ -57,39 +57,44 @@ describe('Unit Tests for _getIntegrations', function() {
 });
 
 describe('Unit Tests for computeInfraMaturityScore', function() {
-  it('should not include infrastructureDockerLabelsPercentage weight if value ==0', done => {
-    const { scoreWeights } = InfraModel;
-    const rowData = {
+  before(function() {
+    this.rowData = {
       infrastructureLatestAgentPercentage: 100,
       infrastructureCustomAttributesHostPercentage: 100,
       infrastructureDockerLabelsPercentage: 100,
       infrastructureCloudIntegrationEnabled: 100,
       infrastructureAWSBillingEnabled: 100,
-      infrastructureUsingOHIs: 100
+      infrastructureUsingOHIs: 100,
+      infrastructureUsingDocker: true
     };
+    this.scoreWeights = InfraModel.scoreWeights;
 
-    let overallPercentage = 0;
+    this.overallPercentage = 0;
     // eslint-disable-next-line guard-for-in
-    for (const key in scoreWeights) {
-      overallPercentage += scoreWeights[key] * 100;
+    for (const key in this.scoreWeights) {
+      this.overallPercentage += this.scoreWeights[key] * 100;
     }
+  });
 
-    let result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore({
-      rowData,
-      scoreWeights
+  it('happy path', function(done) {
+    const result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore({
+      rowData: this.rowData,
+      scoreWeights: this.scoreWeights
     });
-    assert.equal(result.overallPercentage, overallPercentage);
+    assert.equal(result.overallPercentage, this.overallPercentage);
 
-    // should not include infrastructureDockerLabelsPercentage score weight
-    rowData.infrastructureDockerLabelsPercentage = 0;
-    result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore({
-      rowData,
-      scoreWeights
+    done();
+  });
+
+  it('should exclude infrastructureDockerLabelsPercentage weight if infrastructureUsingDocker=false', function(done) {
+    const result = TEST_PROCESS_INFRA_SCORE.computeInfraMaturityScore({
+      rowData: { ...this.rowData, infrastructureUsingDocker: false },
+      scoreWeights: this.scoreWeights
     });
     assert.equal(
       result.overallPercentage,
-      overallPercentage -
-        scoreWeights.infrastructureDockerLabelsPercentage * 100
+      this.overallPercentage -
+        this.scoreWeights.infrastructureDockerLabelsPercentage * 100
     );
 
     done();
@@ -203,7 +208,6 @@ describe('Unit Tests for computeDockerLabelCount', function() {
 
     value = TEST_PROCESS_INFRA_SCORE.computeDockerLabelCount(host);
     assert.equal(value, 50);
-
 
     done();
   });

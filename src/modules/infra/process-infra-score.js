@@ -40,7 +40,10 @@ export function computeInfraMaturityScore({ rowData, scoreWeights }) {
       throw new Error(`computeMaturityScore() key not found. key =${key}`);
     }
 
-    if (key === 'infrastructureDockerLabelsPercentage' && value === 0) {
+    if (
+      key === 'infrastructureDockerLabelsPercentage' &&
+      !rowData.infrastructureUsingDocker
+    ) {
       // don't include Docker score weight if no Docker containers deployed
       continue;
     }
@@ -104,8 +107,6 @@ function _processInfraAccountData(
     : 0;
 
   row.infrastructureUsingDocker = account.contained;
-  row.infrastructureDockerLabels = false;
-  row.infrastructureDockerLabelsPercentage = 0;
 
   row.infrastructureDockerLabelsPercentage = computeDockerLabelCount(
     account.containerSampleKeyset
