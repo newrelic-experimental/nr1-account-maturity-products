@@ -75,11 +75,13 @@ export class APMPanelTag extends React.Component {
   }
 
   async componentDidMount() {
+    // eslint-disable-next-line no-console
     console.time('fetchAPMData');
     const hasErrors = await this.fetchData(
       this.ctxAcctMap,
       this.nerdGraphQuery
     );
+    // eslint-disable-next-line no-console
     console.timeEnd('fetchAPMData');
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,

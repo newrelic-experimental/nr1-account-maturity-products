@@ -11,7 +11,8 @@ class Account {
     this.apmApps = new Map();
     this.browserApps = new Map();
     this.synthMonitors = new Map();
-    this.mobileApps = [];
+    this.mobileApps = new Map();
+    this.infraHosts = new Map();
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
 
@@ -29,7 +30,7 @@ class Account {
     // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
     this.systemSampleKeyset = props.systemSampleKeyset;
     // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
-    this.processSampleKeyset = props.processSampleKeyset;
+    this.containerSampleKeyset = props.containerSampleKeyset;
     this.accountDT = props.reportingEventTypes
       ? props.reportingEventTypes.includes('Span')
       : false;
@@ -69,6 +70,9 @@ class Account {
 
     // number of Log events in Insights
     this.logMessageCount = props.logMessageCount;
+    // number of NRQL conditions on  Log event type
+    this.nrqlLoggingAlertCount = props.nrqlLoggingAlertCount;
+
     // number of Programmability events in Insights
     this.programDeployCount = props.programDeployCount;
     // number of Programability uniq users deploying Nerdlets

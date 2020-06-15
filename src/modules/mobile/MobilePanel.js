@@ -78,11 +78,13 @@ export class MobilePanelTag extends React.Component {
   }
 
   async componentDidMount() {
+    // eslint-disable-next-line no-console
     console.time('fetchMobileData');
     const hasErrors = await this.fetchData(
       this.ctxAcctMap,
       this.nerdGraphQuery
     );
+    // eslint-disable-next-line no-console
     console.timeEnd('fetchMobileData');
 
     const tableData = this.createTableData(this.ctxAcctMap, {

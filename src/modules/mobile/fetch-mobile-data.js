@@ -1,3 +1,4 @@
+import { MobileApplication } from './MobileApplication';
 import PromisePool from 'es6-promise-pool';
 import { GET_MOBILE_APP_SUBSCRIBER_ID_GQL } from './mobile-gql';
 
@@ -35,15 +36,42 @@ export async function fetchMobileData(
   return hasErrors;
 }
 
-// eslint-disable-next-line no-unused-vars
 function _onFulFilledHandler(event, accountMap) {
-  const { hasErrors } = event.data.result;
+  const { entityArr, hasErrors } = event.data.result;
+  for (const entity of entityArr) {
+    const { accountId } = entity;
+    const account = accountMap.get(accountId);
+    const mobileApplication = new MobileApplication(entity);
+
+    const breadcrumbs = account.mobileBreadcrumbs.find(
+      app => app.appName === entity.name
+    );
+    const handledExceptions = account.mobileHandledExceptions.find(
+      app => app.appName === entity.name
+    );
+    const mobileEvents = account.mobileEvents.find(
+      app => app.appName === entity.name
+    );
+
+    mobileApplication.breadcrumbs = breadcrumbs ? breadcrumbs.count : 0;
+    mobileApplication.handledExceptions = handledExceptions
+      ? handledExceptions.count
+      : 0;
+    mobileApplication.mobileEvents = mobileEvents ? mobileEvents.count : 0;
+
+    if (!account.mobileApps) {
+      account.mobileApps = new Map();
+    }
+
+    account.mobileApps.set(mobileApplication.guid, mobileApplication);
+  }
   return hasErrors;
 }
 
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  entityArr = [],
   cursor = null,
   hasErrors = false
 ) {
@@ -66,18 +94,22 @@ async function _fetchEntitiesWithAcctIdGQL(
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
   ) {
-    return { account, hasErrors };
+    return { entityArr, hasErrors };
   }
 
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
-
-  // eslint-disable-next-line require-atomic-updates
-  account.mobileApps = account.mobileApps.concat(entities);
+  entityArr = entityArr.concat(entities);
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
-    return { account, hasErrors };
+    return { entityArr, hasErrors };
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, nextCursor, hasErrors);
+    return _fetchEntitiesWithAcctIdGQL(
+      gqlAPI,
+      account,
+      entityArr,
+      nextCursor,
+      hasErrors
+    );
   }
 }
 

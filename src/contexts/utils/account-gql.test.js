@@ -263,4 +263,51 @@ describe('test FETCH_ACCOUNT_WITH_ID_GQL_OBJ', function() {
       assert.fail(err);
     }
   });
+
+
+
+  it('should include logging only', async () => {
+    const query = { ...FETCH_ACCOUNT_WITH_ID_GQL_OBJ.createQuery(null) };
+    assert.isFalse(
+      query.variables.withFragment,
+      'withFragment should be false'
+    );
+    query.variables = {
+      ...query.variables,
+      id: this.account.id,
+      EVENT_TYPES_INCLUDE: false,
+      PROGRAMMABILITY_SUBSCRIBED: false,
+      APM_SUBSCRIBED: false,
+      BROWSER_SUBSCRIBED: false,
+      MOBILE_SUBSCRIBED: false,
+      INFRA_SUBSCRIBED: false,
+      LOGGING_SUBSCRIBED: true,
+      SYNTHETICS_SUBSCRIBED: false,
+      INSIGHTS_SUBSCRIBED: false
+    };
+
+    try {
+      const response = await this.NG.query(query);
+
+      const {logMessageCount, nrqlLoggingAlertCount} =response.data.actor.account;
+
+      if (this._options.debug) {
+        console.log(`account=\n`, JSON.stringify(acct));
+        console.log('fetch response:\n', JSON.stringify(response));
+      }
+
+
+      assert.isNotNull(logMessageCount.results[0].count);
+      assert.isNotNull(nrqlLoggingAlertCount.nrqlConditionsSearch.totalCount);
+
+
+      assert.isNotNull(response, 'No response');
+      assert.isDefined(response, 'no response');
+    } catch (err) {
+      console.log('error=r', err);
+      assert.fail(err);
+    }
+  });
+
+
 });

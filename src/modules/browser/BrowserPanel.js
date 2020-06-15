@@ -75,11 +75,13 @@ export class BrowserPanelTag extends React.Component {
   }
 
   async componentDidMount() {
+    // eslint-disable-next-line no-console
     console.time('fetchBrowserData');
     const hasErrors = await this.fetchData(
       this.ctxAcctMap,
       this.nerdGraphQuery
     );
+    // eslint-disable-next-line no-console
     console.timeEnd('fetchBrowserData');
 
     const tableData = this.createTableData(this.ctxAcctMap, {
