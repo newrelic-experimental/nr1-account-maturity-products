@@ -51,7 +51,8 @@ export class InfraPanelTag extends React.Component {
 
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
     const { appContext } = this.props;
     this.nerdGraphQuery = appContext.nerdGraphQuery;
@@ -60,13 +61,14 @@ export class InfraPanelTag extends React.Component {
       appContext.docAgentLatestVersion.infrastructure;
     this.docEventTypes = appContext.docEventTypes;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
 
     this.fetchData =
       this.props.fetchData ||
       function() {
-        return Promise.resolve(true);
+        return Promise.resolve(false);
       };
 
     this.createTableData = this.props.createTableData || createInfraTableData;
@@ -79,7 +81,10 @@ export class InfraPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
 
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
@@ -89,7 +94,8 @@ export class InfraPanelTag extends React.Component {
 
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
     this.maturityCtxUpdateScore('INFRASTRUCTURE', scores, tableData);
   }
@@ -125,10 +131,15 @@ export class InfraPanelTag extends React.Component {
     if (this.state.loading) {
       return <CustomCircleLoader message="Loading Infrastructure Data" />;
     }
+
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <InfraTable data={filteredData} columns={this.tableColHeader} />

@@ -52,7 +52,8 @@ export class APMPanelTag extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
 
     const { appContext } = this.props;
@@ -62,6 +63,7 @@ export class APMPanelTag extends React.Component {
     this.docAgentLatestVersion = appContext.docAgentLatestVersion;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.fetchData = this.props.fetchData || fetchAPMData;
     this.createTableData = this.props.createTableData || createAPMTableData;
@@ -75,7 +77,10 @@ export class APMPanelTag extends React.Component {
   async componentDidMount() {
     // eslint-disable-next-line no-console
     console.time('fetchAPMData');
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
     // eslint-disable-next-line no-console
     console.timeEnd('fetchAPMData');
     const tableData = this.createTableData(this.ctxAcctMap, {
@@ -86,7 +91,8 @@ export class APMPanelTag extends React.Component {
 
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
     this.maturityCtxUpdateScore('APM', scores, tableData);
   }
@@ -113,10 +119,15 @@ export class APMPanelTag extends React.Component {
     if (this.state.loading) {
       return <CustomCircleLoader message="Loading APM Application Data" />;
     }
+
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <APMAccountTable data={filteredData} columns={this.tableColHeader} />

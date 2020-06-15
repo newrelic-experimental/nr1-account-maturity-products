@@ -52,7 +52,8 @@ export class BrowserPanelTag extends React.Component {
 
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
 
     const { appContext } = this.props;
@@ -60,6 +61,7 @@ export class BrowserPanelTag extends React.Component {
     this.ctxAcctMap = new Map(appContext.accountMap);
     this.docEventTypes = appContext.docEventTypes;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
 
@@ -75,7 +77,10 @@ export class BrowserPanelTag extends React.Component {
   async componentDidMount() {
     // eslint-disable-next-line no-console
     console.time('fetchBrowserData');
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
     // eslint-disable-next-line no-console
     console.timeEnd('fetchBrowserData');
 
@@ -88,7 +93,8 @@ export class BrowserPanelTag extends React.Component {
 
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
     this.maturityCtxUpdateScore('BROWSER', scores, tableData);
   }
@@ -116,10 +122,14 @@ export class BrowserPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Browser Application Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <BrowserAccountTable

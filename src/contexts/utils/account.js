@@ -19,6 +19,7 @@ export async function createAccountMap(
   { nrqlFragment = null, createAccountFn = createAccount, maxConcurrency = 10 }
 ) {
   const accountMap = new Map();
+  let hasErrors = false;
 
   const acctDetailGenerator = getAccountDetails(
     accountMap,
@@ -30,7 +31,15 @@ export async function createAccountMap(
   );
   const pool = new PromisePool(acctDetailGenerator, maxConcurrency);
   await pool.start();
-  return accountMap;
+
+  // check if any account has encountered any errors
+  for (const account of accountMap.values()) {
+    if (account.error) {
+      hasErrors = true;
+      break;
+    }
+  }
+  return { accountMap, hasErrors };
 }
 
 export async function createAccountMapBatch(
@@ -471,10 +480,10 @@ export function* getAccountDetails(
           fetchAccountDetailsByProduct(account, productLine, query, gqlAPI)
         );
       }
-
       const results = await Promise.all(promises);
       const response = assembleResults(results);
       const accountTmp = createAccountFn({ response, account });
+      accountTmp.error = response.errors;
 
       accountTmp.cloudLinkedAccounts = cloudLinkedAccounts;
       accountTmp.deploymentAppList = await _getDeploymentList(
@@ -501,12 +510,16 @@ export function assembleResults(results) {
 
   for (const result of results) {
     if (result.errors) {
+      response.errors = response.errors
+        ? response.errors.concat(result.errors)
+        : result.errors;
+
       if (
         result.errors.length > 0 &&
         Object.keys(result.errors[0]).length === 0
       ) {
         // catch result.errors=[{}]
-        continue;
+        // continue;
       }
 
       console.log(
@@ -515,7 +528,7 @@ export function assembleResults(results) {
         ` result=`,
         result
       );
-      continue;
+      // continue;
     }
     if (
       result.data &&

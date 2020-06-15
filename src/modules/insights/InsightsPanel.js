@@ -50,7 +50,8 @@ export class InsightsPanelTag extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
     const { appContext } = this.props;
     this.nerdGraphQuery = appContext.nerdGraphQuery;
@@ -58,6 +59,7 @@ export class InsightsPanelTag extends React.Component {
     this.docEventTypes = appContext.docEventTypes;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.fetchData = this.props.fetchData || fetchInsightsData;
     this.createTableData =
@@ -73,7 +75,10 @@ export class InsightsPanelTag extends React.Component {
   async componentDidMount() {
     // eslint-disable-next-line no-console
     console.time('fetchInsightsData');
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
     // eslint-disable-next-line no-console
     console.timeEnd('fetchInsightsData');
 
@@ -85,7 +90,8 @@ export class InsightsPanelTag extends React.Component {
 
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
     this.maturityCtxUpdateScore('INSIGHTS', scores, tableData);
   }
@@ -113,10 +119,14 @@ export class InsightsPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Insights Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <InsightsTable data={filteredData} columns={this.tableColHeader} />

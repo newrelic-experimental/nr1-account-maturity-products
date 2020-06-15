@@ -51,7 +51,8 @@ export class ProgramPanelTag extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      table: []
+      table: [],
+      hasErrors: false
     };
     const { appContext } = this.props;
     this.nerdGraphQuery = appContext.nerdGraphQuery;
@@ -59,11 +60,12 @@ export class ProgramPanelTag extends React.Component {
     this.docEventTypes = appContext.docEventTypes;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
+    this.hasNrqlErrors = appContext.hasErrors;
 
     this.fetchData =
       this.props.fetchData ||
       function() {
-        return Promise.resolve(true);
+        return Promise.resolve(false);
       };
 
     this.createTableData = this.props.createTableData || createProgramTableData;
@@ -75,13 +77,17 @@ export class ProgramPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    const hasErrors = await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery
+    );
     const tableData = this.createTableData(this.ctxAcctMap);
     const scores = this.addMaturityScoreToTable(tableData);
 
     this.setState({
       loading: false,
-      table: tableData
+      table: tableData,
+      hasErrors: this.hasNrqlErrors || hasErrors
     });
 
     this.maturityCtxUpdateScore('PROGRAMMABILITY', scores, tableData);
@@ -110,10 +116,14 @@ export class ProgramPanelTag extends React.Component {
       return <CustomCircleLoader message="Loading Programability Data" />;
     }
 
+    const { appContext } = this.props;
+    const { contactInfo } = appContext;
     return (
       <FilterTableData
         tableData={this.state.table}
         filterKeys={['overallScore']}
+        hasErrors={this.state.hasErrors}
+        contactInfo={contactInfo}
       >
         {({ filteredData }) => (
           <ProgramTable data={filteredData} columns={this.tableColHeader} />
