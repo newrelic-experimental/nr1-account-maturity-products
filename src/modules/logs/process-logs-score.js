@@ -48,17 +48,12 @@ export function computeLogsMaturityScore({ rowData, scoreWeights }) {
 
 function _processLogsData(account) {
   const row = {};
-  const { id, name, logMessageCount } = account;
+  const { id, name, logMessageCount, nrqlLoggingAlertCount } = account;
 
   row.accountName = name;
   row.accountID = id;
   row.loggingReporting = logMessageCount > 0;
-  row.loggingLogVolumePercentage = (count => {
-    if (count === 0) {
-      return 0;
-    }
-    return count > 5 ? 100 : 20;
-  })(logMessageCount);
+  row.loggingAlertEnabled = nrqlLoggingAlertCount >0;
 
   return row;
 }

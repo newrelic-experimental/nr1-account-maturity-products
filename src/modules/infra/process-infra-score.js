@@ -40,6 +40,14 @@ export function computeInfraMaturityScore({ rowData, scoreWeights }) {
       throw new Error(`computeMaturityScore() key not found. key =${key}`);
     }
 
+    if (
+      key === 'infrastructureDockerLabelsPercentage' &&
+      !rowData.infrastructureUsingDocker
+    ) {
+      // don't include Docker score weight if no Docker containers deployed
+      continue;
+    }
+
     if (typeof value === 'boolean') {
       value = value ? 100 : 0;
     }
@@ -49,7 +57,6 @@ export function computeInfraMaturityScore({ rowData, scoreWeights }) {
   }
 
   overallPercentage = overallPercentage <= 100 ? overallPercentage : 100;
-
   return {
     score: Math.round((score / overallPercentage) * 100),
     overallPercentage
@@ -73,7 +80,6 @@ function _processInfraAccountData(
   row.entityCount = hostPercentage.total;
 
   row.infrastructureLatestAgentPercentage = hostPercentage.value;
-
   const systemSampleDefaultList = docEventTypes.SystemSample
     ? docEventTypes.SystemSample.attributes.map(attribute => attribute.name)
     : 0;
@@ -101,42 +107,11 @@ function _processInfraAccountData(
     : 0;
 
   row.infrastructureUsingDocker = account.contained;
-  row.infrastructureDockerLabels = false;
-  row.infrastructureDockerLabelsPercentage = 0;
 
-  const hostWithDockerLabels = account.processSampleKeyset
-    .filter(({ allKeys }) => allKeys.includes('contained'))
-    .filter(
-      ({ allKeys }) =>
-        allKeys.filter(key => key.startsWith('containerLabel')).length > 0
-    );
-
-  row.infrastructureDockerLabels =
-    hostWithDockerLabels && hostWithDockerLabels.length > 0;
-
-  /*
-    If using Docker,
-    If no labels 0 points
-    if using 1 label 5 points
-    if using 2 labels 10 points
-    if using 3+ labels 15 points
-    */
-  row.infrastructureDockerLabelsPercentage = (hosts => {
-    if (!hosts || hosts.length === 0) {
-      return 0;
-    }
-    const labelCount = hostWithDockerLabels.reduce((acc, curr) => {
-      return (
-        acc +
-        curr.allKeys.reduce(
-          (total, key) => total + key.startsWith('containerLabel'),
-          0
-        )
-      );
-    }, 0);
-    return labelCount > 3 ? 1 : labelCount / 3;
-  })(hostWithDockerLabels);
-
+  row.infrastructureDockerLabelsPercentage = computeDockerLabelCount(
+    account.containerSampleKeyset
+  );
+  row.infrastructureDockerLabels = row.infrastructureDockerLabelsPercentage > 0;
   row.infrastructureCloudIntegrationEnabled =
     account.cloudLinkedAccounts &&
     typeof account.cloudLinkedAccounts[id] !== 'undefined';
@@ -147,6 +122,33 @@ function _processInfraAccountData(
 
   return row;
 }
+
+/*
+    If using Docker,
+    If no labels 0 points
+    if using 1 label 5 points
+    if using 2 labels 10 points
+    if using 3+ labels 15 points
+  */
+export function computeDockerLabelCount(hosts) {
+  if (!hosts || hosts.length === 0) {
+    return 0;
+  }
+  const labelCount = hosts.reduce((acc, curr) => {
+    let val = curr.allKeys.reduce(
+      (total, key) => total + key.startsWith('label.'),
+      0
+    );
+    val = val > 3 ? 3 : val;
+    return acc + val;
+  }, 0);
+
+  const perInstanceLabelCount = labelCount / hosts.length;
+  return perInstanceLabelCount > 3
+    ? 100
+    : Math.round((perInstanceLabelCount / 3) * 100);
+}
+
 function _computeVersionPercent(account, latestVersion) {
   const { infraDeployedVersions } = account;
   if (
