@@ -82,7 +82,7 @@ async function _fetchEntitiesWithAcctIdGQL(
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
   ) {
-    return account;
+    return entityArr;
   }
 
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
