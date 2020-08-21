@@ -81,7 +81,7 @@ async function _fetchEntitiesWithAcctIdGQL(
 
 export const BrowserModel = {
   scoreWeights: {
-    reportingAppPercentage: 0.01,
+    reportingAppPercentage: 0.1,
     appsWithAlertsPercentage: 0.15,
     browserDTEnabledPercentage: 0.05,
     customApdexPercentage: 0.1,
