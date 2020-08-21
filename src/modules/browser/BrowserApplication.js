@@ -36,7 +36,7 @@ class BrowserApplication {
       : [];
 
     this.pageAction =
-      account.pageActionList && account.pageActionList.includes(name);
+      account.pageActionList && account.pageActionList.includes(this.name);
 
     this.autoInstrumentation = entity.servingApmApplicationId !== null;
     this.spaAgentEnabled =
