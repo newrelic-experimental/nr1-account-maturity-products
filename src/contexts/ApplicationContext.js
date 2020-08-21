@@ -47,21 +47,19 @@ export class ApplicationCtxProvider extends React.Component {
       docAgentLatestVersion
     } = await this.fetchAccounts(this.nerdGraphQuery);
 
-    console.log('Context accounts', accounts);
-    console.log('cloudLinkedAccounts', cloudLinkedAccounts);
-    console.log(`docEventTypes=${JSON.stringify(docEventTypes)}`);
-    console.log(
-      `docAgentLatestVersion= ${JSON.stringify(docAgentLatestVersion)}`
-    );
+    // console.log('Context accounts', accounts);
+    // console.log('cloudLinkedAccounts', cloudLinkedAccounts);
+    // console.log(`docEventTypes=${JSON.stringify(docEventTypes)}`);
+    // console.log(
+    //   `docAgentLatestVersion= ${JSON.stringify(docAgentLatestVersion)}`
+    // );
 
-    console.time('createAccountMap');
     const accountMap = await this.createAccountMap(
       accounts,
       cloudLinkedAccounts,
       this.nerdGraphQuery,
       {}
     );
-    console.timeEnd('createAccountMap');
 
     this.setState({
       loading: false,

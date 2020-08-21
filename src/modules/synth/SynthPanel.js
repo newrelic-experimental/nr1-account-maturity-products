@@ -75,11 +75,7 @@ export class SynthPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    // eslint-disable-next-line no-console
-    console.time('fetchSynthData');
     await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
-    // eslint-disable-next-line no-console
-    console.timeEnd('fetchSynthData');
     const tableData = this.createTableData(this.ctxAcctMap);
     const scores = this.addMaturityScoreToTable(tableData, this.ctxAcctMap);
     this.setState({
