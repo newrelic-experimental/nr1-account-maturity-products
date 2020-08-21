@@ -13,7 +13,7 @@ export class ApplicationCtxProvider extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     nr1: PropTypes.object,
-    nr1graph: PropTypes.func,
+    nr1graph: PropTypes.object,
     fetchAccounts: PropTypes.func,
     createAccountMap: PropTypes.func,
     name: PropTypes.string
