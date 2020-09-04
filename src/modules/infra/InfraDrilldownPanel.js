@@ -53,11 +53,7 @@ export class InfraDrilldownPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    // eslint-disable-next-line no-console
-    console.time('fetchInfraDrilldownData');
     await this.fetchData(this.ctxAcctMap, this.accountId, this.nerdGraphQuery);
-    // eslint-disable-next-line no-console
-    console.timeEnd('fetchInfraDrilldownData');
 
     const infraHostTable = this.processDrilldownHostList(
       this.accountId,

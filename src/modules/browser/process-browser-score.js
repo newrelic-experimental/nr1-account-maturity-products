@@ -27,9 +27,6 @@ export function createBrowserTableData(
       (account.pgViewKeyset ? account.pgViewKeyset.length : 0) >
       docPgViewKeysetCount;
 
-    console.log(
-      `processBrowserScore docKeyCount=${docPgViewKeysetCount} txnKeyCount=${account.pgViewKeyset.length}`
-    );
     const { appList, percentDTCapableApps } = createBrowserApplicationList(
       account.browserApps
     );

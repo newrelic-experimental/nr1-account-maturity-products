@@ -394,4 +394,118 @@ describe('Unit/Integration Tests for  assembleResults()', function() {
 
     done();
   });
+
+  it('should handle response with partial results', done => {
+    const results = [
+      {
+        data: {
+          actor: {
+            account: {
+              id: 111,
+              name: 'test 111 account',
+              pageActionData: { results: [] },
+              pageViewKeyset: { results: [] }
+            }
+          }
+        },
+        errors: [{ message: 'error on otherData' }]
+      },
+      {
+        data: {
+          actor: {
+            account: {
+              id: 111,
+              name: 'test 111 account',
+              throughputData: { results: [] },
+              transactionKeyset: { results: [] }
+            }
+          }
+        }
+      }
+    ];
+
+    const response = TEST_assembleResults(results);
+
+    if (this._options.debug) {
+      console.log(`response=${JSON.stringify(response)}`);
+      console.log(response.data.actor.account);
+    }
+
+    assert.hasAllKeys(
+      response.data.actor.account,
+      [
+        'id',
+        'name',
+        'pageActionData',
+        'pageViewKeyset',
+        'throughputData',
+        'transactionKeyset'
+      ],
+      'missing expected keys'
+    );
+
+    done();
+  });
+
+  it('should handle response with partial results and error', done => {
+    const results = [
+      {
+        data: {
+          actor: {
+            account: {
+              id: 111,
+              name: 'test 111 account',
+              pageActionData: { results: [] },
+              pageViewKeyset: { results: [] }
+            }
+          }
+        },
+        errors: [{ message: 'error on someData' }]
+      },
+      {
+        errors: [{ message: 'unexpected error' }]
+      }
+    ];
+
+    const response = TEST_assembleResults(results);
+
+    if (this._options.debug) {
+      console.log(`response=${JSON.stringify(response)}`);
+      console.log(response.data.actor.account);
+    }
+
+    assert.hasAllKeys(
+      response.data.actor.account,
+      ['id', 'name', 'pageActionData', 'pageViewKeyset'],
+      'missing expected keys'
+    );
+
+    done();
+  });
+
+  it('should handle response with unexpected exception', done => {
+    const results = [
+      {
+        data: {
+          actor: null
+        },
+        errors: [
+          {
+            message: 'Unexpected Exception:  Failed to fetch'
+          }
+        ]
+      }
+    ];
+
+    const response = TEST_assembleResults(results);
+
+    if (this._options.debug) {
+      console.log(`response=${JSON.stringify(response)}`);
+      console.log(response.data.actor.account);
+    }
+
+    assert.isNull(response, 'response is not null');
+
+    done();
+  });
 });
