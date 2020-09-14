@@ -217,7 +217,9 @@ export function createAccount(event) {
         allKeys
       }))
     : [];
-  accountDetail.contained = accountDetail.containerSampleKeyset ? accountDetail.containerSampleKeyset.length > 0 : false;
+  accountDetail.contained = accountDetail.containerSampleKeyset
+    ? accountDetail.containerSampleKeyset.length > 0
+    : false;
   // [{ hostname:<servername> , allKeys:["attributes","attributes"]}, .... ]
   accountDetail.systemSampleKeyset = systemSampleKeyset
     ? systemSampleKeyset.results.map(({ entityName, allKeys }) => ({
