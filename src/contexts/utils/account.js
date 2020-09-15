@@ -253,9 +253,10 @@ export function createAccount(event) {
   accountDetail.logMessageCount = logMessageCount
     ? logMessageCount.results[0].count
     : 0;
-  accountDetail.nrqlLoggingAlertCount = nrqlLoggingAlertCount
-    ? nrqlLoggingAlertCount.nrqlConditionsSearch.totalCount
-    : 0;
+  accountDetail.nrqlLoggingAlertCount =
+    nrqlLoggingAlertCount && nrqlLoggingAlertCount.nrqlConditionsSearch
+      ? nrqlLoggingAlertCount.nrqlConditionsSearch.totalCount
+      : 0;
 
   accountDetail.programDeployCount = programDeployCount
     ? programDeployCount.results[0].count

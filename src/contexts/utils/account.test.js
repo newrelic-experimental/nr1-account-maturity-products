@@ -9,7 +9,7 @@ import btoa from 'btoa';
 import {
   createAccountMap as TEST_createAccountMap,
   createAccountMapBatch as TEST_createAccountMapBatch,
-  createAccount as createAccountCore,
+  createAccount as TEST_createAccount,
   getAccountDetails as TEST_getAccountDetails,
   fetchAccountDetailsByProduct as TEST_fetchAccountDetailsByProduct,
   assembleResults as TEST_assembleResults
@@ -205,7 +205,7 @@ describe('Unit/Integration Tests for  getAccountDetails()', function() {
       gqlAPI: json => this.NG.query(json),
       accountMap: new Map(),
       nrqlFragment: null,
-      createAccountFn: createAccountCore
+      createAccountFn: TEST_createAccount
     };
 
     const generator = TEST_getAccountDetails(
@@ -505,6 +505,480 @@ describe('Unit/Integration Tests for  assembleResults()', function() {
     }
 
     assert.isNull(response, 'response is not null');
+
+    done();
+  });
+});
+
+describe('Unit Tests for  createAccount()', function() {
+  this.timeout(TIMEOUT);
+  this._options = {
+    debug: false
+  };
+
+  before(async () => {
+    this.event = {
+      account: {
+        id: 123,
+        name: 'My Account'
+      }
+    };
+  });
+
+  it('should handle null response', done => {
+    const response = null;
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.isEmpty(
+      account.reportingEventTypes,
+      'reportingEventTypes is not empty'
+    );
+    assert.isEmpty(account.dtAppList, 'dtAppList is not empty');
+    assert.isEmpty(account.throughputData, 'throughputData is not empty');
+    assert.isEmpty(account.pageActionList, 'pageActionList is not empty');
+    assert.isEmpty(account.txnKeyset, 'txnKeyset is not empty');
+    assert.isEmpty(account.pgViewKeyset, 'pgViewKeyset is not empty');
+    assert.isEmpty(
+      account.containerSampleKeyset,
+      'containerSampleKeyset is not empty'
+    );
+    assert.isFalse(account.contained, 'contained is not false');
+
+    assert.isEmpty(
+      account.systemSampleKeyset,
+      'systemSampleKeyset is not empty'
+    );
+    assert.isEmpty(
+      account.infraDeployedVersions,
+      'infraDeployedVersions is not empty'
+    );
+    assert.strictEqual(account.infraHostCount, 0, 'infraHostCount is not zero');
+
+    assert.isEmpty(
+      account.mobileDeployedVersions,
+      'mobileDeployedVersions is not empty'
+    );
+    assert.isEmpty(
+      account.apmDeployedVersions,
+      'apmDeployedVersions is not empty'
+    );
+    assert.isFalse(account.awsbillingEnabled, 'awsbillingEnabled is not false');
+
+    assert.strictEqual(
+      account.logMessageCount,
+      0,
+      'logMessageCount is not zero'
+    );
+    assert.strictEqual(
+      account.nrqlLoggingAlertCount,
+      0,
+      'nrqlLoggingAlertCount is not zero'
+    );
+    assert.strictEqual(
+      account.programDeployCount,
+      0,
+      'programDeployCount is not zero'
+    );
+    assert.strictEqual(
+      account.programUniqUserDeployment,
+      0,
+      'programUniqUserDeployment is not zero'
+    );
+
+    assert.isEmpty(account.mobileBreadcrumbs, 'mobileBreadcrumbs is not empty');
+    assert.isEmpty(
+      account.mobileHandledExceptions,
+      'mobileHandledExceptions is not empty'
+    );
+    assert.isEmpty(account.mobileEvents, 'mobileEvents is not empty');
+    assert.strictEqual(
+      account.mobileAppLaunch,
+      0,
+      'mobileAppLaunch is not zero'
+    );
+
+    done();
+  });
+
+  it('should handle null eventType', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            eventType: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.isEmpty(
+      account.reportingEventTypes,
+      'reportingEventTypes is not empty'
+    );
+
+    done();
+  });
+
+  it('should handle null program fragment results', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            programDeployCount: null,
+            programUniqUserDeployment: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.strictEqual(
+      account.programDeployCount,
+      0,
+      'programDeployCount is not zero'
+    );
+    assert.strictEqual(
+      account.programUniqUserDeployment,
+      0,
+      'programUniqUserDeployment is not zero'
+    );
+
+    done();
+  });
+
+  it('should handle null apm fragment results', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            dtData: null,
+            throughputData: null,
+            transactionKeyset: null,
+            apmDeployedVersions: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.isEmpty(account.dtAppList, 'dtAppList is not empty');
+    assert.isEmpty(account.throughputData, 'throughputData is not empty');
+    assert.isEmpty(account.txnKeyset, 'txnKeyset is not empty');
+    assert.isEmpty(
+      account.apmDeployedVersions,
+      'apmDeployedVersions is not empty'
+    );
+
+    done();
+  });
+
+  it('should handle null browser fragment results', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            pageActionData: null,
+            pageViewKeyset: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.isEmpty(account.pageActionList, 'pageActionList is not empty');
+    assert.isEmpty(account.pgViewKeyset, 'pgViewKeyset is not empty');
+
+    done();
+  });
+
+  it('should handle null mobile fragment results', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            mobileBreadcrumbs: null,
+            mobileHandledExceptions: null,
+            mobileEvents: null,
+            mobileAppLaunch: null,
+            mobileDeployedVersions: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.isEmpty(account.mobileBreadcrumbs, 'mobileBreadcrumbs is not empty');
+    assert.isEmpty(
+      account.mobileHandledExceptions,
+      'mobileHandledExceptions is not empty'
+    );
+    assert.isEmpty(account.mobileEvents, 'mobileEvents is not empty');
+    assert.strictEqual(
+      account.mobileAppLaunch,
+      0,
+      'mobileAppLaunch is not zero'
+    );
+    assert.isEmpty(
+      account.mobileDeployedVersions,
+      'mobileDeployedVersions is not empty'
+    );
+
+    done();
+  });
+
+  it('should handle null log fragment results', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            logMessageCount: null,
+            nrqlLoggingAlertCount: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.strictEqual(
+      account.logMessageCount,
+      0,
+      'logMessageCount is not zero'
+    );
+    assert.strictEqual(
+      account.nrqlLoggingAlertCount,
+      0,
+      'nrqlLoggingAlertCount is not zero'
+    );
+
+    done();
+  });
+
+  it('should handle null nrqlConditionsSearch', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            nrqlLoggingAlertCount: {
+              nrqlConditionsSearch: null
+            }
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.strictEqual(
+      account.nrqlLoggingAlertCount,
+      0,
+      'nrqlLoggingAlertCount is not zero'
+    );
+
+    done();
+  });
+
+  it('should handle null infra fragment results', done => {
+    const response = {
+      data: {
+        actor: {
+          account: {
+            id: 123,
+            name: 'My Account',
+            systemSampleKeyset: null,
+            containerSampleKeyset: null,
+            infraDeployedVersions: null,
+            infraHostCount: null,
+            awsBilling: null
+          }
+        }
+      }
+    };
+    this.event.response = response;
+
+    const account = TEST_createAccount(this.event);
+
+    if (this._options.debug) {
+      console.log(`account=${JSON.stringify(account)}`);
+    }
+
+    assert.strictEqual(
+      account.id,
+      this.event.account.id,
+      'Account id does not match'
+    );
+    assert.strictEqual(
+      account.name,
+      this.event.account.name,
+      'Account name does not match'
+    );
+
+    assert.isEmpty(
+      account.containerSampleKeyset,
+      'containerSampleKeyset is not empty'
+    );
+    assert.isFalse(account.contained, 'contained is not false');
+
+    assert.isEmpty(
+      account.systemSampleKeyset,
+      'systemSampleKeyset is not empty'
+    );
+    assert.isEmpty(
+      account.infraDeployedVersions,
+      'infraDeployedVersions is not empty'
+    );
+    assert.strictEqual(account.infraHostCount, 0, 'infraHostCount is not zero');
+
+    assert.isFalse(account.awsbillingEnabled, 'awsbillingEnabled is not false');
 
     done();
   });
