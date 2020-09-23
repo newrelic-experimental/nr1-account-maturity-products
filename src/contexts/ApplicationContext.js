@@ -70,11 +70,13 @@ export class ApplicationCtxProvider extends React.Component {
   }
 
   async nerdGraphQuery(query) {
-    const fn = this.nr1 ? this.nr1.services.nerdGraph : this.nr1graph;
+    // const fn = this.nr1 ? this.nr1.services.nerdGraph : this.nr1graph;
+    const fn = this.nr1 ? this.nr1 : this.nr1graph;
     let response = {};
     try {
-      const results = await fn.query(this._gqlJsonToString(query));
-      response = this.nr1 ? results.raw : results;
+      const results = await fn.query(query);
+      // response = this.nr1 ? results.raw : results;
+      response = results;
 
       if (response.errors && response.errors.length > 0) {
         response = this.handleGqlError({ response }, query);
