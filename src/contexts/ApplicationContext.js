@@ -12,7 +12,6 @@ const ApplicationContext = React.createContext();
 export class ApplicationCtxProvider extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    nr1: PropTypes.object,
     nr1graph: PropTypes.object,
     fetchAccounts: PropTypes.func,
     createAccountMap: PropTypes.func,
@@ -33,8 +32,6 @@ export class ApplicationCtxProvider extends React.Component {
     this._gqlJsonToString = this._gqlJsonToString.bind(this);
     this.fetchAccounts = this.props.fetchAccounts || fetchAccounts;
     this.createAccountMap = this.props.createAccountMap || createAccountMap;
-    this.nr1 = props.nr1;
-    this.nr1graph = props.nr1graph;
     this.name = this.props.name || '';
     this.isEUDatacenter = DataCenterUtils.isEUDatacenter();
   }
@@ -70,13 +67,10 @@ export class ApplicationCtxProvider extends React.Component {
   }
 
   async nerdGraphQuery(query) {
-    // const fn = this.nr1 ? this.nr1.services.nerdGraph : this.nr1graph;
-    const fn = this.nr1 ? this.nr1 : this.nr1graph;
+    const fn = this.props.nr1graph;
     let response = {};
     try {
-      const results = await fn.query(query);
-      // response = this.nr1 ? results.raw : results;
-      response = results;
+      response = await fn.query(query);
 
       if (response.errors && response.errors.length > 0) {
         response = this.handleGqlError({ response }, query);
@@ -88,6 +82,7 @@ export class ApplicationCtxProvider extends React.Component {
     return response;
   }
 
+  // DEPRECATED
   _gqlJsonToString(gqlJSON) {
     if (!this.nr1) {
       return gqlJSON;
