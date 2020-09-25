@@ -1,4 +1,3 @@
-/* eslint-disable guard-for-in */
 /* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -12,7 +11,6 @@ const ApplicationContext = React.createContext();
 export class ApplicationCtxProvider extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    nr1: PropTypes.object,
     nr1graph: PropTypes.object,
     fetchAccounts: PropTypes.func,
     createAccountMap: PropTypes.func,
@@ -30,11 +28,8 @@ export class ApplicationCtxProvider extends React.Component {
 
     this.nerdGraphQuery = this.nerdGraphQuery.bind(this);
     this.handleGqlError = handleGqlError;
-    this._gqlJsonToString = this._gqlJsonToString.bind(this);
     this.fetchAccounts = this.props.fetchAccounts || fetchAccounts;
     this.createAccountMap = this.props.createAccountMap || createAccountMap;
-    this.nr1 = props.nr1;
-    this.nr1graph = props.nr1graph;
     this.name = this.props.name || '';
     this.isEUDatacenter = DataCenterUtils.isEUDatacenter();
   }
@@ -70,11 +65,10 @@ export class ApplicationCtxProvider extends React.Component {
   }
 
   async nerdGraphQuery(query) {
-    const fn = this.nr1 ? this.nr1.services.nerdGraph : this.nr1graph;
+    const fn = this.props.nr1graph;
     let response = {};
     try {
-      const results = await fn.query(this._gqlJsonToString(query));
-      response = this.nr1 ? results.raw : results;
+      response = await fn.query(query);
 
       if (response.errors && response.errors.length > 0) {
         response = this.handleGqlError({ response }, query);
@@ -84,33 +78,6 @@ export class ApplicationCtxProvider extends React.Component {
       response = this.handleGqlError({ response, error }, query);
     }
     return response;
-  }
-
-  _gqlJsonToString(gqlJSON) {
-    if (!this.nr1) {
-      return gqlJSON;
-    }
-
-    try {
-      if (typeof gqlJSON !== 'object') {
-        throw Error('Not a JSON object');
-      }
-      let { query, variables } = gqlJSON;
-
-      if (!query) {
-        throw Error('Not standard GQL');
-      }
-
-      query = query.substring(query.indexOf('{'));
-      for (const variable in variables) {
-        const value = variables[variable];
-        query = query.replace(`$${variable}`, `${JSON.stringify(value)}`);
-      }
-      return query;
-    } catch (err) {
-      console.error('Error in converting GQL JSON', err);
-      return gqlJSON;
-    }
   }
 
   render() {
