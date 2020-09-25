@@ -264,8 +264,6 @@ describe('test FETCH_ACCOUNT_WITH_ID_GQL_OBJ', function() {
     }
   });
 
-
-
   it('should include logging only', async () => {
     const query = { ...FETCH_ACCOUNT_WITH_ID_GQL_OBJ.createQuery(null) };
     assert.isFalse(
@@ -289,17 +287,19 @@ describe('test FETCH_ACCOUNT_WITH_ID_GQL_OBJ', function() {
     try {
       const response = await this.NG.query(query);
 
-      const {logMessageCount, nrqlLoggingAlertCount} =response.data.actor.account;
+      const {
+        logMessageCount,
+        nrqlLoggingAlertCount
+      } = response.data.actor.account;
+      const acct = response.data.actor.account;
 
       if (this._options.debug) {
         console.log(`account=\n`, JSON.stringify(acct));
         console.log('fetch response:\n', JSON.stringify(response));
       }
 
-
       assert.isNotNull(logMessageCount.results[0].count);
       assert.isNotNull(nrqlLoggingAlertCount.nrqlConditionsSearch.totalCount);
-
 
       assert.isNotNull(response, 'No response');
       assert.isDefined(response, 'no response');
@@ -308,6 +308,4 @@ describe('test FETCH_ACCOUNT_WITH_ID_GQL_OBJ', function() {
       assert.fail(err);
     }
   });
-
-
 });

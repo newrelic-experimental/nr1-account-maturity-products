@@ -53,7 +53,7 @@ function _processLogsData(account) {
   row.accountName = name;
   row.accountID = id;
   row.loggingReporting = logMessageCount > 0;
-  row.loggingAlertEnabled = nrqlLoggingAlertCount >0;
+  row.loggingAlertEnabled = nrqlLoggingAlertCount > 0;
 
   return row;
 }
