@@ -1,4 +1,3 @@
-/* eslint-disable guard-for-in */
 /* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -29,7 +28,6 @@ export class ApplicationCtxProvider extends React.Component {
 
     this.nerdGraphQuery = this.nerdGraphQuery.bind(this);
     this.handleGqlError = handleGqlError;
-    this._gqlJsonToString = this._gqlJsonToString.bind(this);
     this.fetchAccounts = this.props.fetchAccounts || fetchAccounts;
     this.createAccountMap = this.props.createAccountMap || createAccountMap;
     this.name = this.props.name || '';
@@ -80,34 +78,6 @@ export class ApplicationCtxProvider extends React.Component {
       response = this.handleGqlError({ response, error }, query);
     }
     return response;
-  }
-
-  // DEPRECATED
-  _gqlJsonToString(gqlJSON) {
-    if (!this.nr1) {
-      return gqlJSON;
-    }
-
-    try {
-      if (typeof gqlJSON !== 'object') {
-        throw Error('Not a JSON object');
-      }
-      let { query, variables } = gqlJSON;
-
-      if (!query) {
-        throw Error('Not standard GQL');
-      }
-
-      query = query.substring(query.indexOf('{'));
-      for (const variable in variables) {
-        const value = variables[variable];
-        query = query.replace(`$${variable}`, `${JSON.stringify(value)}`);
-      }
-      return query;
-    } catch (err) {
-      console.error('Error in converting GQL JSON', err);
-      return gqlJSON;
-    }
   }
 
   render() {
