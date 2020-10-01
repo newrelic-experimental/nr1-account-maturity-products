@@ -8,7 +8,7 @@ import matchSorter from 'match-sorter';
 export function APMAccountTable(props) {
   return (
     <div>
-      <ReactTable style={{width: '600px'}} data={props.data} columns={props.columns} filterable />
+      <ReactTable data={props.data} columns={props.columns} filterable />
       {CreateCSVLink(props.columns, props.data)}
     </div>
   );
