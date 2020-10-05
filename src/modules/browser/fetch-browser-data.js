@@ -90,7 +90,7 @@ async function _fetchEntitiesWithAcctIdGQL(
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return entityArr;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, tag, entityArr, nextCursor);
   }
 }
 
