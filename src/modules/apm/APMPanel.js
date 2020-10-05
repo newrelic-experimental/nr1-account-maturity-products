@@ -93,7 +93,7 @@ export class APMPanelTag extends React.Component {
     console.log("APMPanel");
     console.log(this.props.appContext);
     if (prevProps.appContext.tag !== this.props.appContext.tag) {
-      await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.tag);
+      await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.appContext.tag);
       const tableData = this.createTableData(this.ctxAcctMap, {
         docEventTypes: this.docEventTypes,
         docAgentLatestVersion: this.docAgentLatestVersion
