@@ -16,8 +16,7 @@ export async function createAccountMap(
   accounts,
   cloudLinkedAccounts,
   gqlAPI,
-  { nrqlFragment = null, createAccountFn = createAccount, maxConcurrency = 10 },
-  tag
+  { nrqlFragment = null, createAccountFn = createAccount, maxConcurrency = 10 }
 ) {
   const accountMap = new Map();
 

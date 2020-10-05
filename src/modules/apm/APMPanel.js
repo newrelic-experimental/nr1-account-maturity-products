@@ -75,7 +75,7 @@ export class APMPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.tag);
+    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.appContext.tag);
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
       docAgentLatestVersion: this.docAgentLatestVersion
@@ -91,8 +91,8 @@ export class APMPanelTag extends React.Component {
 
   async componentDidUpdate(prevProps) {
     console.log("APMPanel");
-    console.log(this.props.tag);
-    if (prevProps.tag !== this.props.tag) {
+    console.log(this.props.appContext);
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
       await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.tag);
       const tableData = this.createTableData(this.ctxAcctMap, {
         docEventTypes: this.docEventTypes,
