@@ -5,6 +5,7 @@ import { GET_MOBILE_APP_SUBSCRIBER_ID_GQL } from './mobile-gql';
 export async function fetchMobileData(
   accountMap,
   gqlAPI,
+  tag,
   overrides = {
     fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
@@ -19,7 +20,7 @@ export async function fetchMobileData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
-      yield options.fetchEntities(gqlAPI, account);
+      yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
 

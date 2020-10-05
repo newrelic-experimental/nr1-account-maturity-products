@@ -5,6 +5,7 @@ import { SYNTH_ENTITIES_SUBSCRIBER_ID_GQL } from './synth-gql';
 export async function fetchSynthData(
   accountMap,
   gqlAPI,
+  tag,
   overrides = {
     fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
@@ -19,7 +20,7 @@ export async function fetchSynthData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
-      yield options.fetchEntities(gqlAPI, account);
+      yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
 
@@ -47,6 +48,7 @@ function _onFulFilledHandler(event, accountMap) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {

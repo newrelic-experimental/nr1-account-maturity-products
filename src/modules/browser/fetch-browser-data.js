@@ -5,6 +5,7 @@ import { BROWSER_ENTITIES_SUBSCRIBER_ID_GQL } from './browser-gql';
 export async function fetchBrowserData(
   accountMap,
   gqlAPI,
+  tag,
   overrides = {
     fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
@@ -19,7 +20,7 @@ export async function fetchBrowserData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
-      yield options.fetchEntities(gqlAPI, account);
+      yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
 
