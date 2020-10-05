@@ -51,13 +51,26 @@ async function _fetchEntitiesWithAcctIdGQL(
   cursor = null
 ) {
   const accountId = account.id;
-  const query = {
+  let query = {
     ...SYNTH_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
       nrql: `domain IN ('SYNTH') AND type IN ('MONITOR') and accountId=${accountId}`
     }
   };
+
+  if (tag !== null) {
+    let split = tag.split(":");
+    const key = split[0];
+    const value = split[1];
+    query = {
+      ...SYNTH_ENTITIES_SUBSCRIBER_ID_GQL,
+      variables: {
+        cursor,
+        nrql: `domain IN ('SYNTH') AND type IN ('MONITOR') and accountId=${accountId} AND tags.${key} = '${value}'`
+      }
+    };
+  }
 
   const response = await gqlAPI(query);
   if (

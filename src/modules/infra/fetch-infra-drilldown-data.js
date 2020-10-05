@@ -23,11 +23,15 @@ function _onFulFilledHandler(result, account) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {
   const accountId = account.id;
-  const entitySearchQuery = `domain = 'INFRA' and type = 'HOST' and accountId= ${accountId}`;
+  let entitySearchQuery = `domain = 'INFRA' and type = 'HOST' and accountId= ${accountId}`;
+  if (tag !== null) {
+    let entitySearchQuery = `domain = 'INFRA' and type = 'HOST' and accountId= ${accountId} AND tags.${key} = '${value}'`;
+  }
 
   const query = {
     ...INFRA_DRILLDOWN_ENTITIES_GQL,

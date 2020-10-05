@@ -64,17 +64,28 @@ function _onFulFilledHandler(event, accountMap) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {
   const { id } = account;
-  const query = {
+  let query = {
     ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
       nrql: `domain IN ('MOBILE') AND type IN ('APPLICATION') and accountId=${id}`
     }
   };
+
+  if (tag !== null) {
+    query = {
+      ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
+      variables: {
+        cursor,
+        nrql: `domain IN ('MOBILE') AND type IN ('APPLICATION') and accountId=${id} AND tags.${key} = '${value}'`
+      }
+    };
+  }
 
   const response = await gqlAPI(query);
 

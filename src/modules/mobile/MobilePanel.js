@@ -76,7 +76,7 @@ export class MobilePanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.appContext.tag);
 
     const tableData = this.createTableData(this.ctxAcctMap, {
       docMobileLatestVersionHash: this.docMobileLatestVersionHash
@@ -89,6 +89,25 @@ export class MobilePanelTag extends React.Component {
       table: tableData
     });
     this.maturityCtxUpdateScore('MOBILE', scores, tableData);
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
+      this.setState({ loading: true });
+      await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.appContext.tag);
+
+      const tableData = this.createTableData(this.ctxAcctMap, {
+        docMobileLatestVersionHash: this.docMobileLatestVersionHash
+      });
+
+      const scores = this.addMaturityScoreToTable(tableData);
+
+      this.setState({
+        loading: false,
+        table: tableData
+      });
+      this.maturityCtxUpdateScore('MOBILE', scores, tableData);
+    }
   }
 
   addMaturityScoreToTable(tableData) {

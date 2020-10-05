@@ -54,8 +54,6 @@ async function _fetchEntitiesWithAcctIdGQL(
   cursor = null
 ) {
   const accountId = account.id;
-  console.log("fetch-apm");
-  console.log(tag);
   let query = {
     ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
@@ -72,7 +70,7 @@ async function _fetchEntitiesWithAcctIdGQL(
       ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
       variables: {
         cursor,
-        nrql: `domain IN ('APM') AND type IN ('APPLICATION') AND accountId=${accountId} AND tag.${key} = '${value}'`
+        nrql: `domain IN ('APM') AND type IN ('APPLICATION') AND accountId=${accountId} AND tags.${key} = '${value}'`
       }
     };
   }

@@ -53,7 +53,7 @@ export class InfraDrilldownPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.accountId, this.nerdGraphQuery);
+    await this.fetchData(this.ctxAcctMap, this.accountId, this.nerdGraphQuery, this.props.appContext.tag);
 
     const infraHostTable = this.processDrilldownHostList(
       this.accountId,
@@ -65,6 +65,24 @@ export class InfraDrilldownPanelTag extends React.Component {
       table: infraHostTable,
       loading: false
     });
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
+      this.setState({loading: true});
+      await this.fetchData(this.ctxAcctMap, this.accountId, this.nerdGraphQuery, this.props.appContext.tag);
+
+      const infraHostTable = this.processDrilldownHostList(
+        this.accountId,
+        this.ctxAcctMap,
+        this.docEventTypes
+      );
+
+      this.setState({
+        table: infraHostTable,
+        loading: false
+      });
+    }
   }
 
   processDrilldownHostList(accountId, ctxAcctMap, docEventTypes) {

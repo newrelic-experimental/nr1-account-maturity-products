@@ -45,8 +45,7 @@ export class APMPanelTag extends React.Component {
     scoreWeights: PropTypes.object,
     tableColHeader: PropTypes.array,
     createTableData: PropTypes.func,
-    computeMaturityScore: PropTypes.func,
-    tag: PropTypes.string
+    computeMaturityScore: PropTypes.func
   };
 
   constructor(props) {
@@ -66,7 +65,6 @@ export class APMPanelTag extends React.Component {
 
     this.fetchData = this.props.fetchData || fetchAPMData;
     this.createTableData = this.props.createTableData || createAPMTableData;
-    //this.tag = appContext.tagFilter;
 
     this.computeMaturityScore =
       this.props.computeMaturityScore || computeAPMMaturityScore;
@@ -89,10 +87,9 @@ export class APMPanelTag extends React.Component {
     this.maturityCtxUpdateScore('APM', scores, tableData);
   }
 
-  async componentDidUpdate(prevProps) {
-    console.log("APMPanel");
-    console.log(this.props.appContext);
+  async componentDidUpdate(prevProps) { //Tag update
     if (prevProps.appContext.tag !== this.props.appContext.tag) {
+      this.setState({loading: true});
       await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.appContext.tag);
       const tableData = this.createTableData(this.ctxAcctMap, {
         docEventTypes: this.docEventTypes,

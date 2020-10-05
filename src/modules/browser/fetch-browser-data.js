@@ -47,17 +47,31 @@ function _onFulFilledHandler(event, accountMap) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {
   const accountId = account.id;
-  const query = {
+  let query = {
     ...BROWSER_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
       nrql: `domain IN ('BROWSER') AND type IN ('APPLICATION') and accountId=${accountId}`
     }
   };
+
+  if (tag !== null) {
+    let split = tag.split(':');
+    const key = split[0];
+    const value = split[1];
+    query = {
+      ...BROWSER_ENTITIES_SUBSCRIBER_ID_GQL,
+      variables: {
+        cursor,
+        nrql: `domain IN ('BROWSER') AND type IN ('APPLICATION') and accountId=${accountId} AND tags.${key} = '${value}'`
+      }
+    }
+  }
 
   const response = await gqlAPI(query);
 
