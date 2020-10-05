@@ -73,7 +73,9 @@ export class APMPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    console.log(this.ctxAcctMap);
+    console.log(appContext.tagFilter);
+    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, appContext.tagFilter);
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
       docAgentLatestVersion: this.docAgentLatestVersion
