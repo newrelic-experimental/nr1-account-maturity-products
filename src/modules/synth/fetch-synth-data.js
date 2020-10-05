@@ -74,6 +74,7 @@ async function _fetchEntitiesWithAcctIdGQL(
     };
   }
 
+  console.log(query);
   const response = await gqlAPI(query);
   if (
     !response.data.actor.entitySearch ||

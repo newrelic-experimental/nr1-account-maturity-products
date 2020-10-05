@@ -66,9 +66,9 @@ export class ApplicationCtxProvider extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-    console.log("AppContext");
-    console.log(this.props.tag);
     if (prevProps.tag !== this.props.tag) {
+      console.log("AppContext");
+      console.log(this.props.tag);
       const {
         accounts,
         cloudLinkedAccounts,
