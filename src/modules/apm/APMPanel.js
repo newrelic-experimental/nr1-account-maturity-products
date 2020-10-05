@@ -65,7 +65,7 @@ export class APMPanelTag extends React.Component {
 
     this.fetchData = this.props.fetchData || fetchAPMData;
     this.createTableData = this.props.createTableData || createAPMTableData;
-    this.tag = appConext.tagFilter;
+    this.tag = appContext.tagFilter;
 
     this.computeMaturityScore =
       this.props.computeMaturityScore || computeAPMMaturityScore;
@@ -88,6 +88,11 @@ export class APMPanelTag extends React.Component {
       table: tableData
     });
     this.maturityCtxUpdateScore('APM', scores, tableData);
+  }
+
+  async componentDidUpdate() {
+    console.log("APMPanel")
+    console.log(this.tag);
   }
 
   addMaturityScoreToTable(tableData) {

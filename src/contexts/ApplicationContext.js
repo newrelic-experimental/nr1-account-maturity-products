@@ -65,6 +65,11 @@ export class ApplicationCtxProvider extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    console.log("appContext");
+    console.log(this.props);
+  }
+
   async nerdGraphQuery(query) {
     const fn = this.props.nr1graph;
     let response = {};
