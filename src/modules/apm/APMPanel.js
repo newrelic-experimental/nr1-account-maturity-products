@@ -45,7 +45,8 @@ export class APMPanelTag extends React.Component {
     scoreWeights: PropTypes.object,
     tableColHeader: PropTypes.array,
     createTableData: PropTypes.func,
-    computeMaturityScore: PropTypes.func
+    computeMaturityScore: PropTypes.func,
+    tag: PropTypes.string
   };
 
   constructor(props) {
@@ -65,7 +66,7 @@ export class APMPanelTag extends React.Component {
 
     this.fetchData = this.props.fetchData || fetchAPMData;
     this.createTableData = this.props.createTableData || createAPMTableData;
-    this.tag = appContext.tagFilter;
+    //this.tag = appContext.tagFilter;
 
     this.computeMaturityScore =
       this.props.computeMaturityScore || computeAPMMaturityScore;
@@ -74,9 +75,7 @@ export class APMPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(this.ctxAcctMap);
-    console.log(this.tag);
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.tag);
+    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.tag);
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
       docAgentLatestVersion: this.docAgentLatestVersion
@@ -90,9 +89,23 @@ export class APMPanelTag extends React.Component {
     this.maturityCtxUpdateScore('APM', scores, tableData);
   }
 
-  async componentDidUpdate() {
-    console.log("APMPanel")
-    console.log(this.tag);
+  async componentDidUpdate(prevProps) {
+    console.log("APMPanel");
+    console.log(this.props.tag);
+    if (prevProps.tag !== this.props.tag) {
+      await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.tag);
+      const tableData = this.createTableData(this.ctxAcctMap, {
+        docEventTypes: this.docEventTypes,
+        docAgentLatestVersion: this.docAgentLatestVersion
+      });
+      const scores = this.addMaturityScoreToTable(tableData);
+
+      this.setState({
+        loading: false,
+        table: tableData
+      });
+      this.maturityCtxUpdateScore('APM', scores, tableData);
+    }
   }
 
   addMaturityScoreToTable(tableData) {

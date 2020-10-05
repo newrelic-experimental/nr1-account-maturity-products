@@ -14,8 +14,8 @@ export class ApplicationCtxProvider extends React.Component {
     nr1graph: PropTypes.object,
     fetchAccounts: PropTypes.func,
     createAccountMap: PropTypes.func,
-    name: PropTypes.string,
-    tag: PropTypes.string //tag filter
+    name: PropTypes.string
+    //tag: PropTypes.string //tag filter
   };
 
   constructor(props) {
@@ -65,39 +65,39 @@ export class ApplicationCtxProvider extends React.Component {
     });
   }
 
-  async componentDidUpdate(prevProps) {
-    console.log("AppContext");
-    console.log(this.props.tag);
-    if (prevProps.tag !== this.props.tag) {
-      const {
-        accounts,
-        cloudLinkedAccounts,
-        docEventTypes,
-        docAgentLatestVersion
-      } = await this.fetchAccounts(this.nerdGraphQuery);
-
-      // console.log('Context accounts', accounts);
-      // console.log('cloudLinkedAccounts', cloudLinkedAccounts);
-      // console.log(`docEventTypes=${JSON.stringify(docEventTypes)}`);
-      // console.log(
-      //   `docAgentLatestVersion= ${JSON.stringify(docAgentLatestVersion)}`
-      // );
-
-      const accountMap = await this.createAccountMap(
-        accounts,
-        cloudLinkedAccounts,
-        this.nerdGraphQuery,
-        {}
-      );
-
-      this.setState({
-        loading: false,
-        accountMap,
-        docEventTypes,
-        docAgentLatestVersion
-      });
-    }
-  }
+  // async componentDidUpdate(prevProps) {
+  //   console.log("AppContext");
+  //   console.log(this.props.tag);
+  //   if (prevProps.tag !== this.props.tag) {
+  //     const {
+  //       accounts,
+  //       cloudLinkedAccounts,
+  //       docEventTypes,
+  //       docAgentLatestVersion
+  //     } = await this.fetchAccounts(this.nerdGraphQuery);
+  //
+  //     // console.log('Context accounts', accounts);
+  //     // console.log('cloudLinkedAccounts', cloudLinkedAccounts);
+  //     // console.log(`docEventTypes=${JSON.stringify(docEventTypes)}`);
+  //     // console.log(
+  //     //   `docAgentLatestVersion= ${JSON.stringify(docAgentLatestVersion)}`
+  //     // );
+  //
+  //     const accountMap = await this.createAccountMap(
+  //       accounts,
+  //       cloudLinkedAccounts,
+  //       this.nerdGraphQuery,
+  //       {}
+  //     );
+  //
+  //     this.setState({
+  //       loading: false,
+  //       accountMap,
+  //       docEventTypes,
+  //       docAgentLatestVersion
+  //     });
+  //   }
+  // }
 
   async nerdGraphQuery(query) {
     const fn = this.props.nr1graph;
@@ -125,8 +125,7 @@ export class ApplicationCtxProvider extends React.Component {
           loading: this.state.loading,
           accountMap: this.state.accountMap,
           docEventTypes: this.state.docEventTypes,
-          docAgentLatestVersion: this.state.docAgentLatestVersion,
-          tagFilter: this.props.tag
+          docAgentLatestVersion: this.state.docAgentLatestVersion
         }}
       >
         {this.props.children}

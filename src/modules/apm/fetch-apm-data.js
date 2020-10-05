@@ -64,7 +64,7 @@ async function _fetchEntitiesWithAcctIdGQL(
     }
   };
 
-  if (tag !== null || tag !== '' || tag !== undefined) {
+  if (tag !== null) {
     let split = tag.split(':');
     const key = split[0];
     const value = split[1];
