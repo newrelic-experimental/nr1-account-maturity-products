@@ -56,19 +56,19 @@ async function _fetchEntitiesWithAcctIdGQL(
   const accountId = account.id;
   console.log("fetch-apm");
   console.log(tag);
-  if (tag == null || tag == '') {
-    const query = {
-      ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
-      variables: {
-        cursor,
-        nrql: `domain IN ('APM') AND type IN ('APPLICATION') AND accountId=${accountId}`
-      }
-    };
-  } else {
+  const query = {
+    ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
+    variables: {
+      cursor,
+      nrql: `domain IN ('APM') AND type IN ('APPLICATION') AND accountId=${accountId}`
+    }
+  };
+
+  if (tag !== null || tag !== '') {
     let split = tag.split(':');
     const key = split[0];
     const value = split[1];
-    const query = {
+    query = {
       ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
       variables: {
         cursor,
@@ -76,13 +76,6 @@ async function _fetchEntitiesWithAcctIdGQL(
       }
     };
   }
-  // const query = {
-  //   ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
-  //   variables: {
-  //     cursor,
-  //     nrql: `domain IN ('APM') AND type IN ('APPLICATION') and accountId=${accountId}`
-  //   }
-  // };
 
   const response = await gqlAPI(query);
 
