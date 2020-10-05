@@ -79,6 +79,9 @@ async function _fetchEntitiesWithAcctIdGQL(
   };
 
   if (tag !== null) {
+    let split = tag.split(":");
+    const key = split[0];
+    const value = split[1];
     query = {
       ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
       variables: {

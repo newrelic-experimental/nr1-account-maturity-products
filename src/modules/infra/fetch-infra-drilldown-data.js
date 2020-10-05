@@ -30,6 +30,9 @@ async function _fetchEntitiesWithAcctIdGQL(
   const accountId = account.id;
   let entitySearchQuery = `domain = 'INFRA' and type = 'HOST' and accountId= ${accountId}`;
   if (tag !== null) {
+    let split = tag.split(":");
+    const key = split[0];
+    const value = split[1];
     let entitySearchQuery = `domain = 'INFRA' and type = 'HOST' and accountId= ${accountId} AND tags.${key} = '${value}'`;
   }
 
