@@ -65,7 +65,7 @@ export class ApplicationCtxProvider extends React.Component {
     });
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
     if (prevProps.tag !== this.props.tag) {
       const {
         accounts,
