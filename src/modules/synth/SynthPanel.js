@@ -91,6 +91,8 @@ export class SynthPanelTag extends React.Component {
       this.setState({loading: true});
       await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.props.appContext.tag);
       const tableData = this.createTableData(this.ctxAcctMap);
+      console.log("table");
+      console.log(tableData);
       const scores = this.addMaturityScoreToTable(tableData, this.ctxAcctMap);
       this.setState({
         loading: false,
