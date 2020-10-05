@@ -56,7 +56,7 @@ async function _fetchEntitiesWithAcctIdGQL(
   const accountId = account.id;
   console.log("fetch-apm");
   console.log(tag);
-  const query = {
+  let query = {
     ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
