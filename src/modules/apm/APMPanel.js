@@ -65,6 +65,7 @@ export class APMPanelTag extends React.Component {
 
     this.fetchData = this.props.fetchData || fetchAPMData;
     this.createTableData = this.props.createTableData || createAPMTableData;
+    this.tag = appConext.tagFilter;
 
     this.computeMaturityScore =
       this.props.computeMaturityScore || computeAPMMaturityScore;
@@ -74,8 +75,8 @@ export class APMPanelTag extends React.Component {
 
   async componentDidMount() {
     console.log(this.ctxAcctMap);
-    console.log(appContext.tagFilter);
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, appContext.tagFilter);
+    console.log(this.tag);
+    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery, this.tag);
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
       docAgentLatestVersion: this.docAgentLatestVersion
