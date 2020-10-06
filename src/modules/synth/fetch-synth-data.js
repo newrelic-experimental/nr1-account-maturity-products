@@ -21,7 +21,7 @@ export async function fetchSynthData(
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
       console.log(account);
-      //account.synthMonitors = new Map();
+      account.synthMonitors = new Map();
       yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
