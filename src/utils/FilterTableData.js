@@ -41,6 +41,7 @@ export class FilterTableData extends React.Component {
   render() {
     const { tableData, filterKeys } = this.props;
     const filteredData = this._filterNoData(tableData, filterKeys);
+    console.log("filter");
     console.log(filteredData);
 
     return (

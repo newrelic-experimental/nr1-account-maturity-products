@@ -42,6 +42,8 @@ function _onFulFilledHandler(event, accountMap) {
       account.synthMonitors = new Map();
     }
 
+    console.log("fulfilled");
+    console.log(account.synthMonitors.size);
     account.synthMonitors.set(monitor.guid, monitor);
   }
 }
@@ -74,7 +76,7 @@ async function _fetchEntitiesWithAcctIdGQL(
     };
   }
 
-  console.log(query);
+  //console.log(query);
   const response = await gqlAPI(query);
   console.log(response);
   if (
