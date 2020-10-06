@@ -20,6 +20,7 @@ export async function fetchSynthData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
+      account.synthMonitors = null;
       yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
@@ -33,21 +34,22 @@ export async function fetchSynthData(
 }
 
 function _onFulFilledHandler(event, accountMap) {
-  let mem = {};
+  //let mem = {};
   //accountMap.synthMonitors = new Map();
   for (const entity of event.data.result) {
     const { accountId } = entity;
     const account = accountMap.get(accountId);
     const monitor = new Monitor(entity);
 
-    // if (!account.synthMonitors) {
+    if (!account.synthMonitors) {
+      account.synthMonitors = new Map();
+      //mem[accountId] = accountId;
+    }
+    // } else {
+    // if (mem[accountId] == null) {
     //   account.synthMonitors = new Map();
     //   mem[accountId] = accountId;
-    // } else {
-    if (mem[accountId] == null) {
-      account.synthMonitors = new Map();
-      mem[accountId] = accountId;
-    }
+    // }
     console.log("fulfilled");
     console.log(account.synthMonitors.size);
     account.synthMonitors.set(monitor.guid, monitor);
