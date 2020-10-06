@@ -3,7 +3,7 @@ import { Host } from './Host';
 
 export async function fetchInfraDrilldownData(accountMap, accountId, gqlAPI, tag) {
   const account = accountMap.get(accountId);
-
+  account.infraHosts = new Map();
   const result = await _fetchEntitiesWithAcctIdGQL(gqlAPI, account, tag);
 
   _onFulFilledHandler(result, account);

@@ -20,6 +20,7 @@ export async function fetchAPMData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
+      account.apmApps = new Map();
       yield options.fetchEntities(gqlAPI, account, tag);
     }
   };

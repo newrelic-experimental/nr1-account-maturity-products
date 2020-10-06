@@ -20,6 +20,7 @@ export async function fetchBrowserData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
+      account.browserApps = new Map();
       yield options.fetchEntities(gqlAPI, account, tag);
     }
   };

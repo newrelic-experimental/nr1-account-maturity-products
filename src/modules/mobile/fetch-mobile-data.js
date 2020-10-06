@@ -20,6 +20,7 @@ export async function fetchMobileData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
+      account.mobileApps = new Map();
       yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
