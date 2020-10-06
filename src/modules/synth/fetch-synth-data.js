@@ -76,6 +76,7 @@ async function _fetchEntitiesWithAcctIdGQL(
 
   console.log(query);
   const response = await gqlAPI(query);
+  console.log(response);
   if (
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
