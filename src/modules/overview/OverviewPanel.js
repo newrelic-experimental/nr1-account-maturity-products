@@ -46,6 +46,10 @@ export class OverviewPanelTag extends React.Component {
     this.summaryHeader = this.props.summaryHeader || null;
   }
 
+  componentDidUpdate(prevProps) {
+    console.log(this.props.appContext)
+  }
+
   render() {
     const { appContext, maturityScores } = this.props;
     const { accountMap } = appContext;
