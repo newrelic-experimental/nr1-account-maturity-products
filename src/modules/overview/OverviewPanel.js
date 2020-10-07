@@ -47,7 +47,7 @@ export class OverviewPanelTag extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.appContext.tags !== this.props.appContext.tags) {
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
       this.props.maturityScores = {}; //reset maturityScores to trigger loader
     }
   }
