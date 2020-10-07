@@ -128,7 +128,7 @@ export class InfraDrilldownPanelTag extends React.Component {
 
     return (
       <div>
-        <ReactTable data={this.state.table} columns={this.InfraListCols} />
+        <ReactTable style={{height: '600px'}} data={this.state.table} columns={this.InfraListCols} />
         {CreateCSVLink(this.InfraListCols, this.state.table)}
       </div>
     );
