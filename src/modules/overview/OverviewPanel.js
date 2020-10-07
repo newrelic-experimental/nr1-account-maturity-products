@@ -41,23 +41,9 @@ export class OverviewPanelTag extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      scores: null
-    }
+    
     this.createTableData = this.props.createTableData || createTableData;
     this.summaryHeader = this.props.summaryHeader || null;
-  }
-
-  componentDidMount() {
-    let { maturityScores } = this.props;
-    this.setState({scores: maturityScores});
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.appContext.tag !== this.props.appContext.tag) {
-      let scoreCopy = this.props.maturityScores;
-      this.setState({scores: null});
-    }
   }
 
   render() {
@@ -65,7 +51,7 @@ export class OverviewPanelTag extends React.Component {
     const { appContext, maturityScores } = this.props;
     const { accountMap } = appContext;
 
-    if (Object.keys(maturityScores).length === 0 || scores == null) {
+    if (Object.keys(maturityScores).length === 0) {
       return <CustomCircleLoader message="Loading Overview" />;
     }
     const { tableData, scoreKeys } = this.createTableData(
