@@ -51,18 +51,17 @@ export class OverviewPanelTag extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.appContext.tag !== this.props.appContext.tag) {
-      this.setState({tagsUpdated: true }, () =>{
-        this.setState({tagsUpdated: false })
-      })
+      this.setState({tagsUpdated: true});
     }
   }
 
   render() {
-    const { tagsUpdated } = this.state;
+    let { tagsUpdated } = this.state;
     const { appContext, maturityScores } = this.props;
     const { accountMap } = appContext;
 
     if (Object.keys(maturityScores).length === 0 || tagsUpdated == true) {
+      this.setState({tagsUpdated: false});
       return <CustomCircleLoader message="Loading Overview" />;
     }
     const { tableData, scoreKeys } = this.createTableData(
