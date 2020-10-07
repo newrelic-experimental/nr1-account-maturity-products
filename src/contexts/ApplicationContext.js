@@ -64,38 +64,6 @@ export class ApplicationCtxProvider extends React.Component {
       docAgentLatestVersion
     });
   }
-  // 
-  // async componentDidUpdate(prevProps) {
-  //   if (prevProps.tag !== this.props.tag) {
-  //     const {
-  //       accounts,
-  //       cloudLinkedAccounts,
-  //       docEventTypes,
-  //       docAgentLatestVersion
-  //     } = await this.fetchAccounts(this.nerdGraphQuery);
-  //
-  //     // console.log('Context accounts', accounts);
-  //     // console.log('cloudLinkedAccounts', cloudLinkedAccounts);
-  //     // console.log(`docEventTypes=${JSON.stringify(docEventTypes)}`);
-  //     // console.log(
-  //     //   `docAgentLatestVersion= ${JSON.stringify(docAgentLatestVersion)}`
-  //     // );
-  //
-  //     const accountMap = await this.createAccountMap(
-  //       accounts,
-  //       cloudLinkedAccounts,
-  //       this.nerdGraphQuery,
-  //       {}
-  //     );
-  //
-  //     this.setState({
-  //       loading: false,
-  //       accountMap,
-  //       docEventTypes,
-  //       docAgentLatestVersion
-  //     });
-  //   }
-  // }
 
   async nerdGraphQuery(query) {
     const fn = this.props.nr1graph;
