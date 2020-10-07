@@ -53,7 +53,7 @@ export class OverviewPanelTag extends React.Component {
   }
 
   render() {
-    const { appContext, maturityScores } = this.props;
+    let { appContext, maturityScores } = this.props;
     const { accountMap } = appContext;
 
     if (Object.keys(maturityScores).length === 0) {
