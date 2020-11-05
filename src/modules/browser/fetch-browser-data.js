@@ -63,7 +63,7 @@ async function _fetchEntitiesWithAcctIdGQL(
   };
 
   if (tag !== null) {
-    let split = tag.split(':');
+    const split = tag.split(':');
     const key = split[0];
     const value = split[1];
     query = {
@@ -72,7 +72,7 @@ async function _fetchEntitiesWithAcctIdGQL(
         cursor,
         nrql: `domain IN ('BROWSER') AND type IN ('APPLICATION') and accountId=${accountId} AND tags.${key} = '${value}'`
       }
-    }
+    };
   }
 
   const response = await gqlAPI(query);
@@ -91,7 +91,13 @@ async function _fetchEntitiesWithAcctIdGQL(
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return entityArr;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, tag, entityArr, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(
+      gqlAPI,
+      account,
+      tag,
+      entityArr,
+      nextCursor
+    );
   }
 }
 

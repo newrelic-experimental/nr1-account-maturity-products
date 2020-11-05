@@ -15,7 +15,7 @@ export class ApplicationCtxProvider extends React.Component {
     fetchAccounts: PropTypes.func,
     createAccountMap: PropTypes.func,
     name: PropTypes.string,
-    tag: PropTypes.string //tag filter
+    tag: PropTypes.string // tag filter
   };
 
   constructor(props) {
