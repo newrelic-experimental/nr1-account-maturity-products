@@ -75,7 +75,11 @@ export class SynthPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery,
+      this.props.appContext.tag
+    );
     const tableData = this.createTableData(this.ctxAcctMap);
     const scores = this.addMaturityScoreToTable(tableData, this.ctxAcctMap);
     this.setState({
@@ -84,6 +88,27 @@ export class SynthPanelTag extends React.Component {
     });
 
     this.maturityCtxUpdateScore('SYNTHETICS', scores, tableData);
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
+      this.setState({ loading: true }); // eslint-disable-line react/no-did-update-set-state
+      await this.fetchData(
+        this.ctxAcctMap,
+        this.nerdGraphQuery,
+        this.props.appContext.tag
+      );
+      const tableData = this.createTableData(this.ctxAcctMap);
+      const scores = this.addMaturityScoreToTable(tableData, this.ctxAcctMap);
+
+      /* eslint-disable react/no-did-update-set-state */
+      this.setState({
+        loading: false,
+        table: tableData
+      });
+      /* eslint-enable react/no-did-update-set-state */
+      this.maturityCtxUpdateScore('SYNTHETICS', scores, tableData);
+    }
   }
 
   addMaturityScoreToTable(tableData, ctxAcctMap) {

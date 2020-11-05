@@ -14,7 +14,8 @@ export class ApplicationCtxProvider extends React.Component {
     nr1graph: PropTypes.object,
     fetchAccounts: PropTypes.func,
     createAccountMap: PropTypes.func,
-    name: PropTypes.string
+    name: PropTypes.string,
+    tag: PropTypes.string // tag filter
   };
 
   constructor(props) {
@@ -90,7 +91,8 @@ export class ApplicationCtxProvider extends React.Component {
           loading: this.state.loading,
           accountMap: this.state.accountMap,
           docEventTypes: this.state.docEventTypes,
-          docAgentLatestVersion: this.state.docAgentLatestVersion
+          docAgentLatestVersion: this.state.docAgentLatestVersion,
+          tag: this.props.tag
         }}
       >
         {this.props.children}

@@ -73,7 +73,11 @@ export class APMPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
+    await this.fetchData(
+      this.ctxAcctMap,
+      this.nerdGraphQuery,
+      this.props.appContext.tag
+    );
     const tableData = this.createTableData(this.ctxAcctMap, {
       docEventTypes: this.docEventTypes,
       docAgentLatestVersion: this.docAgentLatestVersion
@@ -85,6 +89,31 @@ export class APMPanelTag extends React.Component {
       table: tableData
     });
     this.maturityCtxUpdateScore('APM', scores, tableData);
+  }
+
+  async componentDidUpdate(prevProps) {
+    // Tag update
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
+      this.setState({ loading: true }); // eslint-disable-line react/no-did-update-set-state
+      await this.fetchData(
+        this.ctxAcctMap,
+        this.nerdGraphQuery,
+        this.props.appContext.tag
+      );
+      const tableData = this.createTableData(this.ctxAcctMap, {
+        docEventTypes: this.docEventTypes,
+        docAgentLatestVersion: this.docAgentLatestVersion
+      });
+      const scores = this.addMaturityScoreToTable(tableData);
+
+      /* eslint-disable react/no-did-update-set-state */
+      this.setState({
+        loading: false,
+        table: tableData
+      });
+      /* eslint-enable react/no-did-update-set-state */
+      this.maturityCtxUpdateScore('APM', scores, tableData);
+    }
   }
 
   addMaturityScoreToTable(tableData) {

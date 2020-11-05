@@ -5,6 +5,7 @@ import { GET_MOBILE_APP_SUBSCRIBER_ID_GQL } from './mobile-gql';
 export async function fetchMobileData(
   accountMap,
   gqlAPI,
+  tag,
   overrides = {
     fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
@@ -19,7 +20,8 @@ export async function fetchMobileData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
-      yield options.fetchEntities(gqlAPI, account);
+      account.mobileApps = new Map();
+      yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
 
@@ -64,17 +66,31 @@ function _onFulFilledHandler(event, accountMap) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {
   const { id } = account;
-  const query = {
+  let query = {
     ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
       nrql: `domain IN ('MOBILE') AND type IN ('APPLICATION') and accountId=${id}`
     }
   };
+
+  if (tag !== null) {
+    const split = tag.split(':');
+    const key = split[0];
+    const value = split[1];
+    query = {
+      ...GET_MOBILE_APP_SUBSCRIBER_ID_GQL,
+      variables: {
+        cursor,
+        nrql: `domain IN ('MOBILE') AND type IN ('APPLICATION') and accountId=${id} AND tags.${key} = '${value}'`
+      }
+    };
+  }
 
   const response = await gqlAPI(query);
 
@@ -91,7 +107,13 @@ async function _fetchEntitiesWithAcctIdGQL(
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return entityArr;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(
+      gqlAPI,
+      account,
+      tag,
+      entityArr,
+      nextCursor
+    );
   }
 }
 

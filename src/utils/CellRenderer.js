@@ -116,7 +116,11 @@ function renderPopup(tableData, popupColHeaders, trigger) {
       contentStyle={contentStyle}
     >
       <div>
-        <ReactTable data={tableData} columns={popupColHeaders} />
+        <ReactTable
+          style={{ height: '600px' }}
+          data={tableData}
+          columns={popupColHeaders}
+        />
         {CreateCSVLink(popupColHeaders, tableData)}
       </div>
     </Popup>

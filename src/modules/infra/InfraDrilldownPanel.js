@@ -53,7 +53,12 @@ export class InfraDrilldownPanelTag extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchData(this.ctxAcctMap, this.accountId, this.nerdGraphQuery);
+    await this.fetchData(
+      this.ctxAcctMap,
+      this.accountId,
+      this.nerdGraphQuery,
+      this.props.appContext.tag
+    );
 
     const infraHostTable = this.processDrilldownHostList(
       this.accountId,
@@ -65,6 +70,30 @@ export class InfraDrilldownPanelTag extends React.Component {
       table: infraHostTable,
       loading: false
     });
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.appContext.tag !== this.props.appContext.tag) {
+      this.setState({ loading: true }); // eslint-disable-line react/no-did-update-set-state
+      await this.fetchData(
+        this.ctxAcctMap,
+        this.accountId,
+        this.nerdGraphQuery,
+        this.props.appContext.tag
+      );
+
+      const infraHostTable = this.processDrilldownHostList(
+        this.accountId,
+        this.ctxAcctMap,
+        this.docEventTypes
+      );
+      /* eslint-disable react/no-did-update-set-state */
+      this.setState({
+        table: infraHostTable,
+        loading: false
+      });
+      /* eslint-enable react/no-did-update-set-state */
+    }
   }
 
   processDrilldownHostList(accountId, ctxAcctMap, docEventTypes) {
@@ -110,7 +139,11 @@ export class InfraDrilldownPanelTag extends React.Component {
 
     return (
       <div>
-        <ReactTable data={this.state.table} columns={this.InfraListCols} />
+        <ReactTable
+          style={{ height: '600px' }}
+          data={this.state.table}
+          columns={this.InfraListCols}
+        />
         {CreateCSVLink(this.InfraListCols, this.state.table)}
       </div>
     );

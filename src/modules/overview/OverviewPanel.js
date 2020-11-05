@@ -41,7 +41,6 @@ export class OverviewPanelTag extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.createTableData = this.props.createTableData || createTableData;
     this.summaryHeader = this.props.summaryHeader || null;
   }

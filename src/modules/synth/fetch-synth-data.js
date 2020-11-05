@@ -5,6 +5,7 @@ import { SYNTH_ENTITIES_SUBSCRIBER_ID_GQL } from './synth-gql';
 export async function fetchSynthData(
   accountMap,
   gqlAPI,
+  tag,
   overrides = {
     fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
@@ -19,7 +20,8 @@ export async function fetchSynthData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
-      yield options.fetchEntities(gqlAPI, account);
+      account.synthMonitors = new Map();
+      yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
 
@@ -47,11 +49,12 @@ function _onFulFilledHandler(event, accountMap) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {
   const accountId = account.id;
-  const query = {
+  let query = {
     ...SYNTH_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
@@ -59,7 +62,21 @@ async function _fetchEntitiesWithAcctIdGQL(
     }
   };
 
+  if (tag !== null) {
+    const split = tag.split(':');
+    const key = split[0];
+    const value = split[1];
+    query = {
+      ...SYNTH_ENTITIES_SUBSCRIBER_ID_GQL,
+      variables: {
+        cursor,
+        nrql: `domain IN ('SYNTH') AND type IN ('MONITOR') and accountId=${accountId} AND tags.${key} = '${value}'`
+      }
+    };
+  }
+
   const response = await gqlAPI(query);
+
   if (
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
@@ -73,7 +90,13 @@ async function _fetchEntitiesWithAcctIdGQL(
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return entityArr;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(
+      gqlAPI,
+      account,
+      tag,
+      entityArr,
+      nextCursor
+    );
   }
 }
 

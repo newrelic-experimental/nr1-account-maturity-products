@@ -5,6 +5,7 @@ import { APM_ENTITIES_SUBSCRIBER_ID_GQL } from './apm-gql';
 export async function fetchAPMData(
   accountMap,
   gqlAPI,
+  tag,
   overrides = {
     fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
@@ -19,7 +20,8 @@ export async function fetchAPMData(
 
   const _getEntities = function*() {
     for (const account of accountMap.values()) {
-      yield options.fetchEntities(gqlAPI, account);
+      account.apmApps = new Map();
+      yield options.fetchEntities(gqlAPI, account, tag);
     }
   };
 
@@ -48,17 +50,31 @@ function _onFulFilledHandler(event, accountMap) {
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
+  tag,
   entityArr = [],
   cursor = null
 ) {
   const accountId = account.id;
-  const query = {
+  let query = {
     ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
-      nrql: `domain IN ('APM') AND type IN ('APPLICATION') and accountId=${accountId}`
+      nrql: `domain IN ('APM') AND type IN ('APPLICATION') AND accountId=${accountId}`
     }
   };
+
+  if (tag !== null) {
+    const split = tag.split(':');
+    const key = split[0];
+    const value = split[1];
+    query = {
+      ...APM_ENTITIES_SUBSCRIBER_ID_GQL,
+      variables: {
+        cursor,
+        nrql: `domain IN ('APM') AND type IN ('APPLICATION') AND accountId=${accountId} AND tags.${key} = '${value}'`
+      }
+    };
+  }
 
   const response = await gqlAPI(query);
 
@@ -76,7 +92,13 @@ async function _fetchEntitiesWithAcctIdGQL(
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return entityArr;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
+    return _fetchEntitiesWithAcctIdGQL(
+      gqlAPI,
+      account,
+      tag,
+      entityArr,
+      nextCursor
+    );
   }
 }
 
