@@ -36,9 +36,13 @@ class Application {
         .map(tag => tag.key)
         .filter(
           key =>
-            ['account', 'accountId', 'language', 'trustedAccountId'].indexOf(
-              key
-            ) === -1
+            [
+              'account',
+              'accountId',
+              'language',
+              'trustedAccountId',
+              'guid'
+            ].indexOf(key) === -1
         );
     }
 
