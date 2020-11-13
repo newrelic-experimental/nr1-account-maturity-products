@@ -49,53 +49,31 @@ class Application {
     this.keyTxns = [];
   }
 
-  isDTCapable() {
-    let isDTCapable = false;
+  isRecentAgent(docAgentLatestVersion) {
+    const isRecentAgent = false;
     try {
-      if (this.reporting) {
-        switch (this.language) {
-          case 'python':
-            if (semver.gt(semver.coerce(this.maxVersion), '4.1.0')) {
-              isDTCapable = true;
-            }
-            break;
-          case 'ruby':
-            if (semver.gt(semver.coerce(this.maxVersion), '5.2.0')) {
-              isDTCapable = true;
-            }
-            break;
-          case 'nodejs':
-            if (semver.gt(semver.coerce(this.maxVersion), '4.3.0')) {
-              isDTCapable = true;
-            }
-            break;
-          case 'go':
-            if (semver.gt(semver.coerce(this.maxVersion), '2.0.0')) {
-              isDTCapable = true;
-            }
-            break;
-          case 'dotnet':
-            if (semver.gt(semver.coerce(this.maxVersion), '8.5.45')) {
-              isDTCapable = true;
-            }
-            break;
-          case 'php':
-            if (semver.gt(semver.coerce(this.maxVersion), '8.3.0')) {
-              isDTCapable = true;
-            }
-            break;
-          case 'java':
-            if (semver.gt(semver.coerce(this.maxVersion), '4.2.0')) {
-              isDTCapable = true;
-            }
-            break;
-          default:
-            isDTCapable = false;
-        }
+      let latestVersion = semver.valid(
+        semver.coerce(docAgentLatestVersion[this.language])
+      );
+
+      // get latest version for dotnet legacy if agent version < 7
+      if (
+        this.language === 'dotnet' &&
+        Number.parseInt(
+          this.maxVersion.substring(0, this.maxVersion.indexOf('.'))
+        ) < 7
+      ) {
+        latestVersion = semver.valid(
+          semver.coerce(docAgentLatestVersion.dotnet_legacy)
+        );
       }
-      return isDTCapable;
+
+      const agentVer = semver.valid(semver.coerce(this.maxVersion));
+
+      // check agent major version
+      return semver.satisfies(agentVer, `${semver.major(latestVersion)}.x`);
     } catch (err) {
-      return isDTCapable;
+      return isRecentAgent;
     }
   }
 

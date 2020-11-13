@@ -344,6 +344,7 @@ export async function getAgentReleases(gqlAPI) {
       android: _getAgentRelease(data.androidReleases),
       browser: _getAgentRelease(data.browserReleases),
       dotnet: _getAgentRelease(data.dotnetReleases),
+      dotnet_legacy: _getAgentRelease(data.dotnetReleases, 'dotnet_legacy'),
       elixir: _getAgentRelease(data.elixirReleases),
       go: _getAgentRelease(data.goReleases),
       infrastructure: _getAgentRelease(data.infraReleases),
@@ -353,7 +354,7 @@ export async function getAgentReleases(gqlAPI) {
       php: _getAgentRelease(data.phpReleases),
       python: _getAgentRelease(data.pythonReleases),
       ruby: _getAgentRelease(data.rubyReleases),
-      sdk: _getAgentRelease(data.sdkReleases)
+      c: _getAgentRelease(data.sdkReleases)
     };
   } catch (err) {
     console.error(err);
@@ -417,13 +418,24 @@ export async function getCloudLinkedAccounts(gqlAPI, accountId = null) {
   return cloudLinkedAccounts;
 }
 
-function _getAgentRelease(agentReleaseNode) {
+function _getAgentRelease(agentReleaseNode, name = null) {
   if (!agentReleaseNode) {
     return '0.0.0';
   }
+
+  if (!name) {
+    return agentReleaseNode.agentReleases &&
+      agentReleaseNode.agentReleases.length > 0
+      ? agentReleaseNode.agentReleases[0].version
+      : '0.0.0';
+  }
+
+  // this logic is specific to dotnet_legacy
   return agentReleaseNode.agentReleases &&
     agentReleaseNode.agentReleases.length > 0
-    ? agentReleaseNode.agentReleases[0].version
+    ? agentReleaseNode.agentReleases
+        .filter(release => release.version.startsWith('6'))
+        .shift().version
     : '0.0.0';
 }
 

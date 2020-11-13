@@ -86,10 +86,9 @@ export const ApmModel = {
     appsWithAlertsPercentage: 0.2,
     customApdexPercentage: 0.1,
     usingLabelsPercentage: 0.12,
-    apmUsingDTCapableAgentPercentage: 0.05,
     apmDistributedTracingEnabledPercentage: 0.13,
     apmDeploymentMarkersPercentage: 0.15,
-    apmLatestAgentPercentage: 0.05
+    apmLatestAgentPercentage: 0.1
   },
   rowDataEnricher: null
 };
