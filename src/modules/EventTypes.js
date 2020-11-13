@@ -13769,6 +13769,140 @@ export const EventTypes = {
             ],
             dataSources: ['APM'],
             name: 'JfrMethodSample'
+          },
+          // IMPORTANT NOTE: please do not delete these event types
+          // unless it becomes available in GQL
+          {
+            attributes: [
+              {
+                label: 'aggregationFunction',
+                name: 'aggregationFunction'
+              },
+              {
+                label: 'appId',
+                name: 'appId'
+              },
+              {
+                label: 'consumingAccountId',
+                name: 'consumingAccountId'
+              },
+              {
+                label: 'consumingAccountName',
+                name: 'consumingAccountName'
+              },
+              {
+                label: 'durationMs',
+                name: 'durationMs'
+              },
+              {
+                label: 'key',
+                name: 'key'
+              },
+              {
+                label: 'masterAccountId',
+                name: 'masterAccountId'
+              },
+              {
+                label: 'masterAccountName',
+                name: 'masterAccountName'
+              },
+              {
+                label: 'metric',
+                name: 'metric'
+              },
+              {
+                label: 'nr.aggregationCount',
+                name: 'nr.aggregationCount'
+              },
+              {
+                label: 'nr.calculatorHostname',
+                name: 'nr.calculatorHostname'
+              },
+              {
+                label: 'nr.incomingUsageVersion',
+                name: 'nr.incomingUsageVersion'
+              },
+              {
+                label: 'nr.outgoingUsageVersion',
+                name: 'nr.outgoingUsageVersion'
+              },
+              {
+                label: 'nr.sourceApplication',
+                name: 'nr.sourceApplication'
+              },
+              {
+                label: 'nr.stamperHost',
+                name: 'nr.stamperHost'
+              },
+              {
+                label: 'processedTime',
+                name: 'processedTime'
+              },
+              {
+                label: 'productLine',
+                name: 'productLine'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'type',
+                name: 'type'
+              },
+              {
+                label: 'usage',
+                name: 'usage'
+              }
+            ],
+            dataSources: [],
+            name: 'NrUsage'
+          },
+          {
+            attributes: [
+              {
+                label: 'api',
+                name: 'api'
+              },
+              {
+                label: 'awsAPI',
+                name: 'awsAPI'
+              },
+              {
+                label: 'awsRegion',
+                name: 'awsRegion'
+              },
+              {
+                label: 'duration',
+                name: 'duration'
+              },
+              {
+                label: 'googleApi',
+                name: 'googleApi'
+              },
+              {
+                label: 'http.method',
+                name: 'http.method'
+              },
+              {
+                label: 'http.url',
+                name: 'http.url'
+              },
+              {
+                label: 'nr.sampleDataSet',
+                name: 'nr.sampleDataSet'
+              },
+              {
+                label: 'sampleDataSet',
+                name: 'sampleDataSet'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              }
+            ],
+            dataSources: [],
+            name: 'Public_APICall'
           }
         ]
       }
