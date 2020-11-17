@@ -52,7 +52,7 @@ async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account, cursor = null) {
     return account;
   }
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
-  account.insightsDashboards.push(entities);
+  account.insightsDashboards.push(...entities);
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return account;

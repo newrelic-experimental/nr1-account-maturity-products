@@ -1870,6 +1870,14 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'net.connectionsAcceptedPerSecond',
+                name: 'net.connectionsAcceptedPerSecond'
+              },
+              {
+                label: 'net.connectionsActive',
+                name: 'net.connectionsActive'
+              },
+              {
                 label: 'net.requestsPerSecond',
                 name: 'net.requestsPerSecond'
               },
@@ -1892,14 +1900,6 @@ export const EventTypes = {
               {
                 label: 'net.connectionsIdle',
                 name: 'net.connectionsIdle'
-              },
-              {
-                label: 'net.connectionsActive',
-                name: 'net.connectionsActive'
-              },
-              {
-                label: 'net.connectionsAcceptedPerSecond',
-                name: 'net.connectionsAcceptedPerSecond'
               }
             ],
             dataSources: ['NGINX'],
@@ -2980,6 +2980,10 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'response.status',
+                name: 'response.status'
+              },
+              {
                 label: 'timestamp',
                 name: 'timestamp'
               },
@@ -3596,6 +3600,34 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'externalDuration',
+                name: 'externalDuration'
+              },
+              {
+                label: 'traceId',
+                name: 'traceId'
+              },
+              {
+                label: 'response.status',
+                name: 'response.status'
+              },
+              {
+                label: 'request.headers.userAgent',
+                name: 'request.headers.userAgent'
+              },
+              {
+                label: 'newRelic.ingestPoint',
+                name: 'newRelic.ingestPoint'
+              },
+              {
+                label: 'aws.lambda.coldStart',
+                name: 'aws.lambda.coldStart'
+              },
+              {
+                label: 'request.headers.accept',
+                name: 'request.headers.accept'
+              },
+              {
                 label: 'duration',
                 name: 'duration'
               },
@@ -3672,10 +3704,6 @@ export const EventTypes = {
                 name: 'httpResponseCode'
               },
               {
-                label: 'externalDuration',
-                name: 'externalDuration'
-              },
-              {
                 label: 'externalCallCount',
                 name: 'externalCallCount'
               },
@@ -3709,6 +3737,34 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'externalDuration',
+                name: 'externalDuration'
+              },
+              {
+                label: 'error.class',
+                name: 'error.class'
+              },
+              {
+                label: 'traceId',
+                name: 'traceId'
+              },
+              {
+                label: 'request.headers.userAgent',
+                name: 'request.headers.userAgent'
+              },
+              {
+                label: 'newRelic.ingestPoint',
+                name: 'newRelic.ingestPoint'
+              },
+              {
+                label: 'aws.lambda.coldStart',
+                name: 'aws.lambda.coldStart'
+              },
+              {
+                label: 'request.headers.accept',
+                name: 'request.headers.accept'
+              },
               {
                 label: 'duration',
                 name: 'duration'
@@ -3790,20 +3846,12 @@ export const EventTypes = {
                 name: 'httpResponseCode'
               },
               {
-                label: 'externalDuration',
-                name: 'externalDuration'
-              },
-              {
                 label: 'externalCallCount',
                 name: 'externalCallCount'
               },
               {
                 label: 'error.message',
                 name: 'error.message'
-              },
-              {
-                label: 'error.class',
-                name: 'error.class'
               },
               {
                 label: 'databaseDuration',
@@ -4086,6 +4134,10 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'Session',
+                name: 'session'
+              },
+              {
                 label: 'browserInteractionId',
                 name: 'browserInteractionId'
               },
@@ -4120,10 +4172,6 @@ export const EventTypes = {
               {
                 label: 'Timestamp',
                 name: 'timestamp'
-              },
-              {
-                label: 'Session',
-                name: 'session'
               },
               {
                 label: 'Region Code',
@@ -6711,6 +6759,38 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'capacityPods\t',
+                name: 'capacityPods\t'
+              },
+              {
+                label: 'capacityMemoryBytes',
+                name: 'capacityMemoryBytes'
+              },
+              {
+                label: 'capacityEphemeralStorageBytes',
+                name: 'capacityEphemeralStorageBytes'
+              },
+              {
+                label: 'capacityCpuCores',
+                name: 'capacityCpuCores'
+              },
+              {
+                label: 'allocatablePods',
+                name: 'allocatablePods'
+              },
+              {
+                label: 'allocatableMemoryBytes',
+                name: 'allocatableMemoryBytes'
+              },
+              {
+                label: 'allocatableEphemeralStorageBytes\t',
+                name: 'allocatableEphemeralStorageBytes\t'
+              },
+              {
+                label: 'allocatableCpuCores',
+                name: 'allocatableCpuCores'
+              },
+              {
                 label: 'runtimeUsedBytes',
                 name: 'runtimeUsedBytes'
               },
@@ -6925,16 +7005,16 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'pvcNamespace\t',
+                name: 'pvcNamespace\t'
+              },
+              {
                 label: 'fsUsedPercent\t',
                 name: 'fsUsedPercent\t'
               },
               {
                 label: 'volumeName',
                 name: 'volumeName'
-              },
-              {
-                label: 'pvcNamespace\t',
-                name: 'pvcNamespace\t'
               },
               {
                 label: 'pvcName\t',
@@ -7463,6 +7543,10 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'deviceUuid',
+                name: 'deviceUuid'
+              },
+              {
                 label: 'UUID',
                 name: 'uuid'
               },
@@ -7473,10 +7557,6 @@ export const EventTypes = {
               {
                 label: 'OS Name',
                 name: 'osName'
-              },
-              {
-                label: 'deviceUuid',
-                name: 'deviceUuid'
               },
               {
                 label: 'deviceType',
@@ -9471,12 +9551,12 @@ export const EventTypes = {
                 name: 'db.maxExecutionTimeExceededPerSecond\t'
               },
               {
-                label: 'db.tableOpenCacheHitsPerSecond\t',
-                name: 'db.tableOpenCacheHitsPerSecond\t'
-              },
-              {
                 label: 'db.handlerWritePerSecond\t',
                 name: 'db.handlerWritePerSecond\t'
+              },
+              {
+                label: 'db.tableOpenCacheHitsPerSecond\t',
+                name: 'db.tableOpenCacheHitsPerSecond\t'
               },
               {
                 label: 'query.slowQueriesPerSecond',
@@ -10673,6 +10753,26 @@ export const EventTypes = {
                 name: 'timestamp'
               },
               {
+                label: 'newRelic.traceFiler.type',
+                name: 'newRelic.traceFiler.type'
+              },
+              {
+                label: 'entityGuid',
+                name: 'entityGuid'
+              },
+              {
+                label: 'transaction.name',
+                name: 'transaction.name'
+              },
+              {
+                label: 'session',
+                name: 'session'
+              },
+              {
+                label: 'newRelic.ingestPoint',
+                name: 'newRelic.ingestPoint'
+              },
+              {
                 label: 'trace.id',
                 name: 'trace.id'
               },
@@ -10711,10 +10811,6 @@ export const EventTypes = {
               {
                 label: 'timeSinceBrowserInteractionStart.ms',
                 name: 'timeSinceBrowserInteractionStart.ms'
-              },
-              {
-                label: 'session',
-                name: 'session'
               },
               {
                 label: 'response.statusCode',
@@ -10861,10 +10957,6 @@ export const EventTypes = {
                 name: 'host'
               },
               {
-                label: 'entityGuid',
-                name: 'entityGuid'
-              },
-              {
                 label: 'db.statement',
                 name: 'db.statement'
               },
@@ -10946,6 +11038,78 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'timeStamp',
+                name: 'timeStamp'
+              },
+              {
+                label: 'sslCertificationExpirationDaysRemaining',
+                name: 'sslCertificationExpirationDaysRemaining'
+              },
+              {
+                label: 'sslCertificateExpirationMs',
+                name: 'sslCertificateExpirationMs'
+              },
+              {
+                label: 'responseStatus',
+                name: 'responseStatus'
+              },
+              {
+                label: 'port',
+                name: 'port'
+              },
+              {
+                label: 'parentId',
+                name: 'parentId'
+              },
+              {
+                label: 'nr.durationConnectV2',
+                name: 'nr.durationConnectV2'
+              },
+              {
+                label: 'monitorId',
+                name: 'monitorId'
+              },
+              {
+                label: 'minionJobsSkipped5MinRate',
+                name: 'minionJobsSkipped5MinRate'
+              },
+              {
+                label: 'minionJobsReceived5MinRate',
+                name: 'minionJobsReceived5MinRate'
+              },
+              {
+                label: 'minionId',
+                name: 'minionId'
+              },
+              {
+                label: 'minion',
+                name: 'minion'
+              },
+              {
+                label: 'longRunningTasksMinTime',
+                name: 'longRunningTasksMinTime'
+              },
+              {
+                label: 'longRunningTasksMaxTime',
+                name: 'longRunningTasksMaxTime'
+              },
+              {
+                label: 'longRunningTasksAvgTime',
+                name: 'longRunningTasksAvgTime'
+              },
+              {
+                label: 'isNavigationRoot',
+                name: 'isNavigationRoot'
+              },
+              {
+                label: 'hierarchicalURL',
+                name: 'hierarchicalURL'
+              },
+              {
+                label: 'entityGuid',
+                name: 'entityGuid'
+              },
               {
                 label: 'unloadEventStart',
                 name: 'unloadEventStart'
@@ -11147,6 +11311,242 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'minionWorkers',
+                name: 'minionWorkers'
+              },
+              {
+                label: 'minionVmVersion',
+                name: 'minionVmVersion'
+              },
+              {
+                label: 'minionVmVendor',
+                name: 'minionVmVendor'
+              },
+              {
+                label: 'minionVmUptimeMs',
+                name: 'minionVmUptimeMs'
+              },
+              {
+                label: 'minionVmSpecVersion',
+                name: 'minionVmSpecVersion'
+              },
+              {
+                label: 'minionVmName',
+                name: 'minionVmName'
+              },
+              {
+                label: 'minionUptimeMs',
+                name: 'minionUptimeMs'
+              },
+              {
+                label: 'minionSystemUptimeMs',
+                name: 'minionSystemUptimeMs'
+              },
+              {
+                label: 'minionSwapMemoryUsedPercentage',
+                name: 'minionSwapMemoryUsedPercentage'
+              },
+              {
+                label: 'minionSwapMemoryUsedBytes',
+                name: 'minionSwapMemoryUsedBytes'
+              },
+              {
+                label: 'minionSwapMemoryTotalBytes',
+                name: 'minionSwapMemoryTotalBytes'
+              },
+              {
+                label: 'minionSwapMemoryFreePercentage',
+                name: 'minionSwapMemoryFreePercentage'
+              },
+              {
+                label: 'minionSwapMemoryFreeBytes',
+                name: 'minionSwapMemoryFreeBytes'
+              },
+              {
+                label: 'minionProvider',
+                name: 'minionProvider'
+              },
+              {
+                label: 'minionProcessorsUsagePercentage',
+                name: 'minionProcessorsUsagePercentage'
+              },
+              {
+                label: 'minionProcessorsFrequencyGHz',
+                name: 'minionProcessorsFrequencyGHz'
+              },
+              {
+                label: 'minionProcessors',
+                name: 'minionProcessors'
+              },
+              {
+                label: 'minionPhysicalMemoryUsedPercentage',
+                name: 'minionPhysicalMemoryUsedPercentage'
+              },
+              {
+                label: 'minionPhysicalMemoryUsedBytes',
+                name: 'minionPhysicalMemoryUsedBytes'
+              },
+              {
+                label: 'minionPhysicalMemoryTotalBytes',
+                name: 'minionPhysicalMemoryTotalBytes'
+              },
+              {
+                label: 'minionPhysicalMemoryFreePercentage',
+                name: 'minionPhysicalMemoryFreePercentage'
+              },
+              {
+                label: 'minionPhysicalMemoryFreeBytes',
+                name: 'minionPhysicalMemoryFreeBytes'
+              },
+              {
+                label: 'minionOsVersion',
+                name: 'minionOsVersion'
+              },
+              {
+                label: 'minionOsName',
+                name: 'minionOsName'
+              },
+              {
+                label: 'minionLocationIsPrivate',
+                name: 'minionLocationIsPrivate'
+              },
+              {
+                label: 'minionJobsTimedout5MinRate',
+                name: 'minionJobsTimedout5MinRate'
+              },
+              {
+                label: 'minionJobsTimedout1MinRate',
+                name: 'minionJobsTimedout1MinRate'
+              },
+              {
+                label: 'minionJobsTimedout15MinRate',
+                name: 'minionJobsTimedout15MinRate'
+              },
+              {
+                label: 'minionJobsStarted5MinRate',
+                name: 'minionJobsStarted5MinRate'
+              },
+              {
+                label: 'minionJobsStarted1MinRate',
+                name: 'minionJobsStarted1MinRate'
+              },
+              {
+                label: 'minionJobsStarted15MinRate',
+                name: 'minionJobsStarted15MinRate'
+              },
+              {
+                label: 'minionJobsSkipped1MinRate',
+                name: 'minionJobsSkipped1MinRate'
+              },
+              {
+                label: 'minionJobsSkipped15MinRate',
+                name: 'minionJobsSkipped15MinRate'
+              },
+              {
+                label: 'minionJobsSkipped',
+                name: 'minionJobsSkipped'
+              },
+              {
+                label: 'minionJobsRunning',
+                name: 'minionJobsRunning'
+              },
+              {
+                label: 'minionJobsReceived5MinRate',
+                name: 'minionJobsReceived5MinRate'
+              },
+              {
+                label: 'minionJobsReceived1MinRate',
+                name: 'minionJobsReceived1MinRate'
+              },
+              {
+                label: 'minionJobsReceived15MinRate',
+                name: 'minionJobsReceived15MinRate'
+              },
+              {
+                label: 'minionJobsQueued5MinRate',
+                name: 'minionJobsQueued5MinRate'
+              },
+              {
+                label: 'minionJobsQueued1MinRate',
+                name: 'minionJobsQueued1MinRate'
+              },
+              {
+                label: 'minionJobsQueued15MinRate',
+                name: 'minionJobsQueued15MinRate'
+              },
+              {
+                label: 'minionJobsInternalEngineError5MinRate',
+                name: 'minionJobsInternalEngineError5MinRate'
+              },
+              {
+                label: 'minionJobsInternalEngineError1MinRate',
+                name: 'minionJobsInternalEngineError1MinRate'
+              },
+              {
+                label: 'minionJobsInternalEngineError15MinRate',
+                name: 'minionJobsInternalEngineError15MinRate'
+              },
+              {
+                label: 'minionJobsInternalEngineError',
+                name: 'minionJobsInternalEngineError'
+              },
+              {
+                label: 'minionJobsFinished5MinRate',
+                name: 'minionJobsFinished5MinRate'
+              },
+              {
+                label: 'minionJobsFinished1MinRate',
+                name: 'minionJobsFinished1MinRate'
+              },
+              {
+                label: 'minionJobsFinished15MinRate',
+                name: 'minionJobsFinished15MinRate'
+              },
+              {
+                label: 'minionJobsFailed5MinRate',
+                name: 'minionJobsFailed5MinRate'
+              },
+              {
+                label: 'minionJobsFailed1MinRate',
+                name: 'minionJobsFailed1MinRate'
+              },
+              {
+                label: 'minionJobsFailed15MinRate',
+                name: 'minionJobsFailed15MinRate'
+              },
+              {
+                label: 'minionIsPrivate',
+                name: 'minionIsPrivate'
+              },
+              {
+                label: 'minionIsContainerized',
+                name: 'minionIsContainerized'
+              },
+              {
+                label: 'minionIpv4',
+                name: 'minionIpv4'
+              },
+              {
+                label: 'minionHostname',
+                name: 'minionHostname'
+              },
+              {
+                label: 'minionDockerVer',
+                name: 'minionDockerVer'
+              },
+              {
+                label: 'minionContainerSystemVersion',
+                name: 'minionContainerSystemVersion'
+              },
+              {
+                label: 'minionBuildNumber',
+                name: 'minionBuildNumber'
+              },
+              {
+                label: 'minionArchitecture',
+                name: 'minionArchitecture'
+              },
+              {
                 label: 'minionId',
                 name: 'minionId'
               },
@@ -11188,6 +11588,22 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'MemoryUsedPercent',
+                name: 'MemoryUsedPercent'
+              },
+              {
+                label: 'MemoryFreePercent',
+                name: 'MemoryFreePercent'
+              },
+              {
+                label: 'warningViolationCount',
+                name: 'warningViolationCount'
+              },
+              {
+                label: 'criticalViolationCount',
+                name: 'criticalViolationCount'
+              },
               {
                 label: 'Operating System',
                 name: 'operatingSystem'
@@ -11387,62 +11803,6 @@ export const EventTypes = {
               {
                 label: 'Full Hostname',
                 name: 'fullHostname'
-              },
-              {
-                label: 'Cluster Name',
-                name: 'clusterName'
-              },
-              {
-                label: 'Core Count',
-                name: 'coreCount'
-              },
-              {
-                label: 'CPU IO Wait Percent',
-                name: 'cpuIOWaitPercent'
-              },
-              {
-                label: 'Display Name',
-                name: 'displayName'
-              },
-              {
-                label: 'Entity GUID',
-                name: 'entityGuid'
-              },
-              {
-                label: 'Entity Key',
-                name: 'entityKey'
-              },
-              {
-                label: 'Instance Type',
-                name: 'instanceType'
-              },
-              {
-                label: 'Processor Count',
-                name: 'processorCount'
-              },
-              {
-                label: 'APM Application Ids',
-                name: 'apmApplicationIds'
-              },
-              {
-                label: 'APM Application Names',
-                name: 'apmApplicationNames'
-              },
-              {
-                label: 'System Memory Bytes',
-                name: 'systemMemoryBytes'
-              },
-              {
-                label: 'Critical Violation Count',
-                name: 'criticalViolationCount'
-              },
-              {
-                label: 'Warning Violation Count',
-                name: 'warningViolationCount'
-              },
-              {
-                label: 'External Key',
-                name: 'externalKey'
               }
             ],
             dataSources: ['Infrastructure'],
@@ -11450,6 +11810,34 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'Transaction Subtype',
+                name: 'transactionSubType'
+              },
+              {
+                label: 'request.uri',
+                name: 'request.uri'
+              },
+              {
+                label: 'response.status',
+                name: 'response.status'
+              },
+              {
+                label: 'eventLoopWait',
+                name: 'eventLoopWait'
+              },
+              {
+                label: 'eventLoopTime',
+                name: 'eventLoopTime'
+              },
+              {
+                label: 'request.headers.userAgent',
+                name: 'request.headers.userAgent'
+              },
+              {
+                label: 'request.headers.accept',
+                name: 'request.headers.accept'
+              },
               {
                 label: 'trace.id',
                 name: 'trace.id'
@@ -11555,10 +11943,6 @@ export const EventTypes = {
                 name: 'appName'
               },
               {
-                label: 'Transaction Subtype',
-                name: 'transactionSubType'
-              },
-              {
                 label: 'parent.app',
                 name: 'parent.app'
               },
@@ -11636,6 +12020,30 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'externalDuration',
+                name: 'externalDuration'
+              },
+              {
+                label: 'response.status',
+                name: 'response.status'
+              },
+              {
+                label: 'eventLoopWait',
+                name: 'eventLoopWait'
+              },
+              {
+                label: 'eventLoopTime',
+                name: 'eventLoopTime'
+              },
+              {
+                label: 'request.headers.userAgent',
+                name: 'request.headers.userAgent'
+              },
+              {
+                label: 'request.headers.accept',
+                name: 'request.headers.accept'
+              },
               {
                 label: 'trace.id',
                 name: 'trace.id'
@@ -11731,10 +12139,6 @@ export const EventTypes = {
               {
                 label: 'guid',
                 name: 'guid'
-              },
-              {
-                label: 'externalDuration',
-                name: 'externalDuration'
               },
               {
                 label: 'errorType',
@@ -11846,6 +12250,14 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'warningViolationCount',
+                name: 'warningViolationCount'
+              },
+              {
+                label: 'criticalViolationCount',
+                name: 'criticalViolationCount'
+              },
               {
                 label: 'Operating System',
                 name: 'operatingSystem'
@@ -12004,6 +12416,14 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'warningViolationCount',
+                name: 'warningViolationCount'
+              },
+              {
+                label: 'criticalViolationCount',
+                name: 'criticalViolationCount'
+              },
               {
                 label: 'Operating System',
                 name: 'operatingSystem'
@@ -12230,6 +12650,14 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'warningViolationCount',
+                name: 'warningViolationCount'
+              },
+              {
+                label: 'criticalViolationCount',
+                name: 'criticalViolationCount'
+              },
               {
                 label: 'Operating System',
                 name: 'operatingSystem'
@@ -12595,6 +13023,10 @@ export const EventTypes = {
           {
             attributes: [
               {
+                label: 'entityGuid',
+                name: 'entityGuid'
+              },
+              {
                 label: 'Monitor ID',
                 name: 'monitorId'
               },
@@ -12694,6 +13126,22 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'windowUnload',
+                name: 'windowUnload'
+              },
+              {
+                label: 'elementSize',
+                name: 'elementSize'
+              },
+              {
+                label: 'elementId',
+                name: 'elementId'
+              },
+              {
+                label: 'largestContentfulPaint',
+                name: 'largestContentfulPaint'
+              },
               {
                 label: 'firstInputDelay',
                 name: 'firstInputDelay'
@@ -12796,6 +13244,14 @@ export const EventTypes = {
           },
           {
             attributes: [
+              {
+                label: 'warningViolationCount',
+                name: 'warningViolationCount'
+              },
+              {
+                label: 'criticalViolationCount',
+                name: 'criticalViolationCount'
+              },
               {
                 label: 'status',
                 name: 'status'
@@ -12947,6 +13403,506 @@ export const EventTypes = {
             ],
             dataSources: ['Infrastructure'],
             name: 'ContainerSample'
+          },
+          {
+            attributes: [
+              {
+                label: 'clusterK8sVersion',
+                name: 'clusterK8sVersion'
+              }
+            ],
+            dataSources: ['Kubernetes'],
+            name: 'K8sClusterSample'
+          },
+          {
+            attributes: [
+              {
+                label: 'entityGuid',
+                name: 'entityGuid'
+              },
+              {
+                label: 'entity.guids',
+                name: 'entity.guids'
+              }
+            ],
+            dataSources: ['Logs'],
+            name: 'Logs'
+          },
+          {
+            attributes: [
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'productLine',
+                name: 'productLine'
+              },
+              {
+                label: 'masterAccountId',
+                name: 'masterAccountId'
+              },
+              {
+                label: 'consumingAccountId',
+                name: 'consumingAccountId'
+              },
+              {
+                label: 'usageMetric',
+                name: 'usageMetric'
+              },
+              {
+                label: 'monthTimestamp',
+                name: 'monthTimestamp'
+              },
+              {
+                label: 'month',
+                name: 'month'
+              },
+              {
+                label: 'metric',
+                name: 'metric'
+              },
+              {
+                label: 'IncidentEvents',
+                name: 'IncidentEvents'
+              },
+              {
+                label: 'GigabytesIngested',
+                name: 'GigabytesIngested'
+              },
+              {
+                label: 'FullUsers',
+                name: 'FullUsers'
+              },
+              {
+                label: 'estimatedCost',
+                name: 'estimatedCost'
+              },
+              {
+                label: 'consumption',
+                name: 'consumption'
+              },
+              {
+                label: 'BytesIngested',
+                name: 'BytesIngested'
+              },
+              {
+                label: 'AppTransactionsAnalyzedMillions',
+                name: 'AppTransactionsAnalyzedMillions'
+              },
+              {
+                label: 'AppTransactionsAnalyzed',
+                name: 'AppTransactionsAnalyzed'
+              }
+            ],
+            dataSources: ['Account Usage'],
+            name: 'NrConsumption'
+          },
+          {
+            attributes: [
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'productLine',
+                name: 'productLine'
+              },
+              {
+                label: 'masterAccountId',
+                name: 'masterAccountId'
+              },
+              {
+                label: 'monthTimestamp',
+                name: 'monthTimestamp'
+              },
+              {
+                label: 'month',
+                name: 'month'
+              },
+              {
+                label: 'metric',
+                name: 'metric'
+              },
+              {
+                label: 'IncidentEventsFree',
+                name: 'IncidentEventsFree'
+              },
+              {
+                label: 'IncidentEventsBillable',
+                name: 'IncidentEventsBillable'
+              },
+              {
+                label: 'IncidentEvents',
+                name: 'IncidentEvents'
+              },
+              {
+                label: 'GigabytesIngestedBillable',
+                name: 'GigabytesIngestedBillable'
+              },
+              {
+                label: 'GigabytesIngested',
+                name: 'GigabytesIngested'
+              },
+              {
+                label: 'FullUsersFree',
+                name: 'FullUsersFree'
+              },
+              {
+                label: 'FullUsersBillable',
+                name: 'FullUsersBillable'
+              },
+              {
+                label: 'FullUsers',
+                name: 'FullUsers'
+              },
+              {
+                label: 'freeLimit',
+                name: 'freeLimit'
+              },
+              {
+                label: 'freeConsumption',
+                name: 'freeConsumption'
+              },
+              {
+                label: 'estimatedCost',
+                name: 'estimatedCost'
+              },
+              {
+                label: 'consumption',
+                name: 'consumption'
+              },
+              {
+                label: 'BytesIngested',
+                name: 'BytesIngested'
+              },
+              {
+                label: 'billableConsumption',
+                name: 'billableConsumption'
+              },
+              {
+                label: 'AppTransactionsAnalyzedMillionsFree',
+                name: 'AppTransactionsAnalyzedMillionsFree'
+              },
+              {
+                label: 'AppTransactionsAnalyzedMillionsBillable',
+                name: 'AppTransactionsAnalyzedMillionsBillable'
+              },
+              {
+                label: 'AppTransactionsAnalyzedMillions',
+                name: 'AppTransactionsAnalyzedMillions'
+              },
+              {
+                label: 'AppTransactionsAnalyzedFree',
+                name: 'AppTransactionsAnalyzedFree'
+              },
+              {
+                label: 'AppTransactionsAnalyzedBillable',
+                name: 'AppTransactionsAnalyzedBillable'
+              },
+              {
+                label: 'AppTransactionsAnalyzed',
+                name: 'AppTransactionsAnalyzed'
+              }
+            ],
+            dataSources: ['Account Usage'],
+            name: 'NrMTDConsumption'
+          },
+          {
+            attributes: [
+              {
+                label: 'trace.id',
+                name: 'trace.id'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'spanCount',
+                name: 'spanCount'
+              },
+              {
+                label: 'root.span.timestamp',
+                name: 'root.span.timestamp'
+              },
+              {
+                label: 'root.span.name',
+                name: 'root.span.name'
+              },
+              {
+                label: 'root.span.id',
+                name: 'root.span.id'
+              },
+              {
+                label: 'root.span.duration.ms',
+                name: 'root.span.duration.ms'
+              },
+              {
+                label: 'root.entity.name',
+                name: 'root.entity.name'
+              },
+              {
+                label: 'root.entity.guid',
+                name: 'root.entity.guid'
+              },
+              {
+                label: 'root.entity.accountId',
+                name: 'root.entity.accountId'
+              },
+              {
+                label: 'newRelic.traceFiler.type',
+                name: 'newRelic.traceFiler.type'
+              },
+              {
+                label: 'errorCount',
+                name: 'errorCount'
+              },
+              {
+                label: 'entityGuids',
+                name: 'entityGuids'
+              },
+              {
+                label: 'entityCount',
+                name: 'entityCount'
+              },
+              {
+                label: 'duration.ms',
+                name: 'duration.ms'
+              },
+              {
+                label: 'backend.timestamp',
+                name: 'backend.timestamp'
+              },
+              {
+                label: 'backend.duration.ms',
+                name: 'backend.duration.ms'
+              },
+              {
+                label: 'accountIds',
+                name: 'accountIds'
+              }
+            ],
+            dataSources: ['Distributed Tracing'],
+            name: 'DistributedTraceSummary'
+          },
+          {
+            attributes: [
+              {
+                label: 'thread.name',
+                name: 'thread.name'
+              },
+              {
+                label: 'succeeded',
+                name: 'succeeded'
+              },
+              {
+                label: 'duration',
+                name: 'duration'
+              },
+              {
+                label: 'desc',
+                name: 'desc'
+              }
+            ],
+            dataSources: ['APM'],
+            name: 'JfrCompilation'
+          },
+          {
+            attributes: [
+              {
+                label: 'thread.name',
+                name: 'thread.name'
+              },
+              {
+                label: 'duration',
+                name: 'duration'
+              },
+              {
+                label: 'class',
+                name: 'class'
+              }
+            ],
+            dataSources: [],
+            name: 'JfrJavaMonitorWait'
+          },
+          {
+            attributes: [
+              {
+                label: 'jvmStartTime',
+                name: 'jvmStartTime'
+              },
+              {
+                label: 'jvmVersion',
+                name: 'jvmVersion'
+              },
+              {
+                label: 'jvmPropertyValue',
+                name: 'jvmPropertyValue'
+              },
+              {
+                label: 'jvmProperty',
+                name: 'jvmProperty'
+              },
+              {
+                label: 'jvmArguments',
+                name: 'jvmArguments'
+              }
+            ],
+            dataSources: ['APM'],
+            name: 'JfrJVMInformation'
+          },
+          {
+            attributes: [
+              {
+                label: 'thread.state',
+                name: 'thread.state'
+              },
+              {
+                label: 'thread.name',
+                name: 'thread.name'
+              },
+              {
+                label: 'stackTrace',
+                name: 'stackTrace'
+              }
+            ],
+            dataSources: ['APM'],
+            name: 'JfrMethodSample'
+          },
+          // IMPORTANT NOTE: please do not delete these event types
+          // unless it becomes available in GQL
+          {
+            attributes: [
+              {
+                label: 'aggregationFunction',
+                name: 'aggregationFunction'
+              },
+              {
+                label: 'appId',
+                name: 'appId'
+              },
+              {
+                label: 'consumingAccountId',
+                name: 'consumingAccountId'
+              },
+              {
+                label: 'consumingAccountName',
+                name: 'consumingAccountName'
+              },
+              {
+                label: 'durationMs',
+                name: 'durationMs'
+              },
+              {
+                label: 'key',
+                name: 'key'
+              },
+              {
+                label: 'masterAccountId',
+                name: 'masterAccountId'
+              },
+              {
+                label: 'masterAccountName',
+                name: 'masterAccountName'
+              },
+              {
+                label: 'metric',
+                name: 'metric'
+              },
+              {
+                label: 'nr.aggregationCount',
+                name: 'nr.aggregationCount'
+              },
+              {
+                label: 'nr.calculatorHostname',
+                name: 'nr.calculatorHostname'
+              },
+              {
+                label: 'nr.incomingUsageVersion',
+                name: 'nr.incomingUsageVersion'
+              },
+              {
+                label: 'nr.outgoingUsageVersion',
+                name: 'nr.outgoingUsageVersion'
+              },
+              {
+                label: 'nr.sourceApplication',
+                name: 'nr.sourceApplication'
+              },
+              {
+                label: 'nr.stamperHost',
+                name: 'nr.stamperHost'
+              },
+              {
+                label: 'processedTime',
+                name: 'processedTime'
+              },
+              {
+                label: 'productLine',
+                name: 'productLine'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'type',
+                name: 'type'
+              },
+              {
+                label: 'usage',
+                name: 'usage'
+              }
+            ],
+            dataSources: [],
+            name: 'NrUsage'
+          },
+          {
+            attributes: [
+              {
+                label: 'api',
+                name: 'api'
+              },
+              {
+                label: 'awsAPI',
+                name: 'awsAPI'
+              },
+              {
+                label: 'awsRegion',
+                name: 'awsRegion'
+              },
+              {
+                label: 'duration',
+                name: 'duration'
+              },
+              {
+                label: 'googleApi',
+                name: 'googleApi'
+              },
+              {
+                label: 'http.method',
+                name: 'http.method'
+              },
+              {
+                label: 'http.url',
+                name: 'http.url'
+              },
+              {
+                label: 'nr.sampleDataSet',
+                name: 'nr.sampleDataSet'
+              },
+              {
+                label: 'sampleDataSet',
+                name: 'sampleDataSet'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              }
+            ],
+            dataSources: [],
+            name: 'Public_APICall'
           }
         ]
       }

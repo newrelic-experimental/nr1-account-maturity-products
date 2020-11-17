@@ -70,12 +70,6 @@ export const APMSummaryCols = [
         filterable: false
       },
       {
-        Header: 'DT Capable %',
-        accessor: 'apmUsingDTCapableAgentPercentage',
-        Cell: row => cellRenderer(row, APMListCols),
-        filterable: false
-      },
-      {
         Header: 'DT Enabled %',
         accessor: 'apmDistributedTracingEnabledPercentage',
         Cell: row => cellRenderer(row, APMListCols),
@@ -124,8 +118,8 @@ export const APMListCols = [
         Cell: row => cellRenderer(row)
       },
       {
-        Header: 'DT Capable',
-        accessor: 'isDTCapable',
+        Header: 'Recent Agent',
+        accessor: 'isRecentAgent',
         Cell: row => cellRenderer(row)
       },
       {
@@ -135,7 +129,7 @@ export const APMListCols = [
       },
       {
         Header: 'DT Enabled',
-        accessor: 'dtEnabled',
+        accessor: 'isDTEnabled',
         Cell: row => cellRenderer(row)
       },
       {

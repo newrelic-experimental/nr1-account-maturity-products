@@ -306,26 +306,6 @@ class Account {
     );
   }
 
-  getDTCapableApps() {
-    let total = 0;
-    if (!this.apmApps) {
-      return total;
-    }
-
-    for (const app of this.apmApps.values()) {
-      if (app.isDTCapable()) {
-        total++;
-      }
-    }
-    return total;
-  }
-
-  getDTCapableAppsPercent() {
-    return (
-      Math.round((this.getDTCapableApps() / this.getReportingApps()) * 100) || 0
-    );
-  }
-
   getDTEnabledApps() {
     let total = 0;
     if (!this.apmApps) {
@@ -658,57 +638,6 @@ class Account {
       dtEnabledArray,
       nonDtEnabledArray,
       'Distributed Tracing Enabled Reporting Apps'
-    ];
-  }
-
-  getDTCapableAppsArray() {
-    const dtCapableArray = [];
-    const nondtCapableArray = [];
-    if (!this.apmApps) {
-      return [
-        dtCapableArray,
-        nondtCapableArray,
-        'Distributed Tracing Capable Reporting Agent Versions'
-      ];
-    }
-
-    for (const app of this.apmApps.values()) {
-      if (app.reporting) {
-        if (app.isDTCapable()) {
-          dtCapableArray.push(
-            <a
-              href={
-                'https://rpm.newrelic.com/accounts/' +
-                this.id +
-                '/applications/' +
-                app.id
-              }
-            >
-              {' '}
-              {app.name}{' '}
-            </a>
-          );
-        } else {
-          nondtCapableArray.push(
-            <a
-              href={
-                'https://rpm.newrelic.com/accounts/' +
-                this.id +
-                '/applications/' +
-                app.id
-              }
-            >
-              {' '}
-              {app.name}{' '}
-            </a>
-          );
-        }
-      }
-    }
-    return [
-      dtCapableArray,
-      nondtCapableArray,
-      'Distributed Tracing Capable Reporting Agent Versions'
     ];
   }
 

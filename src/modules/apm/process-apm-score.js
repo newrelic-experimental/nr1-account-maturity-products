@@ -1,5 +1,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable dot-notation */
+import semver from 'semver';
+import _ from 'lodash';
 
 export function createAPMTableData(
   accountMap,
@@ -17,7 +19,6 @@ export function createAPMTableData(
     apmRow.appsWithAlertsPercentage = account.getAlertingAppsPercent();
     apmRow.customApdexPercentage = account.getCustomApdexAppsPercent();
     apmRow.usingLabelsPercentage = account.getAppsWithLabelsPercent();
-    apmRow.apmUsingDTCapableAgentPercentage = account.getDTCapableAppsPercent();
     apmRow.apmDistributedTracingEnabledPercentage = account.getDTEnabledAppsPercent();
     apmRow.apmTargetedByKeyTxnPercentage = account.apiData
       ? account.getAppsWithKeyTxnsPercent()
@@ -40,7 +41,10 @@ export function createAPMTableData(
       docAgentLatestVersion
     );
 
-    apmRow.LIST = createAPMApplicationList(account.apmApps);
+    apmRow.LIST = createAPMApplicationList(
+      account.apmApps,
+      docAgentLatestVersion
+    );
 
     if (enricherFn && typeof enricherFn === 'function') {
       try {
@@ -85,7 +89,7 @@ export function computeAPMMaturityScore({ rowData, scoreWeights }) {
   };
 }
 
-export function createAPMApplicationList(appMap) {
+export function createAPMApplicationList(appMap, docAgentLatestVersion) {
   if (!appMap || (appMap && appMap.size === 0)) {
     return [];
   }
@@ -96,7 +100,7 @@ export function createAPMApplicationList(appMap) {
   while (!app.done) {
     const appObj = { ...app.value };
 
-    appObj.isDTCapable = app.value.isDTCapable();
+    appObj.isRecentAgent = app.value.isRecentAgent(docAgentLatestVersion);
     appObj.isDTEnabled = app.value.isDTEnabled();
     appObj.isCustomApdex = app.value.isCustomApdex();
     appObj.isAlerting = app.value.isAlerting();
@@ -114,27 +118,45 @@ export function createAPMApplicationList(appMap) {
  * @param {*} apmDeployedVersions - deployed agent version for an account  , {java: { versions: [  { version: "1.1.0",  count: 4} ] }
  * @param {*} docAgentLatestVersion ,  {"android":"5.24.3","browser":"1167","dotnet":"8.24.244.0","elixir":"0.0.0","go":"3.3.0","infrastructure":"1.10.26","ios":"3.53.1","java":"5.10.0","nodejs":"6.4.2","php":"9.7.0.258","python":"5.8.0.136","ruby":"V6.9.0","skd":"1.3.0"}
  */
-function _computeLatestAgentPercent(
+export function _computeLatestAgentPercent(
   apmDeployedVersions,
   docAgentLatestVersion
 ) {
   let totalLatest = 0;
   let totalDeployed = 0;
 
-  for (const key in apmDeployedVersions) {
-    const latestVersion = docAgentLatestVersion[key];
+  // only split dotnet versions if there are dotnet legacy apm apps
+  if (apmDeployedVersions.dotnet) {
+    const dotnet = apmDeployedVersions.dotnet;
+    const dotnetLegacy = _.remove(dotnet.versions, agent => {
+      const version = agent.version;
+      return Number.parseInt(version.substring(0, version.indexOf('.'))) < 7;
+    });
+    apmDeployedVersions['dotnet_legacy'] = {
+      versions: dotnetLegacy
+    };
+  }
 
-    totalLatest = apmDeployedVersions[key].versions
+  for (const key in apmDeployedVersions) {
+    const latestVersion = semver.valid(
+      semver.coerce(docAgentLatestVersion[key])
+    );
+
+    totalLatest += apmDeployedVersions[key].versions
       .filter(agent => {
-        return agent.version === latestVersion;
+        const agentVer = semver.valid(semver.coerce(agent.version));
+
+        // check agent major version
+        return semver.satisfies(agentVer, `${semver.major(latestVersion)}.x`);
       })
       .reduce((total, curr) => total + curr.count, 0);
 
-    totalDeployed = apmDeployedVersions[key].versions.reduce(
+    totalDeployed += apmDeployedVersions[key].versions.reduce(
       (total, curr) => total + curr.count,
       0
     );
   }
+
   return totalDeployed === 0
     ? 0
     : Math.round((totalLatest / totalDeployed) * 100);
