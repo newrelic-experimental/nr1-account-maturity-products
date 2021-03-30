@@ -423,21 +423,34 @@ function _getAgentRelease(agentReleaseNode, name = null) {
     return '0.0.0';
   }
 
+  // sort the versions by release date descending
+  let releases = [];
+  if (
+    agentReleaseNode.agentReleases &&
+    agentReleaseNode.agentReleases.length > 1
+  ) {
+    releases = agentReleaseNode.agentReleases
+      .map(e => {
+        return {
+          version: e.version,
+          date: new Date(e.date)
+        };
+      })
+      .sort((a, b) => {
+        return b.date > a.date ? 1 : -1;
+      });
+  }
+
   if (!name) {
-    return agentReleaseNode.agentReleases &&
-      agentReleaseNode.agentReleases.length > 0
-      ? agentReleaseNode.agentReleases
-          .filter(release => release.version !== '')
-          .shift().version
+    return releases.length > 0
+      ? releases.filter(release => release.version !== '').shift().version
       : '0.0.0';
   }
 
   // this logic is specific to dotnet_legacy
-  return agentReleaseNode.agentReleases &&
-    agentReleaseNode.agentReleases.length > 0
-    ? agentReleaseNode.agentReleases
-        .filter(release => release.version.startsWith('6'))
-        .shift().version
+  return releases.length > 0
+    ? releases.filter(release => release.version.startsWith('6')).shift()
+        .version
     : '0.0.0';
 }
 

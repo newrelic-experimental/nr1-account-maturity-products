@@ -49,7 +49,7 @@ class Account {
       const agentsDeployedVersion = {};
 
       for (const result of data) {
-        const [language, version] = result.apmLanguageapmAgentVersion;
+        const [language, version] = result.facet;
         const count = result.count;
 
         if (!agentsDeployedVersion[language]) {
