@@ -35,8 +35,8 @@ describe('test FETCH_ACCOUNTS_GQL', function() {
         console.log('total accounts=', accounts.length);
       }
 
-      if (response.errors) {
-        throw new Error(response.errors);
+      if (response.error?.graphQLErrors) {
+        throw new Error(response.error.graphQLErrors);
       }
       assert.isNotNull(response, 'No response');
       assert.isDefined(response, 'no response');

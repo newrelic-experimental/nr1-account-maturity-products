@@ -1,5 +1,8 @@
 export function handleGqlError({ response, error = null }, queryObj) {
-  const { data, errors } = response;
+  const {
+    data,
+    error: { graphQLErrors }
+  } = response;
   const { query, variables } = queryObj;
   let { id: accountId, nrql } = variables || {};
 
@@ -34,7 +37,7 @@ export function handleGqlError({ response, error = null }, queryObj) {
     console.error(
       `Errors returned from GraphQL ${
         !accountId || accountId.length === 0 ? '' : `for Account=${accountId}`
-      }:  ${JSON.stringify(errors)}`
+      }:  ${JSON.stringify(graphQLErrors)}`
     );
     // eslint-disable-next-line no-console
     console.warn(`Query:  ${query}`);
@@ -43,7 +46,7 @@ export function handleGqlError({ response, error = null }, queryObj) {
       ...responseTmp,
       data:
         typeof data === 'undefined' || (data && !data.actor) ? stubData : data,
-      errors: errors.map(e => ({
+      errors: graphQLErrors.map(e => ({
         message: e.message,
         path: e.path ? e.path.join('.') : ''
       }))

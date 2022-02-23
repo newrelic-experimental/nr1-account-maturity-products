@@ -70,7 +70,7 @@ export class ApplicationCtxProvider extends React.Component {
     try {
       response = await fn.query(query);
 
-      if (response.errors && response.errors.length > 0) {
+      if (response.error?.graphQLErrors.length > 0) {
         response = this.handleGqlError({ response }, query);
       }
     } catch (error) {
