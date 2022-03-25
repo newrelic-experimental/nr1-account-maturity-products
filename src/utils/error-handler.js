@@ -1,8 +1,6 @@
 export function handleGqlError({ response, error = null }, queryObj) {
-  const {
-    data,
-    error: { graphQLErrors }
-  } = response;
+  const { data } = response;
+  const { graphQLErrors } = response.error ? response.error : [];
   const { query, variables } = queryObj;
   let { id: accountId, nrql } = variables || {};
 
