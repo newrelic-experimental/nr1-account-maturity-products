@@ -73,7 +73,7 @@ export default class NerdGraphClient {
     if (response.status !== 200 && response.status !== 201) {
       console.log(`Error Response =${JSON.stringify(data)}`);
       console.error(`Error Response Status= ${response.status}.`);
-      throw new Error('Fetch failed. ', data.errors[0].message);
+      throw new Error('Fetch failed. ', data.error?.graphQLErrors[0].message);
     }
 
     let errors;
@@ -83,16 +83,18 @@ export default class NerdGraphClient {
       console.log(`NerdGraphClient data=${JSON.stringify(data)}`);
     }
 
-    if (data.errors) {
+    if (data.error?.graphQLErrors) {
       errors = [];
-      errors.push(JSON.stringify(data.errors));
+      errors.push(JSON.stringify(data.error?.graphQLErrors));
 
       console.log(
-        `NerdGraphClient() ERROR errors:${JSON.stringify(data.errors)}`
+        `NerdGraphClient() ERROR errors:${JSON.stringify(
+          data.error?.graphQLErrors
+        )}`
       );
       console.log(
         `NerdGraphClient() ERROR errors stringified: ${JSON.stringify(
-          data.errors
+          data.error?.graphQLErrors
         )}`
       );
       console.log(`NerdGraphClient() ERROR gqlJSON=${JSON.stringify(gqlJSON)}`);

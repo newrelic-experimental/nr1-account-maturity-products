@@ -375,7 +375,7 @@ describe('Unit/Integration Tests for  assembleResults()', function() {
         }
       },
       {
-        errors: [{}]
+        error: { graphQLErrors: [{}] }
       }
     ];
 
@@ -408,7 +408,7 @@ describe('Unit/Integration Tests for  assembleResults()', function() {
             }
           }
         },
-        errors: [{ message: 'error on otherData' }]
+        error: { graphQLErrors: [{ message: 'error on otherData' }] }
       },
       {
         data: {
@@ -460,10 +460,10 @@ describe('Unit/Integration Tests for  assembleResults()', function() {
             }
           }
         },
-        errors: [{ message: 'error on someData' }]
+        error: { graphQLErrors: [{ message: 'error on someData' }] }
       },
       {
-        errors: [{ message: 'unexpected error' }]
+        error: { graphQLErrors: [{ message: 'unexpected error' }] }
       }
     ];
 
@@ -489,11 +489,13 @@ describe('Unit/Integration Tests for  assembleResults()', function() {
         data: {
           actor: null
         },
-        errors: [
-          {
-            message: 'Unexpected Exception:  Failed to fetch'
-          }
-        ]
+        error: {
+          graphQLErrors: [
+            {
+              message: 'Unexpected Exception:  Failed to fetch'
+            }
+          ]
+        }
       }
     ];
 

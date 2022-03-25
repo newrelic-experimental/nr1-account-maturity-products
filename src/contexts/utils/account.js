@@ -387,10 +387,10 @@ export async function getCloudLinkedAccounts(gqlAPI, accountId = null) {
       }
     : CLOUD_LINKED_ACCTS_GQL;
 
-  const { data, errors } = await gqlAPI(cloudQuery);
+  const { data, error } = await gqlAPI(cloudQuery);
   const cloudLinkedAccounts = {};
 
-  if (errors) {
+  if (error) {
     return cloudLinkedAccounts;
   }
 
@@ -530,10 +530,10 @@ export function assembleResults(results) {
 
   let ctr = 0;
   for (const result of results) {
-    if (result.errors) {
+    if (result.error?.graphQLErrors) {
       console.log(
         `warning: assembleResults() Error found in results. Error=`,
-        result.errors,
+        result.error.graphQLErrors,
         ` result=`,
         result
       );
