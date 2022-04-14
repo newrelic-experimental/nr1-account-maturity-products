@@ -91,5 +91,12 @@ export const ProductColumns = {
       Cell: row => cellRenderer(row),
       filterable: false
     }
+    ,
+    {
+      Header: 'Errors Inbox',
+      accessor: 'ERRORS_INBOX_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    }
   ]
 };

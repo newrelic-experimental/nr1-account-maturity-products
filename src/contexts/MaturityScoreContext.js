@@ -24,6 +24,7 @@ export class MaturityScoreCtxProvider extends React.Component {
    *
    */
   updateScore(productId, scores, table) {
+    console.log('updateScore', productId, scores, table)
     this.setState(prev => {
       const maturityScores = prev.maturityScores;
       maturityScores[productId] = !maturityScores[productId]

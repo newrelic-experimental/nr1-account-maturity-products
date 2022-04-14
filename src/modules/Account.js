@@ -13,6 +13,11 @@ class Account {
     this.synthMonitors = new Map();
     this.mobileApps = new Map();
     this.infraHosts = new Map();
+
+    this.oTelApps = new Map();
+    this.errorsInbox = new Map();
+    this.k8s = [];
+
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
 
@@ -85,6 +90,12 @@ class Account {
     this.mobileEvents = props.mobileEvents;
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
+
+    this.errorGroupCount = props.errorGroupCount;
+    this.errorGroupAssignedPercentage = props.errorGroupAssignedPercentage;
+    this.errorGroupUnresolvedPercentage = props.errorGroupUnresolvedPercentage;
+    this.errorGroupIgnoredPercentage = props.errorGroupIgnoredPercentage;
+    this.errorGroupCommentsPercentage = props.errorGroupCommentsPercentage;
   }
 
   getName() {

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import _ from 'lodash';
 import PromisePool from 'es6-promise-pool';
+import btoa from 'btoa';
 
 import { Account } from '../../modules/Account';
 import { EventTypes } from '../../modules/EventTypes';
@@ -99,6 +100,9 @@ function _setGQLVariables(query, account) {
     LOGGING_SUBSCRIBED: subscriptions
       ? subscriptions.includes('logging')
       : true,
+    ERRORS_INBOX_SUBSCRIBED: subscriptions
+      ? subscriptions.includes('errorsInbox')
+      : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
       : true
@@ -149,6 +153,10 @@ export function setNrqlFragmentSubscription(query) {
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
     query.variables.PROGRAMMABILITY_SUBSCRIBED
   );
+  nrqlFragment = nrqlFragment.replace(
+    /\$ERRORS_INBOX_SUBSCRIBED/g,
+    query.variables.PROGRAMMABILITY_SUBSCRIBED
+  );
   query.query = queryStart.concat(nrqlFragment);
 }
 
@@ -167,6 +175,8 @@ export function createFetchAccountNRQLFragment({
 }
 export function createAccount(event) {
   const { response, account } = event;
+
+  // console.log('createAccount', event)
 
   const {
     id,
@@ -287,6 +297,26 @@ export function createAccount(event) {
     mobileAppLaunch.results.length > 0
       ? mobileAppLaunch.results[0].uniqueSessions
       : 0;
+
+  let errorsInbox = response.data.actor.errorsInbox
+
+  let {
+    totalAssignErrorGroups,
+    totalErrorGroups,
+  } = errorsInbox
+
+
+  // totalErrorGroups.results.length
+  // totalErrorGroups.totalCount
+
+  //from
+  accountDetail.errorGroupCount = totalErrorGroups.totalCount;
+  accountDetail.errorGroupAssignedPercentage = 0.4;
+  accountDetail.errorGroupUnresolvedPercentage = 0.2;
+  accountDetail.errorGroupIgnoredPercentage = 0.2;
+  accountDetail.errorGroupCommentsPercentage = 0.2;
+
+  console.log('accountDetail', accountDetail)
 
   return new Account(accountDetail);
 }
@@ -464,7 +494,8 @@ const subscriptionGQLVarDict = {
   synthetics: 'SYNTHETICS_SUBSCRIBED',
   logging: 'LOGGING_SUBSCRIBED',
   eventTypeInclude: 'EVENT_TYPES_INCLUDE',
-  programmability: 'PROGRAMMABILITY_SUBSCRIBED'
+  programmability: 'PROGRAMMABILITY_SUBSCRIBED',
+  errorsInbox: 'ERRORS_INBOX_SUBSCRIBED'
 };
 
 export function* getAccountDetails(
@@ -479,6 +510,9 @@ export function* getAccountDetails(
     ...FETCH_ACCOUNT_WITH_ID_GQL_OBJ.createQuery(nrqlFragment)
   };
 
+  console.log('FETCH_ACCOUNT_WITH_ID_GQL_OBJ', FETCH_ACCOUNT_WITH_ID_GQL_OBJ)
+  console.log('getAccountDetails', accounts)
+
   for (const account of accounts) {
     yield (async () => {
       const subscriptions = account.subscriptions
@@ -491,6 +525,7 @@ export function* getAccountDetails(
         // see subscriptionGQLVarDict
         subscriptions.push('eventTypeInclude');
         subscriptions.push('programmability');
+        subscriptions.push('errorsInbox');
       }
 
       const promises = [];
@@ -523,7 +558,8 @@ export function assembleResults(results) {
   const response = {
     data: {
       actor: {
-        account: null
+        account: null,
+        errorsInbox: null,
       }
     }
   };
@@ -548,7 +584,19 @@ export function assembleResults(results) {
       ctr++;
       response.data.actor.account = {
         ...response.data.actor.account,
-        ...result.data.actor.account
+        ...result.data.actor.account,
+      };
+    }
+
+    if (
+      result.data &&
+      result.data.actor &&
+      result.data.actor.errorsInbox !== null
+    ) {
+      ctr++;
+      response.data.actor.errorsInbox = {
+        ...response.data.actor.errorsInbox,
+        ...result.data.actor.errorsInbox,
       };
     }
   }

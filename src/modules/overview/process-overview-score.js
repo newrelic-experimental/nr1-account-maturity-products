@@ -37,6 +37,8 @@ export function createTableData(accountMap, maturityScores, enricherFn = null) {
       scoreKeys.push(scoreKey);
     }
 
+    console.log('rowData', rowData)
+
     tableData.push(rowData);
     entry = itr.next();
   }
