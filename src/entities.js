@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 export * from './modules/apm';
 export * from './modules/browser';
 export * from './modules/synth';
