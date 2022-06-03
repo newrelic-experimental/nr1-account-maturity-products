@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-empty-function */
+/* eslint-disable no-console */
 /* eslint-disable react/jsx-key */
 /* eslint-disable prefer-template */
 import React from 'react';
@@ -13,8 +16,14 @@ class Account {
     this.synthMonitors = new Map();
     this.mobileApps = new Map();
     this.infraHosts = new Map();
+
+    this.oTelApps = new Map();
+    // this.errorsInbox = new Map();
+    // this.k8s = [];
+
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
+    this.workloadViews = new Map();
 
     this.apiData = false;
     this.dtAppList = props.dtAppList;
@@ -85,6 +94,55 @@ class Account {
     this.mobileEvents = props.mobileEvents;
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
+
+    this.errorGroupCount = props.errorGroupCount;
+    this.errorGroupAssignedPercentage = props.errorGroupAssignedPercentage;
+    this.errorGroupUnresolvedPercentage = props.errorGroupUnresolvedPercentage;
+    this.errorGroupIgnoredPercentage = props.errorGroupIgnoredPercentage;
+    this.errorGroupCommentsPercentage = props.errorGroupCommentsPercentage;
+
+    // WORKLOADS
+    this.workloads = props.workloads;
+    // workloads in the account
+    this.totalWorkloads = this.workloads.length
+
+    // workloads with related dashbaords
+    this.workloadsWithRelatedDashboards = props.workloadRelatedDashboards;
+
+    // number of workloads with related dashbaords
+    this.workloadsWithRelatedDashboardCount = this.workloadsWithRelatedDashboards.length;
+
+        /*
+            entitySearch.results.entities: [
+              {
+                "accountId": 739516,
+                "alertSeverity": "NOT_CONFIGURED",
+                "domain": "NR1",
+                "entityType": "WORKLOAD_ENTITY",
+                "guid": "NzM5NTE2fE5SMXxXT1JLTE9BRHw4ODYzOQ",
+                "name": "empty workload",
+                "reporting": true,
+                "tags": [
+                  {
+                    "key": "account"
+                  },
+                  {
+                    "key": "accountId"
+                  },
+                  {
+                    "key": "createdBy"
+                  },
+                  {
+                    "key": "trustedAccountId"
+                  }
+                ],
+                "type": "WORKLOAD"
+              },
+              ...
+            ]
+        */
+
+    // console.log('### SK >>> Accounts.PROPS: ', props);
   }
 
   getName() {
@@ -94,6 +152,7 @@ class Account {
     return 0;
   }
 
+  // ALERTS METHODS
   getTotalPolicies() {
     if (this.alertPolicies) {
       return this.alertPolicies.size;
@@ -236,6 +295,7 @@ class Account {
     return Math.round(score);
   }
 
+  // APM METHODS
   getTotalApps() {
     if (this.apmApps) {
       return this.apmApps.size;
@@ -1484,6 +1544,7 @@ class Account {
     );
   }
 
+  // SYNTHTICS METHODS
   getTotalMonitors() {
     return this.synthMonitors ? this.synthMonitors.size : 0;
   }
@@ -1677,6 +1738,38 @@ class Account {
       }
     }
     return 0;
+  }
+
+  // WORKLOADS METHODS
+  getTotalWorkloads() {
+    return this.totalWorkloads ? this.totalWorkloads : 0;
+  }
+
+  getReportingWorkloadsPercent() {
+
+    return 11;
+  }
+
+  getAlertingWorkloadsPercent() {
+
+    return 12;
+  }
+
+  getWorkloadsWithLabelsPercent() {
+
+    return this.workloadsWithRelatedDashboardCount ? this.workloadsWithRelatedDashboardCount : 0;
+  }
+
+  getWorkloadsWithOwnerPercent() {
+
+    return 14;
+  }
+
+  getWorkloadsWithRelatedDashboardsPercent() {
+
+    return this.totalWorkloads && this.totalWorkloads > 0 && this.workloadsWithRelatedDashboardCount
+      ? this.workloadsWithRelatedDashboardCount / this.totalWorkloads * 100
+      : 0;
   }
 }
 

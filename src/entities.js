@@ -6,5 +6,6 @@ export * from './modules/insights';
 export * from './modules/logs';
 export * from './modules/programmability';
 export * from './modules/mobile';
+export * from './modules/workloads';
 
 export * from './modules/overview';

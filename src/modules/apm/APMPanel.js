@@ -84,6 +84,7 @@ export class APMPanelTag extends React.Component {
       loading: false,
       table: tableData
     });
+    console.log('### SK >>> APMPanel:componentDidMount:>> after this.setState: ', this.state);
     this.maturityCtxUpdateScore('APM', scores, tableData);
   }
 
@@ -109,6 +110,13 @@ export class APMPanelTag extends React.Component {
     if (this.state.loading) {
       return <CustomCircleLoader message="Loading APM Application Data" />;
     }
+    console.log('### SK >>> APMTag:render():>> loading is done -- this.state.loading+table: ', this.state);
+    console.log('### SK >>> APMTag:render():>> tableColHeader: ', this.tableColHeader);
+    // ###
+    // ### APMTag.render() #################
+    // ###
+    // debugger; // APMTag.render() #################
+    // ###
     return (
       <FilterTableData
         tableData={this.state.table}
