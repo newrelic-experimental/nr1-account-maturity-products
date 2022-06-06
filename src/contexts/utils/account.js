@@ -2,7 +2,6 @@
 /* eslint-disable prettier/prettier */
 import _ from 'lodash';
 import PromisePool from 'es6-promise-pool';
-import btoa from 'btoa';
 
 import { Account } from '../../modules/Account';
 import { EventTypes } from '../../modules/EventTypes';
@@ -98,11 +97,11 @@ function _setGQLVariables(query, account) {
     SYNTHETICS_SUBSCRIBED: subscriptions
       ? subscriptions.includes('synthetics')
       : true,
-    WORKLOADS_SUBSCRIBED: subscriptions
-      ? subscriptions.includes('workloads')
-      : true,
     LOGGING_SUBSCRIBED: subscriptions
       ? subscriptions.includes('logging')
+      : true,
+    WORKLOADS_SUBSCRIBED: subscriptions
+      ? subscriptions.includes('workloads')
       : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
@@ -147,12 +146,12 @@ export function setNrqlFragmentSubscription(query) {
     query.variables.SYNTHETICS_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
-    /\$WORKLOADS_SUBSCRIBED/g,
-    query.variables.WORKLOADS_SUBSCRIBED
-  );
-  nrqlFragment = nrqlFragment.replace(
     /\$LOGGING_SUBSCRIBED/g,
     query.variables.LOGGING_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
+    /\$WORKLOADS_SUBSCRIBED/g,
+    query.variables.WORKLOADS_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
@@ -176,8 +175,6 @@ export function createFetchAccountNRQLFragment({
 }
 export function createAccount(event) {
   const { response, account } = event;
-
-  // console.log('createAccount', event)
 
   const {
     id,
@@ -204,7 +201,7 @@ export function createAccount(event) {
     mobileEvents,
     mobileAppLaunch,
     workloads,
-    workloadRelatedDashboards
+    workloadRelatedDashboards,
   } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
@@ -301,28 +298,19 @@ export function createAccount(event) {
       ? mobileAppLaunch.results[0].uniqueSessions
       : 0;
 
-
-  // // count of workloads in the account
-  // this.totalWorkloads = props.workloads.results[0].workloads.length;
-
-  // // count of workloads with related dashbaords
-  // this.totalWorkloadsWithRelatedDashboards = props.workloadRelatedDashboards.results[0].length;
-
+  // count of workloads in the account
   accountDetail.workloads =
     workloads &&
     workloads.results.length > 0
       ? workloads.results[0].workloads
       : [];
 
+  // count of workloads with related dashbaords
   accountDetail.workloadRelatedDashboards =
     workloadRelatedDashboards &&
     workloadRelatedDashboards.results
       ? workloadRelatedDashboards.results
       : [];
-
-  // console.log('### SK >>> account.js >> WORKLOADS response: ', accountDetail.workloads, accountDetail.workloadRelatedDashboards);
-
-  // console.log('### SK >>> account.js >> accountDetail: ', accountDetail)
 
   return new Account(accountDetail);
 }
@@ -516,9 +504,6 @@ export function* getAccountDetails(
     ...FETCH_ACCOUNT_WITH_ID_GQL_OBJ.createQuery(nrqlFragment)
   };
 
-  // console.log('### SK >>> FETCH_ACCOUNT_WITH_ID_GQL_OBJ', FETCH_ACCOUNT_WITH_ID_GQL_OBJ)
-  // console.log('### SK >>> getAccountDetails', accounts)
-
   for (const account of accounts) {
     yield (async () => {
       const subscriptions = account.subscriptions
@@ -534,7 +519,6 @@ export function* getAccountDetails(
         subscriptions.push('workloads');
       }
 
-      // console.log('### SK >>> account.js >> ACCOUNT SUBSCRIPTIONS: ', account.id, account.subscriptions, subscriptions);
       const promises = [];
       for (const productLine of subscriptions) {
         // group GQL requests by product to create smaller GQL payload and minimize timeouts
@@ -544,11 +528,6 @@ export function* getAccountDetails(
       }
 
       const results = await Promise.all(promises);
-      // console.log('### SK >>> account.js >> INDEX: ', subscriptions.indexOf('workloads'));
-      // console.log(
-      //   '### SK >>> account.js >> RESULTS: ',
-      //   results[subscriptions.indexOf('workloads')].data.actor.account
-      // );
       const response = assembleResults(results);
       const accountTmp = createAccountFn({ response, account });
 
@@ -560,7 +539,6 @@ export function* getAccountDetails(
       );
 
       accountMap.set(accountTmp.id, accountTmp);
-      // console.log('### SK >>> account.js >>  ACCOUNTTMP: ', accountTmp);
       return Promise.resolve(accountMap);
     })();
   }
@@ -571,7 +549,7 @@ export function assembleResults(results) {
   const response = {
     data: {
       actor: {
-        account: null,
+        account: null
       }
     }
   };
@@ -596,10 +574,9 @@ export function assembleResults(results) {
       ctr++;
       response.data.actor.account = {
         ...response.data.actor.account,
-        ...result.data.actor.account,
+        ...result.data.actor.account
       };
     }
-
   }
   // return null if all nrql fragments for the account had errors
   return ctr > 0 ? response : null;

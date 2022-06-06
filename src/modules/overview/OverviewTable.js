@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable prettier/prettier */
 import React from 'react';
 import ReactTable from 'react-table-v6';
 import { cellRenderer, CreateCSVLink } from '../../utilities';
@@ -49,48 +48,48 @@ export const ProductColumns = {
       accessor: 'APM_SCORE',
       Cell: row => cellRenderer(row),
       filterable: false
-    // },
-    // {
-    //   Header: 'Browser',
-    //   accessor: 'BROWSER_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
-    // },
-    // {
-    //   Header: 'Synthetics',
-    //   accessor: 'SYNTHETICS_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
-    // },
-    // {
-    //   Header: 'Infrastructure',
-    //   accessor: 'INFRASTRUCTURE_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
-    // },
-    // {
-    //   Header: 'Insights',
-    //   accessor: 'INSIGHTS_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
-    // },
-    // {
-    //   Header: 'Log',
-    //   accessor: 'LOG_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
-    // },
-    // {
-    //   Header: 'Programmability',
-    //   accessor: 'PROGRAMMABILITY_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
-    // },
-    // {
-    //   Header: 'Mobile',
-    //   accessor: 'MOBILE_SCORE',
-    //   Cell: row => cellRenderer(row),
-    //   filterable: false
+    },
+    {
+      Header: 'Browser',
+      accessor: 'BROWSER_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Synthetics',
+      accessor: 'SYNTHETICS_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Infrastructure',
+      accessor: 'INFRASTRUCTURE_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Insights',
+      accessor: 'INSIGHTS_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Log',
+      accessor: 'LOG_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Programmability',
+      accessor: 'PROGRAMMABILITY_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Mobile',
+      accessor: 'MOBILE_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
     },
     {
       Header: 'Workloads',

@@ -1,8 +1,6 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-empty-function */
-/* eslint-disable no-console */
 /* eslint-disable react/jsx-key */
 /* eslint-disable prefer-template */
+/* eslint-disable prettier/prettier */
 import React from 'react';
 
 class Account {
@@ -16,11 +14,6 @@ class Account {
     this.synthMonitors = new Map();
     this.mobileApps = new Map();
     this.infraHosts = new Map();
-
-    this.oTelApps = new Map();
-    // this.errorsInbox = new Map();
-    // this.k8s = [];
-
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
     this.workloadViews = new Map();
@@ -95,12 +88,6 @@ class Account {
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
 
-    this.errorGroupCount = props.errorGroupCount;
-    this.errorGroupAssignedPercentage = props.errorGroupAssignedPercentage;
-    this.errorGroupUnresolvedPercentage = props.errorGroupUnresolvedPercentage;
-    this.errorGroupIgnoredPercentage = props.errorGroupIgnoredPercentage;
-    this.errorGroupCommentsPercentage = props.errorGroupCommentsPercentage;
-
     // WORKLOADS
     this.workloads = props.workloads;
     // workloads in the account
@@ -111,38 +98,6 @@ class Account {
 
     // number of workloads with related dashbaords
     this.workloadsWithRelatedDashboardCount = this.workloadsWithRelatedDashboards.length;
-
-        /*
-            entitySearch.results.entities: [
-              {
-                "accountId": 739516,
-                "alertSeverity": "NOT_CONFIGURED",
-                "domain": "NR1",
-                "entityType": "WORKLOAD_ENTITY",
-                "guid": "NzM5NTE2fE5SMXxXT1JLTE9BRHw4ODYzOQ",
-                "name": "empty workload",
-                "reporting": true,
-                "tags": [
-                  {
-                    "key": "account"
-                  },
-                  {
-                    "key": "accountId"
-                  },
-                  {
-                    "key": "createdBy"
-                  },
-                  {
-                    "key": "trustedAccountId"
-                  }
-                ],
-                "type": "WORKLOAD"
-              },
-              ...
-            ]
-        */
-
-    // console.log('### SK >>> Accounts.PROPS: ', props);
   }
 
   getName() {
@@ -152,7 +107,6 @@ class Account {
     return 0;
   }
 
-  // ALERTS METHODS
   getTotalPolicies() {
     if (this.alertPolicies) {
       return this.alertPolicies.size;
@@ -295,7 +249,6 @@ class Account {
     return Math.round(score);
   }
 
-  // APM METHODS
   getTotalApps() {
     if (this.apmApps) {
       return this.apmApps.size;
@@ -1544,7 +1497,6 @@ class Account {
     );
   }
 
-  // SYNTHTICS METHODS
   getTotalMonitors() {
     return this.synthMonitors ? this.synthMonitors.size : 0;
   }
@@ -1745,31 +1697,109 @@ class Account {
     return this.totalWorkloads ? this.totalWorkloads : 0;
   }
 
-  getReportingWorkloadsPercent() {
+  getReportingWorkloads() {
+    let total = 0;
+    if (!this.workloadViews) {
+      return total;
+    }
 
-    return 11;
+    for (const workload of this.workloadViews.values()) {
+      if (workload.reporting) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getReportingWorkloadsPercent() {
+    return (
+      Math.round((this.getReportingWorkloads() / this.getTotalWorkloads()) * 100) || 0
+    );
+  }
+
+  getAlertingWorkloads() {
+    let total = 0;
+    if (!this.workloadViews) {
+      return total;
+    }
+
+    for (const workload of this.workloadViews.values()) {
+      if (workload.isAlerting()) {
+        total++;
+      }
+    }
+    return total;
   }
 
   getAlertingWorkloadsPercent() {
+    return (
+      Math.round((this.getAlertingWorkloads() / this.getReportingWorkloads()) * 100) || 0
+    );
+  }
 
-    return 12;
+  getWorkloadsWithLabels() {
+    let total = 0;
+    if (!this.workloadViews) {
+      return total;
+    }
+
+    for (const workload of this.workloadViews.values()) {
+      if (workload.hasLabels()) {
+        total++;
+      }
+    }
+    return total;
   }
 
   getWorkloadsWithLabelsPercent() {
+    return (
+      Math.round((this.getWorkloadsWithLabels() / this.getReportingWorkloads()) * 100) ||
+      0
+    );
+  }
 
-    return this.workloadsWithRelatedDashboardCount ? this.workloadsWithRelatedDashboardCount : 0;
+  
+
+  getWorkloadsWithOwner() {
+    let total = 0;
+    if (!this.workloadViews) {
+      return total;
+    }
+
+    for (const workload of this.workloadViews.values()) {
+      if (workload.hasOwner()) {
+        total++;
+      }
+    }
+    return total;
   }
 
   getWorkloadsWithOwnerPercent() {
+    return (
+      Math.round((this.getWorkloadsWithOwner() / this.getReportingWorkloads()) * 100) ||
+      0
+    );
+  }
 
-    return 14;
+  getWorkloadsWithRelatedDashboards() {
+    let total = 0;
+    if (!this.workloadViews) {
+      return total;
+    }
+
+    for (const workload of this.workloadViews.values()) {
+      if (workload.hasRelatedDashboards()) {
+        total++;
+      }
+    }
+    return total;
   }
 
   getWorkloadsWithRelatedDashboardsPercent() {
-
-    return this.totalWorkloads && this.totalWorkloads > 0 && this.workloadsWithRelatedDashboardCount
-      ? this.workloadsWithRelatedDashboardCount / this.totalWorkloads * 100
-      : 0;
+    return (
+      Math.round((this.getWorkloadsWithRelatedDashboards() / this.getReportingWorkloads()) * 100) ||
+      0
+    );
   }
 }
 

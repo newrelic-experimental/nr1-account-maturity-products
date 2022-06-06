@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export const FETCH_ACCOUNTS_GQL = {
   query: `
     {
@@ -31,7 +30,9 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
         ...SYNTHETICS_Fragments @include(if: $SYNTHETICS_SUBSCRIBED)
         ...INSIGHTS_Fragments @include(if: $INSIGHTS_SUBSCRIBED)
         ...WORKLOADS_Fragments @include(if: $WORKLOADS_SUBSCRIBED)
+
         ...NRQLFragment @include(if: $withFragment)
+
       }
     }
   }
@@ -160,7 +161,7 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     const withFragment = fragment !== null && fragment.length > 0;
     const placeholder = 'transaction:nrql(query:""){results}';
     fragment = fragment || placeholder;
-    const skQuery = {
+    return {
       query: `
               ${this.query}
               fragment NRQLFragment on Account {
@@ -171,19 +172,6 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
         withFragment
       }
     };
-    // return {
-    //   query: `
-    //           ${this.query}
-    //           fragment NRQLFragment on Account {
-    //               ${fragment}
-    //           }`,
-    //   variables: {
-    //     ...this.variables,
-    //     withFragment
-    //   }
-    // };
-    // console.log('### SK >>> QUERY: ', skQuery);
-    return skQuery;
   }
 };
 

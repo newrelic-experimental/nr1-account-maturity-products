@@ -4,7 +4,7 @@ import ReactTable from 'react-table-v6';
 import { cellRenderer, CreateCSVLink } from '../../utilities';
 import matchSorter from 'match-sorter';
 
-export function WorkloadsTable(props) {
+export function WorkloadTable(props) {
   return (
     <div>
       <ReactTable data={props.data} columns={props.columns} filterable />
@@ -38,8 +38,11 @@ export const WorkloadSummaryCols = [
         accessor: 'entityCount',
         filterable: false
       },
-
-      // ### SK - DEBUG - use only "entityCount" for now
+      {
+        Header: 'With Related Dashbaords',
+        accessor: 'workloadsWithRelatedDashboardCount',
+        filterable: false
+      },
       {
         Header: 'Reporting Workloads %',
         accessor: 'reportingWorkloadsPercentage',

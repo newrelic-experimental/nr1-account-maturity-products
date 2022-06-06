@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { fetchWorkloadData, WorkloadModel } from './fetch-workload-data';
 
 import {
   createWorkloadTableData,
@@ -10,26 +11,20 @@ import {
   ApplicationCtxConsumer,
   CustomCircleLoader,
   MaturityScoreCtxConsumer
-} from '../../contexts';
-import { FilterTableData } from '../../utils/FilterTableData';
-import { WorkloadModel } from './fetch-workload-data';
-import { fetchWorkloadData } from './fetch-workload-data'
-
-import _ from 'lodash';
+} from '../../contexts/';
+import { FilterTableData } from '../../utilities';
 
 export const WorkloadPanel = () => (
   <ApplicationCtxConsumer>
     {appContext => {
       if (appContext.loading) {
-        return <CustomCircleLoader message="Fetching Workloads..." />;
+        return <CustomCircleLoader message="Fetching accounts" />;
       }
-      // console.log('### SK >>> acct-maturity-products:WorkloadTag:appContext: ', appContext);
       return (
         <MaturityScoreCtxConsumer>
           {scoreContext => {
-            // console.log('### SK >>> acct-maturity-products:WorkloadTag:scoreContext.updateScore: ', scoreContext.updateScore);
             return (
-              <WorkloadTag
+              <WorkloadPanelTag
                 appContext={appContext}
                 maturityCtxUpdateScore={scoreContext.updateScore}
               />
@@ -41,7 +36,7 @@ export const WorkloadPanel = () => (
   </ApplicationCtxConsumer>
 );
 
-export class WorkloadTag extends React.Component {
+export class WorkloadPanelTag extends React.Component {
   static propTypes = {
     appContext: PropTypes.object,
     maturityCtxUpdateScore: PropTypes.func,
@@ -54,13 +49,13 @@ export class WorkloadTag extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       loading: true,
       table: []
     };
-    const { appContext } = this.props;
 
-    // console.log('### SK >>> WorkloadTag:props: ', props)
+    const { appContext } = this.props;
     this.nerdGraphQuery = appContext.nerdGraphQuery;
     this.ctxAcctMap = new Map(appContext.accountMap);
     this.docEventTypes = appContext.docEventTypes;
@@ -68,55 +63,35 @@ export class WorkloadTag extends React.Component {
 
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
 
-    this.fetchData = this.props.fetchData || fetchWorkloadData
-
-    this.createTableData = this.props.createTableData || createWorkloadTableData;
-    this.computeMaturityScore = this.props.computeMaturityScore || computeWorkloadMaturityScore;
+    this.fetchData = this.props.fetchData || fetchWorkloadData;
+    this.createTableData =
+      this.props.createTableData || createWorkloadTableData;
+    this.computeMaturityScore =
+      this.props.computeMaturityScore || computeWorkloadMaturityScore;
 
     this.scoreWeights = this.props.scoreWeights || WorkloadModel.scoreWeights;
     this.tableColHeader = this.props.tableColHeader || WorkloadSummaryCols;
   }
 
   async componentDidMount() {
-    // console.log('### SK >>> WorkloadTag:componentDidMount():>> @@@');
     await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
-// console.log('### SK >>> WorkloadTag:componentDidMount::', this.ctxAcctMap, this.nerdGraphQuery);
-// ###
-    const tableData = this.createTableData(this.ctxAcctMap);
-// ###
+
+    const tableData = this.createTableData(this.ctxAcctMap, {
+      docEventTypes: this.docEventTypes,
+      docAgentLatestVersion: this.docAgentLatestVersion
+    });
+
     const scores = this.addMaturityScoreToTable(tableData);
-// ###
-    // console.log('### SK >>> WorkloadTag:componentDidMount:>> (scores, tableData): ', scores, tableData);
-    // console.log('### SK >>> WorkloadTag:componentDidMount:>> before this.setState: ', this.state);
-// ###
-// debugger; // WorkloadTag.componentDidMount()  ##################
-// ###
-// console.log('### SK >>> WorkloadTag:componentDidMount:tbefore _.cloneDeep()');
-// ###
-// ### 1 before this.setState()
-// ###
+
     this.setState({
       loading: false,
       table: tableData
     });
-// ###
-// ### 2 after this.setState()
-// ###
-    console.log('### SK >>> WorkloadTag:componentDidMount:>> after this.setState: ', this.state);
-    console.log('### SK >>> WorkloadTag:componentDidMount:tableData: ', tableData);
-// ###
-// // WorkloadTag..componentDidMount() ##################
-// ###
     this.maturityCtxUpdateScore('WORKLOADS', scores, tableData);
-// ###
-    console.log('### SK >>> WorkloadTag:componentDidMount:##### after maturityCtxUpdateScore');
-// ###
   }
 
   addMaturityScoreToTable(tableData) {
     const maturityScores = {};
-
-    console.log('### SK >>> addMaturityScoreToTable', tableData)
 
     tableData.forEach(row => {
       const { score } = this.computeMaturityScore({
@@ -134,20 +109,9 @@ export class WorkloadTag extends React.Component {
   }
 
   render() {
-    // console.log('### SK >>> WorkloadTag:render():>> @@@');
     if (this.state.loading) {
-      return <CustomCircleLoader message="Loading Workloads..." />;
+      return <CustomCircleLoader message="Loading Workload Data" />;
     }
-    console.log('### SK >>> WorkloadTag:render():>> done -- this.state.loading+table: ', this.state);
-    console.log('### SK >>> WorkloadTag:render():>> workload tableColHeader: ', this.tableColHeader);
-    // ### 
-    // ### WorkloadTag..render() ##################
-    // ### 
-    // debugger; // WorkloadTag..render() ##################
-    
-    // return (
-    //   <><br/><br/><br/><br/><br/><br/><br/><h1><center>### FAKE WORKLOAD TABLE ###</center></h1></>
-    // );
 
     return (
       <FilterTableData
@@ -155,8 +119,8 @@ export class WorkloadTag extends React.Component {
         filterKeys={['overallScore']}
       >
         {({ filteredData }) => (
-                  <WorkloadTable data={filteredData} columns={this.tableColHeader} />
-                )}
+          <WorkloadTable data={filteredData} columns={this.tableColHeader} />
+        )}
       </FilterTableData>
     );
   }
