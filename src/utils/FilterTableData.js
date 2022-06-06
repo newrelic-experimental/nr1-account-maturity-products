@@ -38,25 +38,8 @@ export class FilterTableData extends React.Component {
   }
 
   render() {
-    // ###
-    // ###
-    console.log('### SK >>> FilterTableData:render():PROPS.filterKeys: ', JSON.stringify(this.props.filterKeys));
-    if (this.props.filterKeys.includes('WORDLOADS') || this.props.filterKeys.includes('WORDLOADS_SCORE') || this.props.filterKeys.includes('APM_SCORE')) {
-      console.log('### SK >>> FilterTableData:render():PROPS: ', this.props);
-      console.log('### SK >>> FilterTableData:render():STATE: ', this.state);
-      console.log('### SK >>> FilterTableData:render():filteredData: ', filteredData);
-      // ###
-      // ### FilterTableData.render() ##################
-      // ###
-      // debugger; // ### FilterTableData.render() ##################
-    }
-    // ###
-    // ###
-
     const { tableData, filterKeys } = this.props;
-    // ###
     const filteredData = this._filterNoData(tableData, filterKeys);
-    // ###
     return (
       <div>
         <div>

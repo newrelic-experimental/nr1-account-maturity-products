@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-// /* eslint-disable no-debugger */
 class Workload {
   constructor(entity, account) {
     this.id = entity.applicationId;
