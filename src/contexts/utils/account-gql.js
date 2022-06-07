@@ -129,11 +129,11 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
   }
 
   fragment WORKLOADS_Fragments on Account {
-    workloads: nrql(query: "select uniques(workloadGuid) as workloads from WorkloadStatus since 1 month ago limit max", timeout: 120) {
+    workloads: nrql(query: "select uniques(workloadGuid) as workloads from WorkloadStatus since 7 days ago limit max", timeout: 120) {
       results
     }
 
-    workloadRelatedDashboards: nrql(query: "select uniqueCount(targetEntityGuid) as relatedDashboards from Relationship where sourceEntityType = 'WORKLOAD' and targetEntityType = 'DASHBOARD' facet sourceEntityGuid as workloadGuid SINCE 1 day ago limit max", timeout: 120) {
+    workloadRelatedDashboards: nrql(query: "select uniqueCount(targetEntityGuid) as relatedDashboards from Relationship where sourceEntityType = 'WORKLOAD' and targetEntityType = 'DASHBOARD' facet sourceEntityGuid as workloadGuid since 7 days ago limit max", timeout: 120) {
       results
     }
   }
