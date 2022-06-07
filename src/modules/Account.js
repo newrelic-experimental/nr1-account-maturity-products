@@ -89,14 +89,18 @@ class Account {
     this.mobileAppLaunch = props.mobileAppLaunch;
 
     // WORKLOADS
-    this.workloads = props.workloads;
     // workloads in the account
+    this.workloads = props.workloads;
     this.totalWorkloads = this.workloads.length
 
     // workloads with related dashbaords
-    this.workloadsWithRelatedDashboards = props.workloadRelatedDashboards;
-
-    // number of workloads with related dashbaords
+    this.workloadsWithRelatedDashboards = [];
+    if (this.workloads.length) {
+      // extract only workloads that currently exist in the account
+      props.workloadRelatedDashboards.forEach(workload => 
+        this.workloads.includes(workload.workloadGuid) && this.workloadsWithRelatedDashboards.push(workload)
+      );
+    }
     this.workloadsWithRelatedDashboardCount = this.workloadsWithRelatedDashboards.length;
   }
 
