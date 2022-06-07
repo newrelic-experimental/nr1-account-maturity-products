@@ -1,6 +1,6 @@
 class Workload {
   constructor(entity, account) {
-    this.id = entity.applicationId;
+    this.id = entity.id;
     this.guid = entity.guid;
     this.name = entity.name;
     this.accountId = entity.accountId;
