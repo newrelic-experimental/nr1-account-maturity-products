@@ -39,7 +39,7 @@ export const WorkloadSummaryCols = [
         filterable: false
       },
       {
-        Header: 'With Related Dashbaords',
+        Header: 'With Related Dashboards',
         accessor: 'workloadsWithRelatedDashboardCount',
         filterable: false
       },
