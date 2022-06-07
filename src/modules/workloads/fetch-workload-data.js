@@ -35,6 +35,7 @@ function _onFulFilledHandler(event, accountMap) {
   for (const entity of event.data.result) {
     const { accountId } = entity;
     const account = accountMap.get(accountId);
+    entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
     const workload = new Workload(entity, account);
 
     if (!account.workloadViews) {
