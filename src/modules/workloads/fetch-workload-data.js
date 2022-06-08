@@ -82,11 +82,11 @@ async function _fetchEntitiesWithAcctIdGQL(
 
 export const WorkloadModel = {
   scoreWeights: {
-    reportingWorkloadsPercentage: 0.02,
-    alertingWorkloadsPercentage: 0.02,
-    usingLabelsPercentage: 0.02,
-    workloadsWithOwnerPercentage: 0.02,
-    workloadsWithRelatedDashboardsPercentage: 0.02
+    reportingWorkloadsPercentage: 0.2,
+    alertingWorkloadsPercentage: 0.2,
+    usingLabelsPercentage: 0.2,
+    workloadsWithOwnerPercentage: 0.2,
+    workloadsWithRelatedDashboardsPercentage: 0.2
   },
   rowDataEnricher: null
 };
