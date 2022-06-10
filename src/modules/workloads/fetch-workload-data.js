@@ -38,11 +38,11 @@ function _onFulFilledHandler(event, accountMap) {
     entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
     const workload = new Workload(entity, account);
 
-    if (!account.workloadViews) {
-      account.workloadViews = new Map();
+    if (!account.workloadMap) {
+      account.workloadMap = new Map();
     }
 
-    account.workloadViews.set(workload.guid, workload);
+    account.workloadMap.set(workload.guid, workload);
   }
 }
 async function _fetchEntitiesWithAcctIdGQL(

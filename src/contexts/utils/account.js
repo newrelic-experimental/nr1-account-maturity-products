@@ -302,7 +302,7 @@ export function createAccount(event) {
   accountDetail.workloads =
     workloads &&
     workloads.results.length > 0
-      ? workloads.results[0].workloads
+      ? workloads.results
       : [];
 
   // count of workloads with related dashbaords

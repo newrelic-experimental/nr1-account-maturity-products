@@ -16,7 +16,7 @@ export function createWorkloadTableData(accountMap, { enricherFn = null }) {
     workloadRow.workloadsWithOwnerPercentage = account.getWorkloadsWithOwnerPercent();
     workloadRow.workloadsWithRelatedDashboardsPercentage = account.getWorkloadsWithRelatedDashboardsPercent();
 
-    workloadRow.LIST = createWorkloadList(account.workloadViews);
+    workloadRow.LIST = createWorkloadList(account.workloadMap);
     workloadRow.workloadDTEnabledPercentage = 12.37;
 
     if (enricherFn && typeof enricherFn === 'function') {
