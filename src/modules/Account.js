@@ -16,7 +16,7 @@ class Account {
     this.infraHosts = new Map();
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
-    this.workloadViews = new Map();
+    this.workloadMap = new Map();
 
     this.apiData = false;
     this.dtAppList = props.dtAppList;
@@ -98,7 +98,7 @@ class Account {
     if (this.workloads.length) {
       // extract only workloads that currently exist in the account
       props.workloadRelatedDashboards.forEach(workload => 
-        this.workloads.includes(workload.workloadGuid) && this.workloadsWithRelatedDashboards.push(workload)
+        this.workloads.find(w => w.workloadGuid === workload.workloadGuid) && this.workloadsWithRelatedDashboards.push(workload)
       );
     }
     this.workloadsWithRelatedDashboardCount = this.workloadsWithRelatedDashboards.length;
@@ -1703,11 +1703,11 @@ class Account {
 
   getReportingWorkloads() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.reporting) {
         total++;
       }
@@ -1723,11 +1723,11 @@ class Account {
 
   getAlertingWorkloads() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.isAlerting()) {
         total++;
       }
@@ -1743,11 +1743,11 @@ class Account {
 
   getWorkloadsWithLabels() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.hasLabels()) {
         total++;
       }
@@ -1766,11 +1766,11 @@ class Account {
 
   getWorkloadsWithOwner() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.hasOwner()) {
         total++;
       }
@@ -1787,11 +1787,11 @@ class Account {
 
   getWorkloadsWithRelatedDashboards() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.hasRelatedDashboards()) {
         total++;
       }

@@ -129,7 +129,7 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
   }
 
   fragment WORKLOADS_Fragments on Account {
-    workloads: nrql(query: "select uniques(workloadGuid) as workloads from WorkloadStatus since 7 days ago limit max", timeout: 120) {
+    workloads: nrql(query: "select uniqueCount(workloadGuid) from WorkloadStatus facet workloadGuid since 7 days ago limit max", timeout: 120) {
       results
     }
 
