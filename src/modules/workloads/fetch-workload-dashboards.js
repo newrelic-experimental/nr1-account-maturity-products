@@ -27,15 +27,8 @@ function _dashboardPoolOnFulfilled(event, accountMap, accountId) {
   // add workload dashboard counts to Workload objects
   const account = accountMap.get(accountId);
   for (const entity of event.data.result.data.actor.entities) {
-    // ###
-    // ###
-    debugger; // ###
-    // ###
     const workload = account.workloadMap.get(entity.guid);
     workload.relatedDashboards =
-      // entity && entity.relatedEntities && entity.relatedEntities.count
-      //   ? entity.relatedEntities.count
-      //   : 0;
       entity && entity.relatedEntities && entity.relatedEntities.results
         ? entity.relatedEntities.results.length
         : 0;
