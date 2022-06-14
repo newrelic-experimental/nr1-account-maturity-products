@@ -26,13 +26,6 @@ class Workload {
     if (entity.tags) {
       this.owner = entity.tags.find(tag => tag.key === 'Team');
     }
-
-    this.relatedDashboards =
-      (
-        (account.workloadsWithRelatedDashboards || []).find(
-          workload => workload.workloadGuid === entity.guid
-        ) || {}
-      ).relatedDashboards || 0;
   }
 
   hasOwner() {
@@ -40,7 +33,7 @@ class Workload {
   }
 
   hasRelatedDashboards() {
-    return this.relatedDashboards > 0;
+    return this.relatedDashboards > 0; // ###
   }
 
   isAlerting() {

@@ -16,7 +16,7 @@ class Account {
     this.infraHosts = new Map();
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
-    this.workloadViews = new Map();
+    this.workloadMap = new Map();
 
     this.apiData = false;
     this.dtAppList = props.dtAppList;
@@ -87,21 +87,6 @@ class Account {
     this.mobileEvents = props.mobileEvents;
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
-
-    // WORKLOADS
-    // workloads in the account
-    this.workloads = props.workloads;
-    this.totalWorkloads = this.workloads.length
-
-    // workloads with related dashbaords
-    this.workloadsWithRelatedDashboards = [];
-    if (this.workloads.length) {
-      // extract only workloads that currently exist in the account
-      props.workloadRelatedDashboards.forEach(workload => 
-        this.workloads.includes(workload.workloadGuid) && this.workloadsWithRelatedDashboards.push(workload)
-      );
-    }
-    this.workloadsWithRelatedDashboardCount = this.workloadsWithRelatedDashboards.length;
   }
 
   getName() {
@@ -111,6 +96,7 @@ class Account {
     return 0;
   }
 
+  // ALERT POLICY METHODS
   getTotalPolicies() {
     if (this.alertPolicies) {
       return this.alertPolicies.size;
@@ -253,6 +239,7 @@ class Account {
     return Math.round(score);
   }
 
+  // APM METHODS
   getTotalApps() {
     if (this.apmApps) {
       return this.apmApps.size;
@@ -807,6 +794,7 @@ class Account {
     ];
   }
 
+  // ALERT SUBSYSTEM METHODS -- continued
   getPolicyChannelsNotEmailArray() {
     const policyNotEmailArray = [];
     const nonPolicyNotEmailArray = [];
@@ -1501,6 +1489,7 @@ class Account {
     );
   }
 
+  // SYNTHETICS MONOTROS
   getTotalMonitors() {
     return this.synthMonitors ? this.synthMonitors.size : 0;
   }
@@ -1698,16 +1687,16 @@ class Account {
 
   // WORKLOADS METHODS
   getTotalWorkloads() {
-    return this.totalWorkloads ? this.totalWorkloads : 0;
+    return this.workloadMap ? this.workloadMap.size : 0;
   }
 
   getReportingWorkloads() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.reporting) {
         total++;
       }
@@ -1723,11 +1712,11 @@ class Account {
 
   getAlertingWorkloads() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.isAlerting()) {
         total++;
       }
@@ -1743,11 +1732,11 @@ class Account {
 
   getWorkloadsWithLabels() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.hasLabels()) {
         total++;
       }
@@ -1762,15 +1751,13 @@ class Account {
     );
   }
 
-  
-
   getWorkloadsWithOwner() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.hasOwner()) {
         total++;
       }
@@ -1787,11 +1774,11 @@ class Account {
 
   getWorkloadsWithRelatedDashboards() {
     let total = 0;
-    if (!this.workloadViews) {
+    if (!this.workloadMap) {
       return total;
     }
 
-    for (const workload of this.workloadViews.values()) {
+    for (const workload of this.workloadMap.values()) {
       if (workload.hasRelatedDashboards()) {
         total++;
       }

@@ -26,25 +26,28 @@ export async function fetchWorkloadData(
   const pool = new PromisePool(_getEntities(), options.poolMaxConcurreny);
 
   pool.addEventListener('fulfilled', event => {
-    options.poolOnFulfilled(event, accountMap);
+    options.poolOnFulfilled(event, accountMap, gqlAPI);
   });
   await pool.start();
 }
 
-function _onFulFilledHandler(event, accountMap) {
-  for (const entity of event.data.result) {
-    const { accountId } = entity;
+async function _onFulFilledHandler(event, accountMap) {
+  if (event.data.result.length > 0) {
+    const { accountId } = event.data.result[0];
     const account = accountMap.get(accountId);
-    entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
-    const workload = new Workload(entity, account);
 
-    if (!account.workloadViews) {
-      account.workloadViews = new Map();
+    for (const entity of event.data.result) {
+      entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
+      const workload = new Workload(entity, account);
+
+      if (!account.workloadMap) {
+        account.workloadMap = new Map();
+      }
+      account.workloadMap.set(workload.guid, workload);
     }
-
-    account.workloadViews.set(workload.guid, workload);
   }
 }
+
 async function _fetchEntitiesWithAcctIdGQL(
   gqlAPI,
   account,
@@ -82,11 +85,11 @@ async function _fetchEntitiesWithAcctIdGQL(
 
 export const WorkloadModel = {
   scoreWeights: {
-    reportingWorkloadsPercentage: 0.2,
-    alertingWorkloadsPercentage: 0.2,
-    usingLabelsPercentage: 0.2,
-    workloadsWithOwnerPercentage: 0.2,
-    workloadsWithRelatedDashboardsPercentage: 0.2
+    // reportingWorkloadsPercentage: 0.2,
+    // alertingWorkloadsPercentage: 0.2,
+    // usingLabelsPercentage: 0.2,
+    workloadsWithOwnerPercentage: 0.5,
+    workloadsWithRelatedDashboardsPercentage: 0.5
   },
   rowDataEnricher: null
 };
