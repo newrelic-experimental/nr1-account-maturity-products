@@ -26,7 +26,7 @@ export async function fetchWorkloadData(
   const pool = new PromisePool(_getEntities(), options.poolMaxConcurreny);
 
   pool.addEventListener('fulfilled', event => {
-    options.poolOnFulfilled(event, accountMap, gqlAPI);
+    options.poolOnFulfilled(event, accountMap);
   });
   await pool.start();
 }
