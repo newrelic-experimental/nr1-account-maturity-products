@@ -33,7 +33,12 @@ export const WORKLOAD_RELATED_DASHBOARDS_COUNT_GQL = {
       entities(guids: $workloadGuids) {
         name
         relatedEntities(filter: {entityDomainTypes: {include: {domain: "VIZ", type: "DASHBOARD"}}}) {
-          count
+          # count
+          results {
+            source {
+              guid
+            }
+          }  
         }
         guid
         accountId
