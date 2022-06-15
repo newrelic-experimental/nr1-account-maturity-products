@@ -1,8 +1,8 @@
 import PromisePool from 'es6-promise-pool';
 import { WORKLOAD_RELATED_DASHBOARDS_COUNT_GQL } from './workload-gql';
 
-const POOLMAXCONCURRENCY = 20;
-const MAXGUIDS = 25;
+const POOLMAXCONCURRENCY = 50;
+const MAXGUIDS = 10;
 
 export async function getWorkloadRelatedDashboardsCount(
   accountMap,
