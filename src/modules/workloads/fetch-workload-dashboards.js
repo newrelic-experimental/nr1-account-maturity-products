@@ -1,8 +1,9 @@
 import PromisePool from 'es6-promise-pool';
 import { WORKLOAD_RELATED_DASHBOARDS_COUNT_GQL } from './workload-gql';
 
+// ### POOLMAXCONCURRENCY = 50 && MAXGUIDS = 8 seems to be the sweet spot and works with no errors
 const POOLMAXCONCURRENCY = 50;
-const MAXGUIDS = 10;
+const MAXGUIDS = 8;
 
 export async function getWorkloadRelatedDashboardsCount(
   accountMap,
