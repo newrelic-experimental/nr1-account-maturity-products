@@ -38,29 +38,12 @@ export const WorkloadSummaryCols = [
         accessor: 'entityCount',
         filterable: false
       },
-      // {
-      //   Header: 'With Related Dashboards',
-      //   accessor: 'workloadsWithRelatedDashboardCount',
-      //   filterable: false
-      // },
-      // {
-      //   Header: 'Reporting Workloads %',
-      //   accessor: 'reportingWorkloadsPercentage',
-      //   Cell: row => cellRenderer(row, WorkloadListCols),
-      //   filterable: false
-      // },
-      // {
-      //   Header: 'Alerts %',
-      //   accessor: 'alertingWorkloadsPercentage',
-      //   Cell: row => cellRenderer(row, WorkloadListCols),
-      //   filterable: false
-      // },
-      // {
-      //   Header: 'Labels %',
-      //   accessor: 'usingLabelsPercentage',
-      //   Cell: row => cellRenderer(row, WorkloadListCols),
-      //   filterable: false
-      // },
+      {
+        Header: 'Reporting Workloads %',
+        accessor: 'reportingWorkloadsPercentage',
+        Cell: row => cellRenderer(row, WorkloadListCols),
+        filterable: false
+      },
       {
         Header: 'With Related Dashboards %',
         accessor: 'workloadsWithRelatedDashboardsPercentage',
@@ -90,11 +73,6 @@ export const WorkloadListCols = [
     columns: [
       { Header: 'Name', accessor: 'name' },
       { Header: 'Related Dashboards', accessor: 'relatedDashboards' },
-      // {
-      //   Header: 'Reporting',
-      //   accessor: 'reporting',
-      //   Cell: row => cellRenderer(row)
-      // },
       {
         Header: 'Has Related Dashboards',
         accessor: 'hasRelatedDashboards',
@@ -105,11 +83,6 @@ export const WorkloadListCols = [
         accessor: 'hasOwner',
         Cell: row => cellRenderer(row)
       },
-      // {
-      //   Header: 'Labels',
-      //   accessor: 'hasLabels',
-      //   Cell: row => cellRenderer(row)
-      // },
       {
         Header: 'Alerting',
         accessor: 'isAlerting',
