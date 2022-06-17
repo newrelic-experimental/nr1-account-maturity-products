@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchWorkloadData, WorkloadModel } from './fetch-workload-data';
+import { getWorkloadRelatedDashboardsCount } from './fetch-workload-dashboards';
 
 import {
   createWorkloadTableData,
@@ -58,7 +59,6 @@ export class WorkloadPanelTag extends React.Component {
     const { appContext } = this.props;
     this.nerdGraphQuery = appContext.nerdGraphQuery;
     this.ctxAcctMap = new Map(appContext.accountMap);
-    this.docEventTypes = appContext.docEventTypes;
     this.maturityCtxUpdateScore = this.props.maturityCtxUpdateScore;
 
     this.addMaturityScoreToTable = this.addMaturityScoreToTable.bind(this);
@@ -76,10 +76,15 @@ export class WorkloadPanelTag extends React.Component {
   async componentDidMount() {
     await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
 
-    const tableData = this.createTableData(this.ctxAcctMap, {
-      docEventTypes: this.docEventTypes,
-      docAgentLatestVersion: this.docAgentLatestVersion
-    });
+    for (const accountId of Array.from(this.ctxAcctMap.keys())) {
+      await getWorkloadRelatedDashboardsCount(
+        this.ctxAcctMap,
+        accountId,
+        this.nerdGraphQuery
+      );
+    }
+
+    const tableData = this.createTableData(this.ctxAcctMap, {});
 
     const scores = this.addMaturityScoreToTable(tableData);
 

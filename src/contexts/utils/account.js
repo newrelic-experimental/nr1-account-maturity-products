@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable prettier/prettier */
 import _ from 'lodash';
 import PromisePool from 'es6-promise-pool';
 
@@ -199,9 +198,7 @@ export function createAccount(event) {
     mobileBreadcrumbs,
     mobileHandledExceptions,
     mobileEvents,
-    mobileAppLaunch,
-    workloads,
-    workloadRelatedDashboards,
+    mobileAppLaunch
   } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
@@ -297,20 +294,6 @@ export function createAccount(event) {
     mobileAppLaunch.results.length > 0
       ? mobileAppLaunch.results[0].uniqueSessions
       : 0;
-
-  // count of workloads in the account
-  accountDetail.workloads =
-    workloads &&
-    workloads.results.length > 0
-      ? workloads.results
-      : [];
-
-  // count of workloads with related dashbaords
-  accountDetail.workloadRelatedDashboards =
-    workloadRelatedDashboards &&
-    workloadRelatedDashboards.results
-      ? workloadRelatedDashboards.results
-      : [];
 
   return new Account(accountDetail);
 }

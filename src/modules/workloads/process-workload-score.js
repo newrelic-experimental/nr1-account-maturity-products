@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export function createWorkloadTableData(accountMap, { enricherFn = null }) {
   const workloadTable = [];
 
@@ -8,21 +7,20 @@ export function createWorkloadTableData(accountMap, { enricherFn = null }) {
     workloadRow.accountName = account.name;
     workloadRow.accountID = account.id;
     workloadRow.entityCount = account.getTotalWorkloads();
-    workloadRow.workloadsWithRelatedDashboardCount =
-      account.workloadsWithRelatedDashboardCount;
-    workloadRow.reportingWorkloadsPercentage = account.getReportingWorkloadsPercent();
-    workloadRow.alertingWorkloadsPercentage = account.getAlertingWorkloadsPercent();
-    workloadRow.usingLabelsPercentage = account.getWorkloadsWithLabelsPercent();
-    workloadRow.workloadsWithOwnerPercentage = account.getWorkloadsWithOwnerPercent();
+    // workloadRow.workloadsWithRelatedDashboardCount = account.getWorkloadsWithRelatedDashboards();
+    // workloadRow.reportingWorkloadsPercentage = account.getReportingWorkloadsPercent();
+    // workloadRow.alertingWorkloadsPercentage = account.getAlertingWorkloadsPercent();
+    // workloadRow.usingLabelsPercentage = account.getWorkloadsWithLabelsPercent();
     workloadRow.workloadsWithRelatedDashboardsPercentage = account.getWorkloadsWithRelatedDashboardsPercent();
+    workloadRow.workloadsWithOwnerPercentage = account.getWorkloadsWithOwnerPercent();
 
     workloadRow.LIST = createWorkloadList(account.workloadMap);
-    workloadRow.workloadDTEnabledPercentage = 12.37;
 
     if (enricherFn && typeof enricherFn === 'function') {
       try {
         enricherFn(workloadRow, account);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(`Enricher failed with error=${JSON.stringify(err)}`);
         throw err;
       }
@@ -70,10 +68,10 @@ export function createWorkloadList(workloadMap) {
 
   while (!workload.done) {
     const workloadObj = { ...workload.value };
-    workloadObj.isAlerting = workload.value.isAlerting();
-    workloadObj.hasLabels = workload.value.hasLabels();
-    workloadObj.hasOwner = workload.value.hasOwner();
     workloadObj.hasRelatedDashboards = workload.value.hasRelatedDashboards();
+    workloadObj.hasOwner = workload.value.hasOwner();
+    // workloadObj.hasLabels = workload.value.hasLabels();
+    workloadObj.isAlerting = workload.value.isAlerting();
 
     workloadList.push(workloadObj);
     workload = itr.next();

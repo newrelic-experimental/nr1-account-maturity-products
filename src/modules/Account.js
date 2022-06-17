@@ -87,21 +87,6 @@ class Account {
     this.mobileEvents = props.mobileEvents;
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
-
-    // WORKLOADS
-    // workloads in the account
-    this.workloads = props.workloads;
-    this.totalWorkloads = this.workloads.length
-
-    // workloads with related dashbaords
-    this.workloadsWithRelatedDashboards = [];
-    if (this.workloads.length) {
-      // extract only workloads that currently exist in the account
-      props.workloadRelatedDashboards.forEach(workload => 
-        this.workloads.find(w => w.workloadGuid === workload.workloadGuid) && this.workloadsWithRelatedDashboards.push(workload)
-      );
-    }
-    this.workloadsWithRelatedDashboardCount = this.workloadsWithRelatedDashboards.length;
   }
 
   getName() {
@@ -111,6 +96,7 @@ class Account {
     return 0;
   }
 
+  // ALERT POLICY METHODS
   getTotalPolicies() {
     if (this.alertPolicies) {
       return this.alertPolicies.size;
@@ -253,6 +239,7 @@ class Account {
     return Math.round(score);
   }
 
+  // APM METHODS
   getTotalApps() {
     if (this.apmApps) {
       return this.apmApps.size;
@@ -807,6 +794,7 @@ class Account {
     ];
   }
 
+  // ALERT SUBSYSTEM METHODS -- continued
   getPolicyChannelsNotEmailArray() {
     const policyNotEmailArray = [];
     const nonPolicyNotEmailArray = [];
@@ -1501,6 +1489,7 @@ class Account {
     );
   }
 
+  // SYNTHETICS MONOTROS
   getTotalMonitors() {
     return this.synthMonitors ? this.synthMonitors.size : 0;
   }
@@ -1698,7 +1687,7 @@ class Account {
 
   // WORKLOADS METHODS
   getTotalWorkloads() {
-    return this.totalWorkloads ? this.totalWorkloads : 0;
+    return this.workloadMap ? this.workloadMap.size : 0;
   }
 
   getReportingWorkloads() {
@@ -1761,8 +1750,6 @@ class Account {
       0
     );
   }
-
-  
 
   getWorkloadsWithOwner() {
     let total = 0;
