@@ -7,10 +7,7 @@ export function createWorkloadTableData(accountMap, { enricherFn = null }) {
     workloadRow.accountName = account.name;
     workloadRow.accountID = account.id;
     workloadRow.entityCount = account.getTotalWorkloads();
-    // workloadRow.workloadsWithRelatedDashboardCount = account.getWorkloadsWithRelatedDashboards();
-    // workloadRow.reportingWorkloadsPercentage = account.getReportingWorkloadsPercent();
-    // workloadRow.alertingWorkloadsPercentage = account.getAlertingWorkloadsPercent();
-    // workloadRow.usingLabelsPercentage = account.getWorkloadsWithLabelsPercent();
+    workloadRow.reportingWorkloadsPercentage = account.getReportingWorkloadsPercent();
     workloadRow.workloadsWithRelatedDashboardsPercentage = account.getWorkloadsWithRelatedDashboardsPercent();
     workloadRow.workloadsWithOwnerPercentage = account.getWorkloadsWithOwnerPercent();
 
@@ -70,7 +67,6 @@ export function createWorkloadList(workloadMap) {
     const workloadObj = { ...workload.value };
     workloadObj.hasRelatedDashboards = workload.value.hasRelatedDashboards();
     workloadObj.hasOwner = workload.value.hasOwner();
-    // workloadObj.hasLabels = workload.value.hasLabels();
     workloadObj.isAlerting = workload.value.isAlerting();
 
     workloadList.push(workloadObj);

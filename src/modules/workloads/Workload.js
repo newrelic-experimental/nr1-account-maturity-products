@@ -24,7 +24,7 @@ class Workload {
 
     this.owner = false;
     if (entity.tags) {
-      this.owner = entity.tags.find(tag => tag.key === 'Team');
+      this.owner = entity.tags.find(tag => tag.key.toLowerCase() === 'team');
     }
   }
 
