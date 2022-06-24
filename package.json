@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://source.datanerd.us/CSE/maturity-products"
+    "url": "https://github.com/newrelic-experimental/nr1-account-maturity-products"
   },
   "files": [
     "dist"
@@ -27,10 +27,10 @@
     "components",
     "maturity"
   ],
-  "author": "New Relic ES",
+  "author": "New Relic TAM/Programmability Team",
   "license": "UNLICENSED",
   "bugs": {
-    "email": "acuffe@newrelic.com"
+    "email": "jdeleon@newrelic.com"
   },
   "contributors": [
     {
@@ -42,12 +42,14 @@
       "email": "jdeleon@newrelic.com"
     },
     {
-      "name": "Sean Winters",
-      "email": "swinters@newrelic.com"
+      "name": "Sean Winters"
     },
     {
-      "name": "Benedicto Tan",
-      "email": "btan@newrelic.com"
+      "name": "Benedicto Tan"
+    },
+    {
+      "name": "Shahram Khazai",
+      "email": "shahram@newrelic.com"
     }
   ],
   "devDependencies": {
