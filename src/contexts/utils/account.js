@@ -102,6 +102,9 @@ function _setGQLVariables(query, account) {
     WORKLOADS_SUBSCRIBED: subscriptions
       ? subscriptions.includes('workloads')
       : true,
+    KUBERNETES_SUBSCRIBED: subscriptions
+      ? subscriptions.includes('kubernetes')
+      : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
       : true
@@ -153,6 +156,10 @@ export function setNrqlFragmentSubscription(query) {
     query.variables.WORKLOADS_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
+    /\$KUBERNETES_SUBSCRIBED/g,
+    query.variables.KUBERNETES_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
     query.variables.PROGRAMMABILITY_SUBSCRIBED
   );
@@ -198,7 +205,18 @@ export function createAccount(event) {
     mobileBreadcrumbs,
     mobileHandledExceptions,
     mobileEvents,
-    mobileAppLaunch
+    mobileAppLaunch,
+
+    // kubernetes
+    clustersUsingPixie,
+    infraAgentsInstalled,
+    infraK8sEvents,
+    prometheousLabels,
+    apmAgentsInsideK8sClusters,
+    nrLogsEvents,
+    pixieUniqueServices,
+    pixieUniqueSpans,
+    pixieUniqueUrls
   } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
@@ -294,6 +312,46 @@ export function createAccount(event) {
     mobileAppLaunch.results.length > 0
       ? mobileAppLaunch.results[0].uniqueSessions
       : 0;
+
+  // kubernetes data
+  accountDetail.clustersUsingPixie =
+    clustersUsingPixie && clustersUsingPixie.results
+      ? clustersUsingPixie.results
+      : [];
+
+  accountDetail.infraAgentsInstalled =
+    infraAgentsInstalled && infraAgentsInstalled.results
+      ? infraAgentsInstalled.results
+      : [];
+
+  accountDetail.infraK8sEvents =
+    infraK8sEvents && infraK8sEvents.results ? infraK8sEvents.results : [];
+
+  accountDetail.prometheousLabels =
+    prometheousLabels && prometheousLabels.results
+      ? prometheousLabels.results
+      : [];
+
+  accountDetail.apmAgentsInsideK8sClusters =
+    apmAgentsInsideK8sClusters && apmAgentsInsideK8sClusters.results
+      ? apmAgentsInsideK8sClusters.results
+      : [];
+
+  accountDetail.nrLogsEvents =
+    nrLogsEvents && nrLogsEvents.results ? nrLogsEvents.results : [];
+
+  accountDetail.pixieUniqueServices =
+    pixieUniqueServices && pixieUniqueServices.results
+      ? pixieUniqueServices.results
+      : [];
+
+  accountDetail.pixieUniqueSpans =
+    pixieUniqueSpans && pixieUniqueSpans.results
+      ? pixieUniqueSpans.results
+      : [];
+
+  accountDetail.pixieUniqueUrls =
+    pixieUniqueUrls && pixieUniqueUrls.results ? pixieUniqueUrls.results : [];
 
   return new Account(accountDetail);
 }
@@ -472,6 +530,7 @@ const subscriptionGQLVarDict = {
   logging: 'LOGGING_SUBSCRIBED',
   eventTypeInclude: 'EVENT_TYPES_INCLUDE',
   workloads: 'WORKLOADS_SUBSCRIBED',
+  kubernetes: 'KUBERNETES_SUBSCRIBED',
   programmability: 'PROGRAMMABILITY_SUBSCRIBED'
 };
 
@@ -499,6 +558,7 @@ export function* getAccountDetails(
         // see subscriptionGQLVarDict
         subscriptions.push('eventTypeInclude');
         subscriptions.push('programmability');
+        subscriptions.push('kubernetes');
         subscriptions.push('workloads');
       }
 
