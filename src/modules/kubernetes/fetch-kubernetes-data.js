@@ -35,7 +35,7 @@ export async function fetchKubernetesData(
 }
 
 async function _onFulFilledHandler(event, accountMap) {
-  if (event.data.result.length > 0 && event.data.result.length < 700) {
+  if (event.data.result.length > 0) {
     const { accountId } = event.data.result[0];
     const account = accountMap.get(accountId);
 
