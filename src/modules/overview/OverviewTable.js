@@ -102,6 +102,12 @@ export const ProductColumns = {
       accessor: 'WORKLOADS_SCORE',
       Cell: row => cellRenderer(row),
       filterable: false
+    },
+    {
+      Header: 'SLM',
+      accessor: 'SLM_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
     }
   ]
 };
