@@ -37,7 +37,7 @@ async function _onFulFilledHandler(event, accountMap) {
     const account = accountMap.get(accountId);
 
     for (const entity of event.data.result) {
-      entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
+      // entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
       const workload = new Workload(entity, account);
 
       if (!account.workloadMap) {

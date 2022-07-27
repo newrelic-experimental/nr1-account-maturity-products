@@ -1,19 +1,12 @@
 /* eslint-disable no-unneeded-ternary */
 class Kubernetes {
   constructor(entity, account) {
-    this.id = entity.id;
     this.guid = entity.guid;
     this.name = entity.name;
     this.accountId = entity.accountId;
     this.integrationTypeCode = entity.integrationTypeCode;
+    this.type = entity.type;
     this.account = account;
-
-    this.reporting = entity.reporting ? entity.reporting : false;
-
-    this.healthStatus = entity.alertSeverity
-      ? entity.alertSeverity
-      : 'NOT_CONFIGURED';
-    this.alertConditions = [];
 
     this.tags = entity.tags;
     this.labels = this.tags
@@ -36,21 +29,9 @@ class Kubernetes {
     this.infraK8sEvents = account.infraK8sEvents;
     this.nrLogsEvents = account.nrLogsEvents;
     this.pixieUniqueServices = account.pixieUniqueServices;
-    this.pixieUniqueSpans = account.pixieUniqueSpans;
-    this.pixieUniqueUrls = account.pixieUniqueUrls;
-    this.prometheousLabels = account.prometheousLabels;
-  }
-
-  isAlerting() {
-    if (this.reporting) {
-      if (
-        this.healthStatus.indexOf('NOT_CONFIGURED') === -1 ||
-        this.healthStatus.indexOf('') === -1
-      ) {
-        return true;
-      }
-    }
-    return false;
+    this.prometheusLabels = account.prometheusLabels;
+    // this.pixieUniqueSpans = account.pixieUniqueSpans;
+    // this.pixieUniqueUrls = account.pixieUniqueUrls;
   }
 
   hasLabels() {
@@ -83,8 +64,8 @@ class Kubernetes {
     return result.length ? true : false;
   }
 
-  isPrometheousLabelUsed() {
-    const result = this.prometheousLabels.filter(
+  isPrometheusLabelUsed() {
+    const result = this.prometheusLabels.filter(
       cluster => cluster.clusterName === this.name
     );
     return result.length ? true : false;
@@ -105,24 +86,10 @@ class Kubernetes {
   }
 
   existPixieUniqueServices() {
-    const result = this.pixieUniqueServices.filter(
-      cluster => cluster.clusterName === this.name
+    const result = this.pixieUniqueServices.find(
+      service => service.clusterName === this.name
     );
-    return result.length ? true : false;
-  }
-
-  existPixieUniqueSpans() {
-    const result = this.pixieUniqueSpans.filter(
-      cluster => cluster.clusterName === this.name
-    );
-    return result.length ? true : false;
-  }
-
-  existPixieUniqueUrls() {
-    const result = this.pixieUniqueUrls.filter(
-      cluster => cluster.clusterName === this.name
-    );
-    return result.length ? true : false;
+    return result === undefined ? 0 : result.pixieServices;
   }
 }
 

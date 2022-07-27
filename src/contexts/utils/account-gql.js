@@ -143,7 +143,7 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     infraK8sEvents: nrql(query: "FROM InfrastructureEvent SELECT sum(event.count) as k8sEvents WHERE category = 'kubernetes' FACET clusterName since 7 days ago LIMIT MAX", timeout: 120) {
       results
     }
-    prometheousLabels: nrql(query: "FROM K8sContainerSample SELECT uniqueCount(apmApplicationNames) as prometheousLabels WHERE \`label.prometheus.io/scrape\` = 'true' FACET clusterName since 7 days ago LIMIT MAX", timeout: 120) {
+    prometheusLabels: nrql(query: "SELECT uniqueCount(clusterName) FROM Metric WHERE integrationName ='nri-prometheus' OR instrumentation.provider = 'prometheus' FACET clusterName since 7 days ago LIMIT MAX", timeout: 120) {
       results
     }
     apmAgentsInsideK8sClusters: nrql(query: "FROM Transaction SELECT uniqueCount(appName) as apmAgents WHERE clusterName IS NOT NULL FACET clusterName since 7 days ago LIMIT MAX", timeout: 120) {
@@ -153,12 +153,6 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
       results
     }
     pixieUniqueServices: nrql(query: "FROM Metric SELECT uniqueCount(service.name)  as pixieServices WHERE instrumentation.provider='pixie' FACET k8s.cluster.name as clusterName since 7 days ago LIMIT MAX", timeout: 120) {
-      results
-    }
-    pixieUniqueSpans: nrql(query: "FROM Span SELECT uniqueCount(service.name) as pixieSpans where instrumentation.provider = 'pixie' FACET k8s.cluster.name as clusterName since 7 days ago LIMIT MAX", timeout: 120) {
-      results
-    }
-    pixieUniqueUrls: nrql(query: "FROM Span SELECT uniqueCount(http.url) as pixieHttpUrls where instrumentation.provider = 'pixie' FACET k8s.cluster.name as clusterName since 7 days ago LIMIT MAX", timeout: 120) {
       results
     }
   }

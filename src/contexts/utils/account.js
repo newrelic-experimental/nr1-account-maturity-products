@@ -211,12 +211,10 @@ export function createAccount(event) {
     clustersUsingPixie,
     infraAgentsInstalled,
     infraK8sEvents,
-    prometheousLabels,
+    prometheusLabels,
     apmAgentsInsideK8sClusters,
     nrLogsEvents,
-    pixieUniqueServices,
-    pixieUniqueSpans,
-    pixieUniqueUrls
+    pixieUniqueServices
   } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
@@ -327,9 +325,9 @@ export function createAccount(event) {
   accountDetail.infraK8sEvents =
     infraK8sEvents && infraK8sEvents.results ? infraK8sEvents.results : [];
 
-  accountDetail.prometheousLabels =
-    prometheousLabels && prometheousLabels.results
-      ? prometheousLabels.results
+  accountDetail.prometheusLabels =
+    prometheusLabels && prometheusLabels.results
+      ? prometheusLabels.results
       : [];
 
   accountDetail.apmAgentsInsideK8sClusters =
@@ -344,14 +342,6 @@ export function createAccount(event) {
     pixieUniqueServices && pixieUniqueServices.results
       ? pixieUniqueServices.results
       : [];
-
-  accountDetail.pixieUniqueSpans =
-    pixieUniqueSpans && pixieUniqueSpans.results
-      ? pixieUniqueSpans.results
-      : [];
-
-  accountDetail.pixieUniqueUrls =
-    pixieUniqueUrls && pixieUniqueUrls.results ? pixieUniqueUrls.results : [];
 
   return new Account(accountDetail);
 }

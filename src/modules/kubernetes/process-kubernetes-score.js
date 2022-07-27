@@ -9,11 +9,10 @@ export function createKubernetesTableData(accountMap, { enricherFn = null }) {
 
     k8sRow.infraAgentsInstalledPercentage = account.getInfraAgentsInstalledPercent();
     k8sRow.infraK8sEventsPercentage = account.getInfraK8sEventsPercent();
-    k8sRow.prometheousLabelsPercentage = account.getPrometheousLabelsPercent();
+    k8sRow.prometheusLabelsPercentage = account.getPrometheusLabelsPercent();
     k8sRow.apmAgentsInsideK8sClustersPercentage = account.getApmAgentsInsideK8sClustersPercent();
     k8sRow.nrLogsEventsPercentage = account.getNrLogsEventsPercent();
     k8sRow.clustersUsingPixiePercentage = account.getClustersUsingPixiePercent();
-    k8sRow.alertingClustersPercentage = account.getAlertingClustersPercent();
 
     k8sRow.LIST = createKubernetesList(account.kubernetesMap);
 
@@ -71,15 +70,11 @@ export function createKubernetesList(kubernetesMap) {
     const k8sObj = { ...k8s.value };
     k8sObj.isInfraAgentsInstalled = k8s.value.isInfraAgentsInstalled();
     k8sObj.isInfraK8sEventGenerated = k8s.value.isInfraK8sEventGenerated();
-    k8sObj.isPrometheousLabelUsed = k8s.value.isPrometheousLabelUsed();
+    k8sObj.isPrometheusLabelUsed = k8s.value.isPrometheusLabelUsed();
     k8sObj.isApmAgentsInstalledInsideK8sCluster = k8s.value.isApmAgentsInstalledInsideK8sCluster();
     k8sObj.isNrLogEnabled = k8s.value.isNrLogEnabled();
     k8sObj.isClusterUsingPixie = k8s.value.isClusterUsingPixie();
     k8sObj.existPixieUniqueServices = k8s.value.existPixieUniqueServices();
-    k8sObj.isAlerting = k8s.value.isAlerting();
-    // k8sObj.existPixieUniqueSpans = k8s.value.existPixieUniqueSpans();
-    // k8sObj.existPixieUniqueUrls = k8s.value.existPixieUniqueUrls();
-    // k8sObj.hasLabels = k8s.value.hasLabels();
 
     k8sList.push(k8sObj);
 

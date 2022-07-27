@@ -30,7 +30,7 @@ export async function fetchKubernetesData(
   });
   await pool.start().then(() => {
     // eslint-disable-next-line no-console
-    console.log('### SK >>> accountMap: ', accountMap);
+    console.log('### SK >>> k8s accountMap: ', accountMap);
   });
 }
 
@@ -41,7 +41,7 @@ async function _onFulFilledHandler(event, accountMap) {
 
     if (!account.kubernetesMap) account.kubernetesMap = new Map();
     for (const entity of event.data.result) {
-      entity.id = entity.guid;
+      // entity.id = entity.guid; // entity.id not used
       const k8sEntity = new Kubernetes(entity, account);
       account.kubernetesMap.set(k8sEntity.guid, k8sEntity);
     }
@@ -85,14 +85,14 @@ async function _fetchEntitiesWithAcctIdGQL(
 
 export const KubernetesModel = {
   scoreWeights: {
-    clustersUsingPixiePercentage: 0.05,
+    clustersUsingPixiePercentage: 0.1,
     infraAgentsInstalledPercentage: 0.1,
     infraK8sEventsPercentage: 0.15,
-    prometheousLabelsPercentage: 0.15,
-    apmAgentsInsideK8sClustersPercentage: 0.2,
-    alertingClustersPercentage: 0.15,
+    prometheusLabelsPercentage: 0.15,
+    apmAgentsInsideK8sClustersPercentage: 0.25,
+    // alertingClustersPercentage: 0.15,
     // pixieUniqueServices: 0.05,
-    nrLogsEventsPercentage: 0.2
+    nrLogsEventsPercentage: 0.25
   },
   rowDataEnricher: null
 };

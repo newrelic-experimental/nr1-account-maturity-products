@@ -94,12 +94,10 @@ class Account {
     this.clustersUsingPixie = props.clustersUsingPixie;
     this.infraAgentsInstalled = props.infraAgentsInstalled;
     this.infraK8sEvents = props.infraK8sEvents;
-    this.prometheousLabels = props.prometheousLabels;
+    this.prometheusLabels = props.prometheusLabels;
     this.apmAgentsInsideK8sClusters = props.apmAgentsInsideK8sClusters;
     this.nrLogsEvents = props.nrLogsEvents;
     this.pixieUniqueServices = props.pixieUniqueServices;
-    this.pixieUniqueSpans = props.pixieUniqueSpans;
-    this.pixieUniqueUrls = props.pixieUniqueUrls;
   }
 
   getName() {
@@ -1812,7 +1810,7 @@ class Account {
   }
 
   getClusterList() {
-    return Array.from(this.kubernetesMap.values()).map(item => item.name);
+    return this.kubernetesMap.size ? Array.from(this.kubernetesMap.values()).map(item => item.name) : [];
   }
 
   isAccountUsingClusters() {
@@ -1852,14 +1850,14 @@ class Account {
     return isFinite(result) ? result : 0;
   }
 
-  // prometheousLabels
-  getPrometheousLabels() {
+  // prometheusLabels
+  getPrometheusLabels() {
     const k8sClusters = this.getClusterList();
-    return this.prometheousLabels.filter(item => k8sClusters.includes(item.clusterName)).length;
+    return this.prometheusLabels.filter(item => k8sClusters.includes(item.clusterName)).length;
   }
 
-  getPrometheousLabelsPercent() {
-    const result = Math.round((this.getPrometheousLabels() / this.getK8sClusterCount()) * 100) || 0;
+  getPrometheusLabelsPercent() {
+    const result = Math.round((this.getPrometheusLabels() / this.getK8sClusterCount()) * 100) || 0;
     return isFinite(result) ? result : 0;
   }
 
@@ -1871,27 +1869,6 @@ class Account {
 
   getApmAgentsInsideK8sClustersPercent() {
     const result = Math.round((this.getApmAgentsInsideK8sClusters() / this.getK8sClusterCount()) * 100) || 0;
-    return isFinite(result) ? result : 0;
-  }
-
-  // alerting clusters
-  getAlertingClusters() {
-    // only kubernetesMap read using nerdgraph contains clusters alertSeverity property
-    let total = 0;
-    if (!this.kubernetesMap) {
-      return total;
-    }
-
-    for (const cluster of this.kubernetesMap.values()) {
-      if (cluster.isAlerting()) {
-        total++;
-      }
-    }
-    return total;
-  }
-
-  getAlertingClustersPercent() {
-    const result = Math.round((this.getAlertingClusters() / this.getK8sClusterCount()) * 100) || 0;
     return isFinite(result) ? result : 0;
   }
 
@@ -1914,28 +1891,6 @@ class Account {
 
   getPixieUniqueServicesPercent() {
     const result = Math.round((this.getPixieUniqueServices() / this.getK8sClusterCount()) * 100) || 0;
-    return isFinite(result) ? result : 0;
-  }
-
-  // pixieUniqueSpans
-  getPixieUniqueSpans() {
-    const k8sClusters = this.getClusterList();
-    return this.pixieUniqueSpans.filter(item => k8sClusters.includes(item.clusterName)).length;
-  }
-
-  getPixieUniqueSpansPercent() {
-    const result = Math.round((this.getPixieUniqueSpans() / this.getK8sClusterCount()) * 100) || 0;
-    return isFinite(result) ? result : 0;
-  }
-
-  // pixieUniqueUrls
-  getPixieUniqueUrls() {
-    const k8sClusters = this.getClusterList();
-    return this.pixieUniqueUrls.filter(item => k8sClusters.includes(item.clusterName)).length;
-  }
-
-  getPixieUniqueUrlsPercent() {
-    const result = Math.round((this.getPixieUniqueUrls() / this.getK8sClusterCount()) * 100) || 0;
     return isFinite(result) ? result : 0;
   }
 }

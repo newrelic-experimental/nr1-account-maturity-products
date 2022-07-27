@@ -45,25 +45,25 @@ export const KubernetesSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Infra K8s Events %',
+        Header: 'K8s Events %',
         accessor: 'infraK8sEventsPercentage',
         Cell: row => cellRenderer(row, KubernetesListCols),
         filterable: false
       },
       {
-        Header: 'Prometheous Labels %',
-        accessor: 'prometheousLabelsPercentage',
+        Header: 'Using Prometheus %',
+        accessor: 'prometheusLabelsPercentage',
         Cell: row => cellRenderer(row, KubernetesListCols),
         filterable: false
       },
       {
-        Header: 'Apm Agents Inside K8s %',
+        Header: 'Apm Agents Installed %',
         accessor: 'apmAgentsInsideK8sClustersPercentage',
         Cell: row => cellRenderer(row, KubernetesListCols),
         filterable: false
       },
       {
-        Header: 'Nr Log Used %',
+        Header: 'Using Log %',
         accessor: 'nrLogsEventsPercentage',
         Cell: row => cellRenderer(row, KubernetesListCols),
         filterable: false
@@ -71,12 +71,6 @@ export const KubernetesSummaryCols = [
       {
         Header: 'Using Pixie %',
         accessor: 'clustersUsingPixiePercentage',
-        Cell: row => cellRenderer(row, KubernetesListCols),
-        filterable: false
-      },
-      {
-        Header: 'Alerting %',
-        accessor: 'alertingClustersPercentage',
         Cell: row => cellRenderer(row, KubernetesListCols),
         filterable: false
       },
@@ -96,11 +90,6 @@ export const KubernetesListCols = [
     columns: [
       { Header: 'Name', accessor: 'name' },
       {
-        Header: 'Reporting',
-        accessor: 'reporting',
-        Cell: row => cellRenderer(row)
-      },
-      {
         Header: 'Infra Agents Installed',
         accessor: 'isInfraAgentsInstalled',
         Cell: row => cellRenderer(row)
@@ -111,8 +100,8 @@ export const KubernetesListCols = [
         Cell: row => cellRenderer(row)
       },
       {
-        Header: 'Prometheous Labels Used',
-        accessor: 'isPrometheousLabelUsed',
+        Header: 'Using Prometheus',
+        accessor: 'isPrometheusLabelUsed',
         Cell: row => cellRenderer(row)
       },
       {
@@ -121,7 +110,7 @@ export const KubernetesListCols = [
         Cell: row => cellRenderer(row)
       },
       {
-        Header: 'Nr Log Enabled',
+        Header: 'Log Enabled',
         accessor: 'isNrLogEnabled',
         Cell: row => cellRenderer(row)
       },
@@ -133,11 +122,6 @@ export const KubernetesListCols = [
       {
         Header: 'Pixie Services',
         accessor: 'existPixieUniqueServices',
-        Cell: row => cellRenderer(row)
-      },
-      {
-        Header: 'Is Alerting',
-        accessor: 'isAlerting',
         Cell: row => cellRenderer(row)
       }
     ]
