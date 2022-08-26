@@ -18,6 +18,8 @@ class Account {
     // this.InfraApps = new Map();
     this.workloadMap = new Map();
 
+    this.kubernetesMap = new Map();
+
     this.apiData = false;
     this.dtAppList = props.dtAppList;
     this.throughputData = props.throughputData;
@@ -87,6 +89,15 @@ class Account {
     this.mobileEvents = props.mobileEvents;
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
+
+    // kubernetes data
+    this.clustersUsingPixie = props.clustersUsingPixie;
+    this.infraAgentsInstalled = props.infraAgentsInstalled;
+    this.infraK8sEvents = props.infraK8sEvents;
+    this.prometheusLabels = props.prometheusLabels;
+    this.apmAgentsInsideK8sClusters = props.apmAgentsInsideK8sClusters;
+    this.nrLogsEvents = props.nrLogsEvents;
+    this.pixieUniqueServices = props.pixieUniqueServices;
   }
 
   getName() {
@@ -1792,6 +1803,95 @@ class Account {
       0
     );
   }
-}
 
+  // KUBERNETERS METHODS ###########################
+  getK8sClusterCount() {
+    return this.kubernetesMap.size;
+  }
+
+  getClusterList() {
+    return this.kubernetesMap.size ? Array.from(this.kubernetesMap.values()).map(item => item.name) : [];
+  }
+
+  isAccountUsingClusters() {
+    return this.kubernetesMap.size > 0;
+  }
+
+  // clustersUsingPixie
+  getClustersUsingPixie() {
+    const k8sClusters = this.getClusterList();
+    return this.clustersUsingPixie.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getClustersUsingPixiePercent() {
+    const result = Math.round((this.getClustersUsingPixie() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // infraAgentsInstalled
+  getInfraAgentsInstalled() {
+    const k8sClusters = this.getClusterList();
+    return this.infraAgentsInstalled.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getInfraAgentsInstalledPercent() {
+    const result = Math.round((this.getInfraAgentsInstalled() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // infraK8sEvents - infra events that come from k8s clusters
+  getInfraK8sEvents() {
+    const k8sClusters = this.getClusterList();
+    return this.infraK8sEvents.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getInfraK8sEventsPercent() {
+    const result = Math.round((this.getInfraK8sEvents() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // prometheusLabels
+  getPrometheusLabels() {
+    const k8sClusters = this.getClusterList();
+    return this.prometheusLabels.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getPrometheusLabelsPercent() {
+    const result = Math.round((this.getPrometheusLabels() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // apmAgentsInsideK8sClusters
+  getApmAgentsInsideK8sClusters() {
+    const k8sClusters = this.getClusterList();
+    return this.apmAgentsInsideK8sClusters.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getApmAgentsInsideK8sClustersPercent() {
+    const result = Math.round((this.getApmAgentsInsideK8sClusters() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // nrLogsEvents
+  getNrLogsEvents() {
+    const k8sClusters = this.getClusterList();
+    return this.nrLogsEvents.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getNrLogsEventsPercent() {
+    const result = Math.round((this.getNrLogsEvents() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // pixieUniqueServices
+  getPixieUniqueServices() {
+    const k8sClusters = this.getClusterList();
+    return this.pixieUniqueServices.filter(item => k8sClusters.includes(item.clusterName)).length;
+  }
+
+  getPixieUniqueServicesPercent() {
+    const result = Math.round((this.getPixieUniqueServices() / this.getK8sClusterCount()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+}
 export { Account };

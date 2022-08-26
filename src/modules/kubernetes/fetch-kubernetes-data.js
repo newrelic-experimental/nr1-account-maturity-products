@@ -1,8 +1,8 @@
-import { Workload } from './Workload';
+import { Kubernetes } from './Kubernetes';
 import PromisePool from 'es6-promise-pool';
-import { WORKLOAD_ENTITIES_SUBSCRIBER_ID_GQL } from './workload-gql';
+import { KUBERNETES_ENTITIES_SUBSCRIBER_ID_GQL } from './kubernetes-gql';
 
-export async function fetchWorkloadData(
+export async function fetchKubernetesData(
   accountMap,
   gqlAPI,
   overrides = {
@@ -28,7 +28,7 @@ export async function fetchWorkloadData(
   pool.addEventListener('fulfilled', event => {
     options.poolOnFulfilled(event, accountMap);
   });
-  await pool.start();
+  await pool.start().then(() => {});
 }
 
 async function _onFulFilledHandler(event, accountMap) {
@@ -36,14 +36,11 @@ async function _onFulFilledHandler(event, accountMap) {
     const { accountId } = event.data.result[0];
     const account = accountMap.get(accountId);
 
+    if (!account.kubernetesMap) account.kubernetesMap = new Map();
     for (const entity of event.data.result) {
-      // entity.id = parseFloat(`${accountId}${entity.indexedAt}`);
-      const workload = new Workload(entity, account);
-
-      if (!account.workloadMap) {
-        account.workloadMap = new Map();
-      }
-      account.workloadMap.set(workload.guid, workload);
+      // entity.id = entity.guid; // entity.id not used
+      const k8sEntity = new Kubernetes(entity, account);
+      account.kubernetesMap.set(k8sEntity.guid, k8sEntity);
     }
   }
 }
@@ -56,10 +53,10 @@ async function _fetchEntitiesWithAcctIdGQL(
 ) {
   const accountId = account.id;
   const query = {
-    ...WORKLOAD_ENTITIES_SUBSCRIBER_ID_GQL,
+    ...KUBERNETES_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
-      nrql: `type IN ('WORKLOAD') and accountId=${accountId}`
+      nrql: `accountId=${accountId} and domain = 'INFRA' and type = 'KUBERNETESCLUSTER'`
     }
   };
 
@@ -83,11 +80,16 @@ async function _fetchEntitiesWithAcctIdGQL(
   }
 }
 
-export const WorkloadModel = {
+export const KubernetesModel = {
   scoreWeights: {
-    reportingWorkloadsPercentage: 0.5,
-    workloadsWithOwnerPercentage: 0.25,
-    workloadsWithRelatedDashboardsPercentage: 0.25
+    clustersUsingPixiePercentage: 0.1,
+    infraAgentsInstalledPercentage: 0.1,
+    infraK8sEventsPercentage: 0.15,
+    prometheusLabelsPercentage: 0.15,
+    apmAgentsInsideK8sClustersPercentage: 0.25,
+    // alertingClustersPercentage: 0.15,
+    // pixieUniqueServices: 0.05,
+    nrLogsEventsPercentage: 0.25
   },
   rowDataEnricher: null
 };

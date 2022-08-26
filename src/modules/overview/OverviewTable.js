@@ -68,6 +68,12 @@ export const ProductColumns = {
       filterable: false
     },
     {
+      Header: 'Kubernetes',
+      accessor: 'KUBERNETES_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
       Header: 'Insights',
       accessor: 'INSIGHTS_SCORE',
       Cell: row => cellRenderer(row),
