@@ -63,7 +63,7 @@ export const KubernetesSummaryCols = [
         filterable: false
       },
       {
-        Header: 'Using Log %',
+        Header: 'Using Logs %',
         accessor: 'nrLogsEventsPercentage',
         Cell: row => cellRenderer(row, KubernetesListCols),
         filterable: false
@@ -95,7 +95,7 @@ export const KubernetesListCols = [
         Cell: row => cellRenderer(row)
       },
       {
-        Header: 'Infra K8s Event Generated',
+        Header: 'K8s Events Generated',
         accessor: 'isInfraK8sEventGenerated',
         Cell: row => cellRenderer(row)
       },
@@ -110,7 +110,7 @@ export const KubernetesListCols = [
         Cell: row => cellRenderer(row)
       },
       {
-        Header: 'Log Enabled',
+        Header: 'Logs Enabled',
         accessor: 'isNrLogEnabled',
         Cell: row => cellRenderer(row)
       },
@@ -121,8 +121,7 @@ export const KubernetesListCols = [
       },
       {
         Header: 'Pixie Services',
-        accessor: 'existPixieUniqueServices',
-        Cell: row => cellRenderer(row)
+        accessor: 'existPixieUniqueServices'
       }
     ]
   }
