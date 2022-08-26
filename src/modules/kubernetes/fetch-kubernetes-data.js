@@ -28,10 +28,7 @@ export async function fetchKubernetesData(
   pool.addEventListener('fulfilled', event => {
     options.poolOnFulfilled(event, accountMap);
   });
-  await pool.start().then(() => {
-    // eslint-disable-next-line no-console
-    console.log('### SK >>> k8s accountMap: ', accountMap);
-  });
+  await pool.start().then(() => {});
 }
 
 async function _onFulFilledHandler(event, accountMap) {
