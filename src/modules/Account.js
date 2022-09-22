@@ -20,6 +20,7 @@ class Account {
 
     this.kubernetesMap = new Map();
     this.slmMap = new Map();
+    this.npmMap = new Map();
 
     this.apiData = false;
     this.dtAppList = props.dtAppList;
@@ -102,6 +103,16 @@ class Account {
   
     // slm data
     this.sliNrqlConditions = {};
+
+    // npm
+    this.npmKentikProviders = props.npmKentikProviders;
+    this.npmNoKentikProvider = props.npmNoKentikProvider;
+    this.npmNoEntityDefinitionDevices = props.npmNoEntityDefinitionDevices;
+    this.npmSnmpPollingFailures = props.npmSnmpPollingFailures;
+    this.npmKentikFlowDevices = props.npmKentikFlowDevices;
+    this.npmKentikVpcDevices = props.npmKentikVpcDevices;
+    this.npmKtranslateSyslogDevices = props.npmKtranslateSyslogDevices;
+
   }
 
   getName() {
@@ -1933,6 +1944,74 @@ class Account {
 
   hasSLIAlerting() {
     return this.sliNrqlConditions.totalCount > 0;
+  }
+
+  // NPM METHODS ###########################
+
+  // How many devices are sending SNMP data
+  getSnmpDeviceCount() {
+    return this.npmKentikProviders.length;
+  }
+
+  // How many devices don't have profiles -- using generic profile
+  getNoKentikProviderCount() {
+    return this.npmNoKentikProvider.length;
+  }
+
+  getNoKentikProviderPercent() {
+    const result = Math.round((this.getNoKentikProviderCount() / this.getSnmpDeviceCount) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  // How many devices don't have entity definitions
+  getDevicesWithNoEntityDefinitionCount() {
+    const result = this.npmNoEntityDefinitionDevices && this.npmNoEntityDefinitionDevices.length ? this.npmNoEntityDefinitionDevices[0].missingDefinitionDevices : 0;
+    return result;
+  }
+
+  getDevicesWithNoEntityDefinitionPercent() {
+    const result = Math.round((this.getDevicesWithNoEntityDefinitionCount() / this.getSnmpDeviceCount) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  getSnmpPollingFailurePercent() {
+    const arraySize = this.npmSnmpPollingFailures.length;
+    const result = this.npmSnmpPollingFailures && this.npmSnmpPollingFailures.length
+      ? this.npmSnmpPollingFailures.reduce((previousValue, currentValue) => {
+          return previousValue + currentValue['latest.PercentFailed'] / arraySize;
+        }, 0)
+      : 0;
+    return result;
+  }
+
+  // How many devices are sending Network Flow data
+  getKentikFlowDeviceCount() {
+    return this.npmKentikFlowDevices.length ? this.npmKentikFlowDevices[0].flowDevices : 0;
+  }
+
+  isKentikFlowDeviceUsed() {
+    const result = this.getKentikFlowDeviceCount();
+    return Boolean(result);
+  }
+
+  // How many devices are sending VPC Flow Log data
+  getKentikVpcDeviceCount() {
+    return this.npmKentikVpcDevices[0].vpcDevices;
+  }
+
+  isKentikVpcDeviceUsed() {
+    const result = this.getKentikVpcDeviceCount();
+    return Boolean(result);;
+  }
+
+  // How many devices are sending Network Syslog data
+  getKtranslateSyslogDeviceCount() {
+    return this.npmKtranslateSyslogDevices[0].syslogDevices;
+  }
+
+  isKtranslateSyslogDeviceUsed() {
+    const result = this.getKtranslateSyslogDeviceCount();
+    return Boolean(result);;
   }
 }
 export { Account };

@@ -108,6 +108,12 @@ export const ProductColumns = {
       accessor: 'SLM_SCORE',
       Cell: row => cellRenderer(row),
       filterable: false
+    },
+    {
+      Header: 'NPM',
+      accessor: 'NPM_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
     }
   ]
 };

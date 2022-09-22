@@ -28,7 +28,7 @@ export async function fetchKubernetesData(
   pool.addEventListener('fulfilled', event => {
     options.poolOnFulfilled(event, accountMap);
   });
-  await pool.start().then(() => {});
+  await pool.start();
 }
 
 async function _onFulFilledHandler(event, accountMap) {
