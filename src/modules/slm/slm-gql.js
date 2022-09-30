@@ -10,6 +10,7 @@ export const SLI_USED_COUNT_GQL = {
                 query
               }
             }
+            nextCursor
           }
         }
       }
@@ -29,6 +30,7 @@ export const SLM_ENTITIES_SUBSCRIBER_ID_GQL = {
           entities {
             accountId
             alertSeverity
+            guid
             name
             type
             serviceLevel {

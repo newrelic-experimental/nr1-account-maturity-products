@@ -35,10 +35,11 @@ async function _onFulFilledHandler(data, accountMap) {
   if (data.data.result.event.length > 0) {
     const { accountId } = data.data.result.event[0];
     const account = accountMap.get(accountId);
-    account.sliNrqlConditions = data.data.result.sliUsed.data.actor.account
-      .alerts.nrqlConditionsSearch.totalCount
-      ? data.data.result.sliUsed.data.actor.account.alerts.nrqlConditionsSearch
-      : { totalCount: 0, nrqlConditions: [] };
+    account.sliNrqlConditions =
+      data.data.result.sliUsed && data.data.result.sliUsed.totalCount
+        ? data.data.result.sliUsed
+        : { totalCount: 0, nrqlConditions: [] };
+
     if (!account.slmMap) account.slmMap = new Map();
     for (const entity of data.data.result.event) {
       entity.id = entity.guid;
@@ -48,30 +49,54 @@ async function _onFulFilledHandler(data, accountMap) {
   }
 }
 
-async function _fetchEntitiesWithAcctIdGQL(
+async function _fetchNrqlConditions(
   gqlAPI,
-  account,
-  entityArr = [],
+  gql,
+  responseObject = {
+    nrqlConditions: [],
+    totalCount: 0
+  },
   cursor = null
 ) {
-  const accountId = account.id;
+  const query = { ...gql };
+  query.variables.cursor = cursor;
 
-  const searchCriteria = {
-    ...SLI_USED_COUNT_GQL,
-    variables: {
-      accountId,
-      searchCriteria: 'newrelic.sli'
-    }
-  };
-  const sliUsed = await gqlAPI(searchCriteria);
+  const response = await gqlAPI(query);
 
-  const query = {
-    ...SLM_ENTITIES_SUBSCRIBER_ID_GQL,
-    variables: {
-      cursor,
-      nrql: `accountId=${accountId} and type = 'SERVICE_LEVEL'`
-    }
-  };
+  if (
+    !response.data.actor.account.alerts ||
+    !response.data.actor.account.alerts.nrqlConditionsSearch
+  ) {
+    return responseObject;
+  }
+
+  const { nrqlConditionsSearch } = response.data.actor.account.alerts;
+
+  responseObject.nrqlConditions = responseObject.nrqlConditions.concat(
+    nrqlConditionsSearch.nrqlConditions
+  );
+
+  responseObject.totalCount = responseObject.nrqlConditions.length;
+
+  if (
+    nrqlConditionsSearch.nextCursor === null ||
+    (nrqlConditionsSearch.nextCursor != null &&
+      nrqlConditionsSearch.nextCursor.length === 0)
+  ) {
+    return responseObject;
+  } else {
+    return _fetchNrqlConditions(
+      gqlAPI,
+      query,
+      responseObject,
+      nrqlConditionsSearch.nextCursor
+    );
+  }
+}
+
+async function _fetchEntities(gqlAPI, gql, responseArray = [], cursor = null) {
+  const query = { ...gql };
+  query.variables.cursor = cursor;
 
   const response = await gqlAPI(query);
 
@@ -79,18 +104,43 @@ async function _fetchEntitiesWithAcctIdGQL(
     !response.data.actor.entitySearch ||
     !response.data.actor.entitySearch.results
   ) {
-    return { sliUsed, event: entityArr };
+    return responseArray;
   }
 
   const { entities, nextCursor } = response.data.actor.entitySearch.results;
 
-  entityArr = entityArr.concat(entities);
+  responseArray = responseArray.concat(entities);
 
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
-    return { sliUsed, event: entityArr };
+    return responseArray;
   } else {
-    return _fetchEntitiesWithAcctIdGQL(gqlAPI, account, entityArr, nextCursor);
+    return _fetchEntities(gqlAPI, query, responseArray, nextCursor);
   }
+}
+
+async function _fetchEntitiesWithAcctIdGQL(gqlAPI, account) {
+  const accountId = account.id;
+
+  const searchCriteria = {
+    ...SLI_USED_COUNT_GQL,
+    variables: {
+      cursor: null,
+      accountId,
+      searchCriteria: 'newrelic.sli'
+    }
+  };
+  const sliUsed = await _fetchNrqlConditions(gqlAPI, searchCriteria);
+
+  const entityQuery = {
+    ...SLM_ENTITIES_SUBSCRIBER_ID_GQL,
+    variables: {
+      cursor: null,
+      nrql: `accountId=${accountId} and type = 'SERVICE_LEVEL'`
+    }
+  };
+  const entityArr = await _fetchEntities(gqlAPI, entityQuery);
+
+  return { sliUsed, event: entityArr };
 }
 
 export const SLMModel = {
