@@ -23,6 +23,7 @@ export class MaturityScoreCtxProvider extends React.Component {
    * @param {{accountID:<acctId>, accountName:<acctName>,SCORE:<score> } } scores
    *
    */
+
   updateScore(productId, scores, table) {
     console.log('updateScore', productId, scores, table)
     this.setState(prev => {

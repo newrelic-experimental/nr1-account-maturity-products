@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable prefer-template */
+/* eslint-disable prettier/prettier */
 import React from 'react';
 
 class Account {
@@ -20,6 +21,7 @@ class Account {
 
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
+    this.workloadMap = new Map();
 
     this.apiData = false;
     this.dtAppList = props.dtAppList;
@@ -105,6 +107,7 @@ class Account {
     return 0;
   }
 
+  // ALERT POLICY METHODS
   getTotalPolicies() {
     if (this.alertPolicies) {
       return this.alertPolicies.size;
@@ -247,6 +250,7 @@ class Account {
     return Math.round(score);
   }
 
+  // APM METHODS
   getTotalApps() {
     if (this.apmApps) {
       return this.apmApps.size;
@@ -801,6 +805,7 @@ class Account {
     ];
   }
 
+  // ALERT SUBSYSTEM METHODS -- continued
   getPolicyChannelsNotEmailArray() {
     const policyNotEmailArray = [];
     const nonPolicyNotEmailArray = [];
@@ -1495,6 +1500,7 @@ class Account {
     );
   }
 
+  // SYNTHETICS MONOTROS
   getTotalMonitors() {
     return this.synthMonitors ? this.synthMonitors.size : 0;
   }
@@ -1688,6 +1694,114 @@ class Account {
       }
     }
     return 0;
+  }
+
+  // WORKLOADS METHODS
+  getTotalWorkloads() {
+    return this.workloadMap ? this.workloadMap.size : 0;
+  }
+
+  getReportingWorkloads() {
+    let total = 0;
+    if (!this.workloadMap) {
+      return total;
+    }
+
+    for (const workload of this.workloadMap.values()) {
+      if (workload.reporting) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getReportingWorkloadsPercent() {
+    return (
+      Math.round((this.getReportingWorkloads() / this.getTotalWorkloads()) * 100) || 0
+    );
+  }
+
+  getAlertingWorkloads() {
+    let total = 0;
+    if (!this.workloadMap) {
+      return total;
+    }
+
+    for (const workload of this.workloadMap.values()) {
+      if (workload.isAlerting()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getAlertingWorkloadsPercent() {
+    return (
+      Math.round((this.getAlertingWorkloads() / this.getReportingWorkloads()) * 100) || 0
+    );
+  }
+
+  getWorkloadsWithLabels() {
+    let total = 0;
+    if (!this.workloadMap) {
+      return total;
+    }
+
+    for (const workload of this.workloadMap.values()) {
+      if (workload.hasLabels()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getWorkloadsWithLabelsPercent() {
+    return (
+      Math.round((this.getWorkloadsWithLabels() / this.getReportingWorkloads()) * 100) ||
+      0
+    );
+  }
+
+  getWorkloadsWithOwner() {
+    let total = 0;
+    if (!this.workloadMap) {
+      return total;
+    }
+
+    for (const workload of this.workloadMap.values()) {
+      if (workload.hasOwner()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getWorkloadsWithOwnerPercent() {
+    return (
+      Math.round((this.getWorkloadsWithOwner() / this.getReportingWorkloads()) * 100) ||
+      0
+    );
+  }
+
+  getWorkloadsWithRelatedDashboards() {
+    let total = 0;
+    if (!this.workloadMap) {
+      return total;
+    }
+
+    for (const workload of this.workloadMap.values()) {
+      if (workload.hasRelatedDashboards()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getWorkloadsWithRelatedDashboardsPercent() {
+    return (
+      Math.round((this.getWorkloadsWithRelatedDashboards() / this.getReportingWorkloads()) * 100) ||
+      0
+    );
   }
 }
 

@@ -13903,6 +13903,96 @@ export const EventTypes = {
             ],
             dataSources: [],
             name: 'Public_APICall'
+          },
+          // Relationship event for workloads and their dashboards
+          {
+            attributes: [
+              {
+                label: 'relationshipType',
+                name: 'relationshipType'
+              },
+              {
+                label: 'relationshipVersion',
+                name: 'relationshipVersion'
+              },
+              {
+                label: 'sourceAccountId',
+                name: 'sourceAccountId'
+              },
+              {
+                label: 'sourceDomain',
+                name: 'sourceDomain'
+              },
+              {
+                label: 'sourceDomainId',
+                name: 'sourceDomainId'
+              },
+              {
+                label: 'sourceEntityGuid',
+                name: 'sourceEntityGuid'
+              },
+              {
+                label: 'sourceEntityType',
+                name: 'sourceEntityType'
+              },
+              {
+                label: 'targetAccountId',
+                name: 'targetAccountId'
+              },
+              {
+                label: 'targetDomain',
+                name: 'targetDomain'
+              },
+              {
+                label: 'targetDomainId',
+                name: 'targetDomainId'
+              },
+              {
+                label: 'targetEntityGuid',
+                name: 'targetEntityGuid'
+              },
+              {
+                label: 'targetEntityType',
+                name: 'targetEntityType'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'timestampNanos',
+                name: 'timestampNanos'
+              }
+            ],
+            dataSources: [],
+            name: 'Relationship'
+          },
+          // WorlloadStatus event
+          {
+            attributes: [
+              {
+                label: 'entity.name',
+                name: 'entity.name'
+              },
+              {
+                label: 'statusValue',
+                name: 'statusValue'
+              },
+              {
+                label: 'statusValueCode',
+                name: 'statusValueCode'
+              },
+              {
+                label: 'timestamp',
+                name: 'timestamp'
+              },
+              {
+                label: 'workloadGuid',
+                name: 'workloadGuid'
+              }
+            ],
+            dataSources: [],
+            name: 'WorkloadStatus'
           }
         ]
       }

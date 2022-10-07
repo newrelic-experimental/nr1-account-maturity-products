@@ -90,6 +90,12 @@ export const ProductColumns = {
       accessor: 'MOBILE_SCORE',
       Cell: row => cellRenderer(row),
       filterable: false
+    },
+    {
+      Header: 'Workloads',
+      accessor: 'WORKLOADS_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
     }
     ,
     {

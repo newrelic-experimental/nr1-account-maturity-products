@@ -27,7 +27,6 @@ export class FilterTableData extends React.Component {
     if (!this.state.hideNoData) {
       return tableData;
     }
-
     const filteredTable = tableData.filter(cols => {
       let isReporting = false;
       filterKeys.forEach(scoreKey => {
@@ -41,7 +40,6 @@ export class FilterTableData extends React.Component {
   render() {
     const { tableData, filterKeys } = this.props;
     const filteredData = this._filterNoData(tableData, filterKeys);
-
     return (
       <div>
         <div>

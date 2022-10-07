@@ -103,6 +103,9 @@ function _setGQLVariables(query, account) {
     ERRORS_INBOX_SUBSCRIBED: subscriptions
       ? subscriptions.includes('errorsInbox')
       : true,
+    WORKLOADS_SUBSCRIBED: subscriptions
+      ? subscriptions.includes('workloads')
+      : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
       : true
@@ -148,6 +151,10 @@ export function setNrqlFragmentSubscription(query) {
   nrqlFragment = nrqlFragment.replace(
     /\$LOGGING_SUBSCRIBED/g,
     query.variables.LOGGING_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
+    /\$WORKLOADS_SUBSCRIBED/g,
+    query.variables.WORKLOADS_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
@@ -494,8 +501,13 @@ const subscriptionGQLVarDict = {
   synthetics: 'SYNTHETICS_SUBSCRIBED',
   logging: 'LOGGING_SUBSCRIBED',
   eventTypeInclude: 'EVENT_TYPES_INCLUDE',
+<<<<<<< HEAD
   programmability: 'PROGRAMMABILITY_SUBSCRIBED',
   errorsInbox: 'ERRORS_INBOX_SUBSCRIBED'
+=======
+  workloads: 'WORKLOADS_SUBSCRIBED',
+  programmability: 'PROGRAMMABILITY_SUBSCRIBED'
+>>>>>>> master
 };
 
 export function* getAccountDetails(
@@ -526,6 +538,7 @@ export function* getAccountDetails(
         subscriptions.push('eventTypeInclude');
         subscriptions.push('programmability');
         subscriptions.push('errorsInbox');
+        subscriptions.push('workloads');
       }
 
       const promises = [];
