@@ -106,6 +106,9 @@ function _setGQLVariables(query, account) {
     WORKLOADS_SUBSCRIBED: subscriptions
       ? subscriptions.includes('workloads')
       : true,
+    KUBERNETES_SUBSCRIBED: subscriptions
+      ? subscriptions.includes('kubernetes')
+      : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
       : true
@@ -155,6 +158,10 @@ export function setNrqlFragmentSubscription(query) {
   nrqlFragment = nrqlFragment.replace(
     /\$WORKLOADS_SUBSCRIBED/g,
     query.variables.WORKLOADS_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
+    /\$KUBERNETES_SUBSCRIBED/g,
+    query.variables.KUBERNETES_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
@@ -208,7 +215,16 @@ export function createAccount(event) {
     mobileBreadcrumbs,
     mobileHandledExceptions,
     mobileEvents,
-    mobileAppLaunch
+    mobileAppLaunch,
+
+    // kubernetes
+    clustersUsingPixie,
+    infraAgentsInstalled,
+    infraK8sEvents,
+    prometheusLabels,
+    apmAgentsInsideK8sClusters,
+    nrLogsEvents,
+    pixieUniqueServices
   } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
@@ -313,9 +329,6 @@ export function createAccount(event) {
   } = errorsInbox
 
 
-  // totalErrorGroups.results.length
-  // totalErrorGroups.totalCount
-
   //from
   accountDetail.errorGroupCount = totalErrorGroups.totalCount;
   accountDetail.errorGroupAssignedPercentage = 0.4;
@@ -324,6 +337,37 @@ export function createAccount(event) {
   accountDetail.errorGroupCommentsPercentage = 0.2;
 
   console.log('accountDetail', accountDetail)
+  // kubernetes data
+  accountDetail.clustersUsingPixie =
+    clustersUsingPixie && clustersUsingPixie.results
+      ? clustersUsingPixie.results
+      : [];
+
+  accountDetail.infraAgentsInstalled =
+    infraAgentsInstalled && infraAgentsInstalled.results
+      ? infraAgentsInstalled.results
+      : [];
+
+  accountDetail.infraK8sEvents =
+    infraK8sEvents && infraK8sEvents.results ? infraK8sEvents.results : [];
+
+  accountDetail.prometheusLabels =
+    prometheusLabels && prometheusLabels.results
+      ? prometheusLabels.results
+      : [];
+
+  accountDetail.apmAgentsInsideK8sClusters =
+    apmAgentsInsideK8sClusters && apmAgentsInsideK8sClusters.results
+      ? apmAgentsInsideK8sClusters.results
+      : [];
+
+  accountDetail.nrLogsEvents =
+    nrLogsEvents && nrLogsEvents.results ? nrLogsEvents.results : [];
+
+  accountDetail.pixieUniqueServices =
+    pixieUniqueServices && pixieUniqueServices.results
+      ? pixieUniqueServices.results
+      : [];
 
   return new Account(accountDetail);
 }
@@ -501,13 +545,11 @@ const subscriptionGQLVarDict = {
   synthetics: 'SYNTHETICS_SUBSCRIBED',
   logging: 'LOGGING_SUBSCRIBED',
   eventTypeInclude: 'EVENT_TYPES_INCLUDE',
-<<<<<<< HEAD
   programmability: 'PROGRAMMABILITY_SUBSCRIBED',
-  errorsInbox: 'ERRORS_INBOX_SUBSCRIBED'
-=======
+  errorsInbox: 'ERRORS_INBOX_SUBSCRIBED',
   workloads: 'WORKLOADS_SUBSCRIBED',
+  kubernetes: 'KUBERNETES_SUBSCRIBED',
   programmability: 'PROGRAMMABILITY_SUBSCRIBED'
->>>>>>> master
 };
 
 export function* getAccountDetails(
@@ -522,8 +564,8 @@ export function* getAccountDetails(
     ...FETCH_ACCOUNT_WITH_ID_GQL_OBJ.createQuery(nrqlFragment)
   };
 
-  console.log('FETCH_ACCOUNT_WITH_ID_GQL_OBJ', FETCH_ACCOUNT_WITH_ID_GQL_OBJ)
-  console.log('getAccountDetails', accounts)
+  // console.log('FETCH_ACCOUNT_WITH_ID_GQL_OBJ', FETCH_ACCOUNT_WITH_ID_GQL_OBJ)
+  // console.log('getAccountDetails', accounts)
 
   for (const account of accounts) {
     yield (async () => {
@@ -538,6 +580,7 @@ export function* getAccountDetails(
         subscriptions.push('eventTypeInclude');
         subscriptions.push('programmability');
         subscriptions.push('errorsInbox');
+        subscriptions.push('kubernetes');
         subscriptions.push('workloads');
       }
 

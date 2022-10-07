@@ -1,7 +1,7 @@
 class Workload {
   // eslint-disable-next-line no-unused-vars
   constructor(entity, account) {
-    this.id = entity.id;
+    // this.id = entity.id;
     this.guid = entity.guid;
     this.name = entity.name;
     this.accountId = entity.accountId;
