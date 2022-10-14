@@ -1,9 +1,9 @@
 export const SLI_USED_COUNT_GQL = {
-  query: `query ($accountId: Int!, $searchCriteria: String) {
+  query: `query ($cursor: String, $accountId: Int!, $searchCriteria: String) {
     actor {
       account(id: $accountId) {
         alerts {
-          nrqlConditionsSearch(searchCriteria: {queryLike: $searchCriteria}) {
+          nrqlConditionsSearch(cursor: $cursor, searchCriteria: {queryLike: $searchCriteria}) {
             totalCount
             nrqlConditions {
               nrql {
