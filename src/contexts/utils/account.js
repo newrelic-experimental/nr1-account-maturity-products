@@ -105,6 +105,7 @@ function _setGQLVariables(query, account) {
     KUBERNETES_SUBSCRIBED: subscriptions
       ? subscriptions.includes('kubernetes')
       : true,
+    SLM_SUBSCRIBED: subscriptions ? subscriptions.includes('slm') : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
       : true
@@ -158,6 +159,10 @@ export function setNrqlFragmentSubscription(query) {
   nrqlFragment = nrqlFragment.replace(
     /\$KUBERNETES_SUBSCRIBED/g,
     query.variables.KUBERNETES_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
+    /\$SLM_SUBSCRIBED/g,
+    query.variables.SLM_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
@@ -521,6 +526,7 @@ const subscriptionGQLVarDict = {
   eventTypeInclude: 'EVENT_TYPES_INCLUDE',
   workloads: 'WORKLOADS_SUBSCRIBED',
   kubernetes: 'KUBERNETES_SUBSCRIBED',
+  slm: 'SLM_SUBSCRIBED',
   programmability: 'PROGRAMMABILITY_SUBSCRIBED'
 };
 
@@ -550,6 +556,7 @@ export function* getAccountDetails(
         subscriptions.push('programmability');
         subscriptions.push('kubernetes');
         subscriptions.push('workloads');
+        subscriptions.push('slm');
       }
 
       const promises = [];

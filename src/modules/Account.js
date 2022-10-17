@@ -19,6 +19,7 @@ class Account {
     this.workloadMap = new Map();
 
     this.kubernetesMap = new Map();
+    this.slmMap = new Map();
 
     this.apiData = false;
     this.dtAppList = props.dtAppList;
@@ -98,6 +99,9 @@ class Account {
     this.apmAgentsInsideK8sClusters = props.apmAgentsInsideK8sClusters;
     this.nrLogsEvents = props.nrLogsEvents;
     this.pixieUniqueServices = props.pixieUniqueServices;
+  
+    // slm data
+    this.sliNrqlConditions = {};
   }
 
   getName() {
@@ -1892,6 +1896,43 @@ class Account {
   getPixieUniqueServicesPercent() {
     const result = Math.round((this.getPixieUniqueServices() / this.getK8sClusterCount()) * 100) || 0;
     return isFinite(result) ? result : 0;
+  }
+
+  // SLM METHODS ###########################
+  getTotalServiceLevels() {
+    return this.slmMap.size;
+  }
+
+  getServiceLevelsWithOwners() {
+    let total = 0;
+    if (!this.slmMap.size) {
+      return total;
+    }
+
+    for (const slm of this.slmMap.values()) {
+      if (slm.hasOwner()) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  // SLI's with owner tag
+  getOwnerPercent() {
+    const result = Math.round((this.getServiceLevelsWithOwners() / this.getTotalServiceLevels()) * 100) || 0;
+    return isFinite(result) ? result : 0;
+  }
+
+  sliUsedInAlertsCount() { // not scored
+    return this.sliNrqlConditions.totalCount;
+  }
+
+  isUsingSLI() {
+    return this.slmMap.size > 0;
+  }
+
+  hasSLIAlerting() {
+    return this.sliNrqlConditions.totalCount > 0;
   }
 }
 export { Account };
