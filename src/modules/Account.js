@@ -1955,38 +1955,37 @@ class Account {
 
   // How many devices don't have profiles -- using generic profile
   getNoKentikProviderCount() {
-    return this.npmNoKentikProvider.length;
+    return this.npmNoKentikProvider[0].npmNoKentikProviderProfileCount;
   }
 
   getNoKentikProviderPercent() {
-    const result = Math.round((this.getNoKentikProviderCount() / this.getSnmpDeviceCount) * 100) || 0;
+    const result = Math.round((1 - (this.getNoKentikProviderCount() / this.getSnmpDeviceCount())) * 100);
     return isFinite(result) ? result : 0;
   }
 
   // How many devices don't have entity definitions
   getDevicesWithNoEntityDefinitionCount() {
-    const result = this.npmNoEntityDefinitionDevices && this.npmNoEntityDefinitionDevices.length ? this.npmNoEntityDefinitionDevices[0].missingDefinitionDevices : 0;
-    return result;
+    return this.npmNoEntityDefinitionDevices[0].npmNoEntityDefinitionCount;
   }
 
   getDevicesWithNoEntityDefinitionPercent() {
-    const result = Math.round((this.getDevicesWithNoEntityDefinitionCount() / this.getSnmpDeviceCount) * 100) || 0;
+    const result = Math.round((1 - (this.getDevicesWithNoEntityDefinitionCount() / this.getSnmpDeviceCount())) * 100);
     return isFinite(result) ? result : 0;
   }
 
+  // SNMP polling failures
+  getSnmpPollingFailureCount() {
+    return this.npmSnmpPollingFailures[0].npmSnmpPollingFailureCount;
+  }
+
   getSnmpPollingFailurePercent() {
-    const arraySize = this.npmSnmpPollingFailures.length;
-    const result = this.npmSnmpPollingFailures && this.npmSnmpPollingFailures.length
-      ? this.npmSnmpPollingFailures.reduce((previousValue, currentValue) => {
-          return previousValue + currentValue['latest.PercentFailed'] / arraySize;
-        }, 0)
-      : 0;
-    return result;
+    const result = Math.round((1 - (this.getSnmpPollingFailureCount() / this.getSnmpDeviceCount())) * 100);
+    return isFinite(result) ? result : 0;
   }
 
   // How many devices are sending Network Flow data
   getKentikFlowDeviceCount() {
-    return this.npmKentikFlowDevices.length ? this.npmKentikFlowDevices[0].flowDevices : 0;
+    return this.npmKentikFlowDevices[0].flowDeviceCount;
   }
 
   isKentikFlowDeviceUsed() {
@@ -1996,7 +1995,7 @@ class Account {
 
   // How many devices are sending VPC Flow Log data
   getKentikVpcDeviceCount() {
-    return this.npmKentikVpcDevices[0].vpcDevices;
+    return this.npmKentikVpcDevices[0].vpcDeviceCount;
   }
 
   isKentikVpcDeviceUsed() {
@@ -2006,7 +2005,7 @@ class Account {
 
   // How many devices are sending Network Syslog data
   getKtranslateSyslogDeviceCount() {
-    return this.npmKtranslateSyslogDevices[0].syslogDevices;
+    return this.npmKtranslateSyslogDevices[0].syslogDeviceCount;
   }
 
   isKtranslateSyslogDeviceUsed() {

@@ -165,37 +165,37 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
 
   fragment NPM_Fragments on Account {
     # How many devices are sending SNMP data
-    npmKentikProviders: nrql(query: "SELECT uniqueCount(instrumentation.provider) FROM Metric where  instrumentation.provider='kentik' FACET device_name since 1 day ago limit max", timeout: 120) {
+    npmKentikProviders: nrql(query: "SELECT uniqueCount(device_name) FROM Metric where  instrumentation.provider='kentik' AND provider != 'kentik-agent' FACET device_name since 1 day ago limit max", timeout: 120) {
       results
     }
 
     # How many devices don't have profiles -- using generic profile
-    npmNoKentikProvider: nrql(query: "SELECT uniqueCount(device_name) FROM Metric where instrumentation.name='kentik-default' FACET device_name since 1 day ago limit max", timeout: 120) {
+    npmNoKentikProvider: nrql(query: "SELECT uniqueCount(device_name) as npmNoKentikProviderProfileCount FROM Metric where provider = 'kentik-default' since 1 day ago", timeout: 120) {
       results
     }
 
     # How many devices don't have entity definitions
-    npmNoEntityDefinitionDevices: nrql(query: "SELECT uniqueCount(device_name) as missingDefinitionDevices from Metric where entity.name is null and instrumentation.provider = 'kentik' and instrumentation.name != 'heartbeat' since 1 day ago limit max", timeout: 120) {
+    npmNoEntityDefinitionDevices: nrql(query: "SELECT uniqueCount(device_name) as npmNoEntityDefinitionCount from Metric where entity.name is null and instrumentation.provider = 'kentik' and instrumentation.name != 'heartbeat'", timeout: 120) {
       results
     }
 
     # SNMP polling failures
-    npmSnmpPollingFailures: nrql(query: "SELECT latest(PercentFailed), latest(healthChecks), latest(badPolls), latest(latestFailure), latest(earliestFailure) FROM ( FROM Metric SELECT filter(count(*), WHERE PollingHealth = 'BAD') / count(*) * 100 as PercentFailed, count(*) as healthChecks, filter(count(*), where PollingHealth = 'BAD') as badPolls, filter(max(timestamp), where PollingHealth = 'BAD') as latestFailure, filter(min(timestamp), where PollingHealth = 'BAD') as earliestFailure WHERE instrumentation.provider = 'kentik' AND PollingHealth IS NOT NULL FACET device_name, instrumentation.name, provider) WHERE badPolls > 0 FACET device_name, instrumentation.name, provider SINCE 24 hours ago limit max", timeout: 120) {
+    npmSnmpPollingFailures: nrql(query: "SELECT uniqueCount(device_name) as npmSnmpPollingFailureCount From Metric where PollingHealth = 'BAD' SINCE 1 day ago", timeout: 120) {
       results
     }
 
     # How many devices are sending Network Flow data
-    npmKentikFlowDevices: nrql(query: "SELECT uniqueCount(device_id) as flowDevices from KFlow where provider='kentik-flow-device' since 1 day ago", timeout: 120) {
+    npmKentikFlowDevices: nrql(query: "SELECT uniqueCount(device_name) as flowDeviceCount from KFlow where provider='kentik-flow-device' since 1 day ago", timeout: 120) {
       results
     }
 
     # How many devices are sending VPC Flow Log data
-    npmKentikVpcDevices: nrql(query: "SELECT uniqueCount(device_id) as vpcDevices from KFlow where provider='kentik-vpc' since 1 month ago", timeout: 120) {
+    npmKentikVpcDevices: nrql(query: "SELECT uniqueCount(vpc_id) as vpcDeviceCount FROM Log_VPC_Flows, Log_VPC_Flows_AWS, Log_VPC_Flows_GCP WHERE instrumentation.name = 'vpc-flow-logs' SINCE 1 day ago", timeout: 120) {
       results
     }
 
     # How many devices are sending Network Syslog data
-    npmKtranslateSyslogDevices: nrql(query: "SELECT uniqueCount(device_name) as syslogDevices from Log where plugin.type = 'ktranslate-syslog' since 1 day ago", timeout: 120) {
+    npmKtranslateSyslogDevices: nrql(query: "SELECT uniqueCount(device_name) as syslogDeviceCount from Log where plugin.type = 'ktranslate-syslog' since 1 day ago", timeout: 120) {
       results
     }
   }
