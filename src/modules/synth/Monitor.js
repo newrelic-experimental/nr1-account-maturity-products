@@ -52,7 +52,7 @@ export class Monitor {
   }
 
   isAlerting() {
-    if (!this.reporting) {
+    if (!this.reporting || !this.healthStatus) {
       return false;
     }
 
