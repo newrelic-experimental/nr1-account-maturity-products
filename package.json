@@ -2,7 +2,7 @@
   "private": true,
   "name": "maturity-products",
   "description": "React components for Maturity Nerdlet",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "scripts": {
     "prepare": "npm run build",
     "mocha-debug": "mocha --inspect-brk --watch 'src/**/*.test.js' --recursive --require @babel/register",

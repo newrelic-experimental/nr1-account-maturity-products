@@ -34,42 +34,42 @@ export const NPMSummaryCols = [
     Header: 'Reporting NPM Calculation',
     columns: [
       {
-        Header: '# SNMP Devices',
+        Header: 'SNMP Devices',
         accessor: 'snmpDeviceCount',
         filterable: false
       },
       {
-        Header: 'Devices w. Generic Profile %',
+        Header: 'Known Profile %',
         accessor: 'noKentikProviderPercentage',
         Cell: row => cellRenderer(row),
         filterable: false
       },
       {
-        Header: 'Devices Missing Entity Definition %',
+        Header: 'Defined Entities %',
         accessor: 'devicesWithNoEntityDefinitionPercentage',
         Cell: row => cellRenderer(row),
         filterable: false
       },
       {
-        Header: 'SNMP Polling Failures',
+        Header: 'SNMP Polling Success %',
         accessor: 'snmpPollingFailurePercentage',
         Cell: row => cellRenderer(row),
         filterable: false
       },
       {
-        Header: 'Network Flow Devices Used',
+        Header: 'Network Flows',
         accessor: 'isKentikFlowDeviceUsed',
         Cell: row => cellRenderer(row),
         filterable: false
       },
       {
-        Header: 'VPC Flow Devices Used',
+        Header: 'VPC Flows',
         accessor: 'isKentikVpcDeviceUsed',
         Cell: row => cellRenderer(row),
         filterable: false
       },
       {
-        Header: 'Network Syslog Devices Used',
+        Header: 'Network Syslogs',
         accessor: 'isKtranslateSyslogDeviceUsed',
         Cell: row => cellRenderer(row),
         filterable: false
