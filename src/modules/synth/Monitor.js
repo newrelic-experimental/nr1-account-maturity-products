@@ -32,7 +32,9 @@ export class Monitor {
       ? entity.tags
           .map(tag => tag.key)
           .filter(key => {
-            this.privateLocation = key === 'privateLocation';
+            if (!this.privateLocation) {
+              this.privateLocation = key === 'privateLocation';
+            }
 
             return (
               [
@@ -50,7 +52,7 @@ export class Monitor {
   }
 
   isAlerting() {
-    if (!this.reporting) {
+    if (!this.reporting || !this.healthStatus) {
       return false;
     }
 
