@@ -106,6 +106,7 @@ function _setGQLVariables(query, account) {
       ? subscriptions.includes('kubernetes')
       : true,
     SLM_SUBSCRIBED: subscriptions ? subscriptions.includes('slm') : true,
+    NPM_SUBSCRIBED: subscriptions ? subscriptions.includes('npm') : true,
     PROGRAMMABILITY_SUBSCRIBED: subscriptions
       ? subscriptions.includes('programmability')
       : true
@@ -165,6 +166,10 @@ export function setNrqlFragmentSubscription(query) {
     query.variables.SLM_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
+    /\$NPM_SUBSCRIBED/g,
+    query.variables.NPM_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
     query.variables.PROGRAMMABILITY_SUBSCRIBED
   );
@@ -219,7 +224,16 @@ export function createAccount(event) {
     prometheusLabels,
     apmAgentsInsideK8sClusters,
     nrLogsEvents,
-    pixieUniqueServices
+    pixieUniqueServices,
+
+    // npm
+    npmKentikProviders,
+    npmNoKentikProvider,
+    npmNoEntityDefinitionDevices,
+    npmSnmpPollingFailures,
+    npmKentikFlowDevices,
+    npmKentikVpcDevices,
+    npmKtranslateSyslogDevices
   } = response ? response.data.actor.account : account;
 
   const accountDetail = {};
@@ -346,6 +360,41 @@ export function createAccount(event) {
   accountDetail.pixieUniqueServices =
     pixieUniqueServices && pixieUniqueServices.results
       ? pixieUniqueServices.results
+      : [];
+
+  accountDetail.npmKentikProviders =
+    npmKentikProviders && npmKentikProviders.results
+      ? npmKentikProviders.results
+      : [];
+
+  accountDetail.npmNoKentikProvider =
+    npmNoKentikProvider && npmNoKentikProvider.results
+      ? npmNoKentikProvider.results
+      : [];
+
+  accountDetail.npmNoEntityDefinitionDevices =
+    npmNoEntityDefinitionDevices && npmNoEntityDefinitionDevices.results
+      ? npmNoEntityDefinitionDevices.results
+      : [];
+
+  accountDetail.npmSnmpPollingFailures =
+    npmSnmpPollingFailures && npmSnmpPollingFailures.results
+      ? npmSnmpPollingFailures.results
+      : [];
+
+  accountDetail.npmKentikFlowDevices =
+    npmKentikFlowDevices && npmKentikFlowDevices.results
+      ? npmKentikFlowDevices.results
+      : [];
+
+  accountDetail.npmKentikVpcDevices =
+    npmKentikVpcDevices && npmKentikVpcDevices.results
+      ? npmKentikVpcDevices.results
+      : [];
+
+  accountDetail.npmKtranslateSyslogDevices =
+    npmKtranslateSyslogDevices && npmKtranslateSyslogDevices.results
+      ? npmKtranslateSyslogDevices.results
       : [];
 
   return new Account(accountDetail);
@@ -527,6 +576,7 @@ const subscriptionGQLVarDict = {
   workloads: 'WORKLOADS_SUBSCRIBED',
   kubernetes: 'KUBERNETES_SUBSCRIBED',
   slm: 'SLM_SUBSCRIBED',
+  npm: 'NPM_SUBSCRIBED',
   programmability: 'PROGRAMMABILITY_SUBSCRIBED'
 };
 
@@ -557,6 +607,7 @@ export function* getAccountDetails(
         subscriptions.push('kubernetes');
         subscriptions.push('workloads');
         subscriptions.push('slm');
+        subscriptions.push('npm');
       }
 
       const promises = [];
