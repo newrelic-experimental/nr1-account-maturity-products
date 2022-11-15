@@ -12,7 +12,7 @@ export const FETCH_ACCOUNTS_GQL = {
 };
 
 export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
-  query: `query ($id: Int!, $withFragment: Boolean!,$EVENT_TYPES_INCLUDE: Boolean!, $PROGRAMMABILITY_SUBSCRIBED: Boolean!, $APM_SUBSCRIBED: Boolean!, $BROWSER_SUBSCRIBED: Boolean!, $MOBILE_SUBSCRIBED: Boolean!, $INFRA_SUBSCRIBED: Boolean!, $LOGGING_SUBSCRIBED: Boolean!, $SYNTHETICS_SUBSCRIBED: Boolean!, $INSIGHTS_SUBSCRIBED: Boolean!, $WORKLOADS_SUBSCRIBED: Boolean!, $KUBERNETES_SUBSCRIBED: Boolean!, $SLM_SUBSCRIBED: Boolean!, $NPM_SUBSCRIBED: Boolean!) {
+  query: `query ($id: Int!, $withFragment: Boolean!,$EVENT_TYPES_INCLUDE: Boolean!, $PROGRAMMABILITY_SUBSCRIBED: Boolean!, $APM_SUBSCRIBED: Boolean!, $BROWSER_SUBSCRIBED: Boolean!, $MOBILE_SUBSCRIBED: Boolean!, $INFRA_SUBSCRIBED: Boolean!, $LOGGING_SUBSCRIBED: Boolean!, $SYNTHETICS_SUBSCRIBED: Boolean!, $INSIGHTS_SUBSCRIBED: Boolean!, $WORKLOADS_SUBSCRIBED: Boolean!, $KUBERNETES_SUBSCRIBED: Boolean!, $SLM_SUBSCRIBED: Boolean!, $NPM_SUBSCRIBED: Boolean!, $ERRORS_INBOX_SUBSCRIBED: Boolean!) {
     actor {
       account(id: $id) {
         id
@@ -37,6 +37,8 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
         ...NRQLFragment @include(if: $withFragment)
 
       }
+
+      ...ERRORS_INBOX_Fragments @include(if: $ERRORS_INBOX_SUBSCRIBED)
     }
   }
 
@@ -131,6 +133,13 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     }
   }
 
+  fragment ERRORS_INBOX_Fragments on Actor {
+    # ERRORS_INBOX_PLACEHOLDER
+    account(id: $id) {
+      id
+    }
+  }
+
   fragment WORKLOADS_Fragments on Account {
     WORKLOADS_PLACEHOLDER:id
   }
@@ -216,6 +225,7 @@ export const FETCH_ACCOUNT_WITH_ID_GQL_OBJ = {
     INFRA_SUBSCRIBED: false,
     LOGGING_SUBSCRIBED: false,
     SYNTHETICS_SUBSCRIBED: false,
+    ERRORS_INBOX_SUBSCRIBED: false,
     WORKLOADS_SUBSCRIBED: false,
     KUBERNETES_SUBSCRIBED: false,
     SLM_SUBSCRIBED: false,

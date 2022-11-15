@@ -99,6 +99,9 @@ function _setGQLVariables(query, account) {
     LOGGING_SUBSCRIBED: subscriptions
       ? subscriptions.includes('logging')
       : true,
+    ERRORS_INBOX_SUBSCRIBED: subscriptions
+      ? subscriptions.includes('errorsInbox')
+      : true,
     WORKLOADS_SUBSCRIBED: subscriptions
       ? subscriptions.includes('workloads')
       : true,
@@ -168,6 +171,10 @@ export function setNrqlFragmentSubscription(query) {
   nrqlFragment = nrqlFragment.replace(
     /\$NPM_SUBSCRIBED/g,
     query.variables.NPM_SUBSCRIBED
+  );
+  nrqlFragment = nrqlFragment.replace(
+    /\$ERRORS_INBOX_SUBSCRIBED/g,
+    query.variables.ERRORS_INBOX_SUBSCRIBED
   );
   nrqlFragment = nrqlFragment.replace(
     /\$PROGRAMMABILITY_SUBSCRIBED/g,
@@ -573,6 +580,7 @@ const subscriptionGQLVarDict = {
   synthetics: 'SYNTHETICS_SUBSCRIBED',
   logging: 'LOGGING_SUBSCRIBED',
   eventTypeInclude: 'EVENT_TYPES_INCLUDE',
+  errorsInbox: 'ERRORS_INBOX_SUBSCRIBED',
   workloads: 'WORKLOADS_SUBSCRIBED',
   kubernetes: 'KUBERNETES_SUBSCRIBED',
   slm: 'SLM_SUBSCRIBED',
@@ -604,6 +612,7 @@ export function* getAccountDetails(
         // see subscriptionGQLVarDict
         subscriptions.push('eventTypeInclude');
         subscriptions.push('programmability');
+        subscriptions.push('errorsInbox');
         subscriptions.push('kubernetes');
         subscriptions.push('workloads');
         subscriptions.push('slm');
@@ -640,6 +649,7 @@ export function assembleResults(results) {
   const response = {
     data: {
       actor: {
+        errorsInbox: null,
         account: null
       }
     }
@@ -666,6 +676,18 @@ export function assembleResults(results) {
       response.data.actor.account = {
         ...response.data.actor.account,
         ...result.data.actor.account
+      };
+    }
+
+    if (
+      result.data &&
+      result.data.actor &&
+      result.data.actor.errorsInbox !== null
+    ) {
+      ctr++;
+      response.data.actor.errorsInbox = {
+        ...response.data.actor.errorsInbox,
+        ...result.data.actor.errorsInbox
       };
     }
   }

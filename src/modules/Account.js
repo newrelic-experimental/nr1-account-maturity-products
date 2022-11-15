@@ -16,6 +16,7 @@ class Account {
     this.infraHosts = new Map();
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
+    this.errorsInbox = new Map();
     this.workloadMap = new Map();
 
     this.kubernetesMap = new Map();
@@ -92,6 +93,13 @@ class Account {
     // unique session count
     this.mobileAppLaunch = props.mobileAppLaunch;
 
+    // errors-inbox data
+    // this.errorGroupCount = props.errorGroupCount;
+    // this.errorGroupAssignedPercentage = props.errorGroupAssignedPercentage;
+    // this.errorGroupUnresolvedPercentage = props.errorGroupUnresolvedPercentage;
+    // this.errorGroupIgnoredPercentage = props.errorGroupIgnoredPercentage;
+    // this.errorGroupCommentsPercentage = props.errorGroupCommentsPercentage;
+    
     // kubernetes data
     this.clustersUsingPixie = props.clustersUsingPixie;
     this.infraAgentsInstalled = props.infraAgentsInstalled;
@@ -112,7 +120,6 @@ class Account {
     this.npmKentikFlowDevices = props.npmKentikFlowDevices;
     this.npmKentikVpcDevices = props.npmKentikVpcDevices;
     this.npmKtranslateSyslogDevices = props.npmKtranslateSyslogDevices;
-
   }
 
   getName() {
@@ -1955,7 +1962,7 @@ class Account {
 
   // How many devices don't have profiles -- using generic profile
   getNoKentikProviderCount() {
-    return this.npmNoKentikProvider[0].npmNoKentikProviderProfileCount;
+    return this.npmNoKentikProvider ? this.npmNoKentikProvider[0].npmNoKentikProviderProfileCount : 0;
   }
 
   getNoKentikProviderPercent() {
@@ -2011,6 +2018,43 @@ class Account {
   isKtranslateSyslogDeviceUsed() {
     const result = this.getKtranslateSyslogDeviceCount();
     return Boolean(result);;
+  }
+
+  // ERRORS-INBOX METHODS ###########################
+  getErrorsInboxGroupCount() {
+    return this.errorsInbox.size || 0;
+  }
+
+  getAssignedErrorGroupCount() {
+    const result = this.totalAssignedErrorGroupCount;
+    return isFinite(result) ? result : 0;
+  }
+
+  getErrorGroupAssignedPercent() {
+    const result = Math.round((this.totalAssignedErrorGroupCount / this.getErrorsInboxGroupCount()) * 100);
+    return isFinite(result) ? result : 0;
+  }
+
+  getErrorGroupUnresolvedPercent() {
+    const result = Math.round(
+      (1 - (Array.from(this.errorsInbox.values()).filter(item => item.state === 'UNRESOLVED' || item.state === null).length /
+        this.getErrorsInboxGroupCount())) *
+        100
+    );
+    return isFinite(result) ? result : 0;
+  }
+
+  getErrorGroupIgnoredPercent() {
+    const result = Math.round(
+      (Array.from(this.errorsInbox.values()).filter(item => item.state === 'IGNORED').length /
+      this.getErrorsInboxGroupCount()) *
+      100
+    );
+    return isFinite(result) ? result : 0;
+  }
+
+  getErrorGroupCommentsPercent() {
+    return 0;
   }
 }
 export { Account };
