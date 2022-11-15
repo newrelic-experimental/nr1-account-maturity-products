@@ -81,7 +81,7 @@ export class ErrorsInboxTag extends React.Component {
   async componentDidMount() {
     await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
     // console.log('componentDidMount::', this.ctxAcctMap, this.nerdGraphQuery)
-    const tableData = this.createTableData(this.ctxAcctMap);
+    const tableData = this.createTableData(this.ctxAcctMap, {});
     const scores = this.addMaturityScoreToTable(tableData);
 
     // console.log('componentDidMount', scores, tableData)
