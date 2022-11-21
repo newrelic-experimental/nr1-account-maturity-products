@@ -5,6 +5,15 @@ class ErrorsInbox {
     this.name = entity.name;
     this.accountId = account.id;
     this.state = entity.state;
+    this.assignment = entity.assignment;
+  }
+
+  isErrorGroupAssigned() {
+    return (
+      (this.assignment !== null && this.assignment.email !== null) ||
+      (this.assignment !== null && this.assignment.userInfo !== null) ||
+      false
+    );
   }
 }
 

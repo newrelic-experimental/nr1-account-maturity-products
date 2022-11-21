@@ -1,8 +1,8 @@
 export const ERRORSINBOX_ENTITIES_SUBSCRIBER_ID_GQL = {
-  query: `query ($cursor: String, $accountIds: [Int!]) {
+  query: `query ($cursor: String, $accountIds: [Int!], $startTime: EpochMilliseconds!, $endTime: EpochMilliseconds!) {
     actor {
       errorsInbox {
-        totalErrorGroups: errorGroups(cursor: $cursor, filter: {accountIds: $accountIds}) {
+        errorGroups: errorGroups(cursor: $cursor, filter: {accountIds: $accountIds}, timeWindow: {startTime: $startTime, endTime: $endTime}) {
           totalCount
           results {
             # comments {
@@ -15,10 +15,18 @@ export const ERRORSINBOX_ENTITIES_SUBSCRIBER_ID_GQL = {
             id
             name
             state
+            assignment {
+              email
+              userInfo: userInfo {
+                email
+                id
+                name
+              }
+            }
           }
           nextCursor
         }
-        totalAssignedErrorGroupCount: errorGroups(filter: {accountIds: $accountIds, isAssigned: true}) {
+        assignedErrorGroupCount: errorGroups(filter: {accountIds: $accountIds, isAssigned: true}, timeWindow: {startTime: $startTime, endTime: $endTime}) {
           totalCount
         }
       }

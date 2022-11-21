@@ -4,6 +4,8 @@ export function createErrorsInboxTableData(accountMap, { enricherFn = null }) {
   for (const account of accountMap.values()) {
     const row = _processErrorsInboxData(account);
 
+    row.LIST = createErrorsInboxList(account.errorsInbox);
+
     if (enricherFn && typeof enricherFn === 'function') {
       try {
         enricherFn(row, account);
@@ -53,11 +55,27 @@ function _processErrorsInboxData(account) {
   row.accountName = name;
   row.accountID = id;
   row.entityCount = account.getErrorsInboxGroupCount();
-  row.assignedErrorGroupCount = account.getAssignedErrorGroupCount();
   row.errorGroupAssignedPercentage = account.getErrorGroupAssignedPercent();
-  row.errorGroupUnresolvedPercentage = account.getErrorGroupUnresolvedPercent();
+  row.errorGroupResolvedPercentage = account.getErrorGroupResolvedPercent();
   row.errorGroupIgnoredPercentage = account.getErrorGroupIgnoredPercent();
-
-  row.errorGroupCommentsPercentage = account.getErrorGroupCommentsPercent();
   return row;
+}
+
+export function createErrorsInboxList(errorsInbox) {
+  if (!errorsInbox || (errorsInbox && errorsInbox.size === 0)) {
+    return [];
+  }
+  const itr = errorsInbox.values();
+  let errorGroup = itr.next();
+  const errorGroupList = [];
+
+  while (!errorGroup.done) {
+    const errorGroupObj = { ...errorGroup.value };
+    errorGroupObj.isErrorGroupAssigned = errorGroup.value.isErrorGroupAssigned();
+
+    errorGroupList.push(errorGroupObj);
+
+    errorGroup = itr.next();
+  }
+  return errorGroupList;
 }

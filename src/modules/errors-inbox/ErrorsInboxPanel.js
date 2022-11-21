@@ -58,7 +58,6 @@ export class ErrorsInboxTag extends React.Component {
     };
     const { appContext } = this.props;
 
-    // console.log('ErrorsInboxTag', props)
     this.nerdGraphQuery = appContext.nerdGraphQuery;
     this.ctxAcctMap = new Map(appContext.accountMap);
     this.docEventTypes = appContext.docEventTypes;
@@ -80,11 +79,9 @@ export class ErrorsInboxTag extends React.Component {
 
   async componentDidMount() {
     await this.fetchData(this.ctxAcctMap, this.nerdGraphQuery);
-    // console.log('componentDidMount::', this.ctxAcctMap, this.nerdGraphQuery)
+
     const tableData = this.createTableData(this.ctxAcctMap, {});
     const scores = this.addMaturityScoreToTable(tableData);
-
-    // console.log('componentDidMount', scores, tableData)
 
     this.setState({
       loading: false,
@@ -96,8 +93,6 @@ export class ErrorsInboxTag extends React.Component {
 
   addMaturityScoreToTable(tableData) {
     const maturityScores = {};
-
-    // console.log('addMaturityScoreToTable', tableData)
 
     tableData.forEach(row => {
       const { score } = this.computeMaturityScore({

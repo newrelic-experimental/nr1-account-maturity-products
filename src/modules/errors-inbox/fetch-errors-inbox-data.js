@@ -37,8 +37,8 @@ function _onFulFilledHandler(event, accountMap) {
   for (const entity of event.data.result.entityArr) {
     const { accountId } = event.data.result;
     const account = accountMap.get(accountId);
-    account.totalAssignedErrorGroupCount =
-      event.data.result.totalAssignedErrorGroupCount;
+    account.assignedErrorGroupCount =
+      event.data.result.assignedErrorGroupCount;
     account.totalErrorGroupCount = event.data.result.totalErrorGroupCount;
     const application = new ErrorsInbox(entity, account);
 
@@ -58,35 +58,28 @@ async function _fetchEntitiesWithAcctIdGQL(
   queryResult = {
     entityArr: [],
     accountId: account.id,
-    totalAssignedErrorGroupCount: 0
+    assignedErrorGroupCount: 0
   },
   cursor = null
 ) {
   const accountId = account.id;
+  const endTime = new Date().getTime(); // current time
+  const startTime = endTime - (7 * 24 * 60 * 60 * 1000) // current time - 7 days
   const query = {
     ...ERRORSINBOX_ENTITIES_SUBSCRIBER_ID_GQL,
     variables: {
       cursor,
+      startTime,
+      endTime,
       accountIds: [accountId]
     }
   };
 
-  let attemptsLeft = 3; // ### SK - try 3 attempts for each gql call
-  let response = {};
-  while (attemptsLeft) {
-    response = await gqlAPI(query);
-    if (attemptsLeft && (response.error || response.errors)) {
-      // eslint-disable-next-line no-loop-func
-      setTimeout(() => { attemptsLeft--; }, 200);
-    } else {
-      // eslint-disable-next-line require-atomic-updates
-      attemptsLeft = 0;
-    }
-  }
-
+  const response = await gqlAPI(query);
+ 
   if (
     !response.data.actor.errorsInbox ||
-    !response.data.actor.errorsInbox.totalErrorGroups
+    !response.data.actor.errorsInbox.errorGroups
   ) {
     return queryResult;
   }
@@ -94,22 +87,22 @@ async function _fetchEntitiesWithAcctIdGQL(
   const {
     results,
     nextCursor
-  } = response.data.actor.errorsInbox.totalErrorGroups;
+  } = response.data.actor.errorsInbox.errorGroups;
 
   queryResult.entityArr = queryResult.entityArr.concat(results);
   queryResult.totalErrorGroupCount =
     response.data.actor.errorsInbox &&
-    response.data.actor.errorsInbox.totalErrorGroups &&
-    response.data.actor.errorsInbox.totalErrorGroups.totalCount
-      ? response.data.actor.errorsInbox.totalErrorGroups.totalCount
+    response.data.actor.errorsInbox.errorGroups &&
+    response.data.actor.errorsInbox.errorGroups.totalCount
+      ? response.data.actor.errorsInbox.errorGroups.totalCount
       : 0;
-  queryResult.totalAssignedErrorGroupCount =
+  queryResult.assignedErrorGroupCount =
     response.data.actor.errorsInbox &&
-    response.data.actor.errorsInbox.totalAssignedErrorGroupCount &&
-    response.data.actor.errorsInbox.totalAssignedErrorGroupCount.totalCount
-      ? response.data.actor.errorsInbox.totalAssignedErrorGroupCount.totalCount
+    response.data.actor.errorsInbox.assignedErrorGroupCount &&
+    response.data.actor.errorsInbox.assignedErrorGroupCount.totalCount
+      ? response.data.actor.errorsInbox.assignedErrorGroupCount.totalCount
       : 0;
-
+  
   if (nextCursor === null || (nextCursor != null && nextCursor.length === 0)) {
     return queryResult;
   } else {
@@ -124,10 +117,10 @@ async function _fetchEntitiesWithAcctIdGQL(
 
 export const ErrorsInboxModel = {
   scoreWeights: {
-    errorGroupAssignedPercentage: 0.4,
-    errorGroupUnresolvedPercentage: 0.2,
-    errorGroupIgnoredPercentage: 0.2,
-    errorGroupCommentsPercentage: 0.2
+    errorGroupAssignedPercentage: 0.5,
+    errorGroupResolvedPercentage: 0.25,
+    errorGroupIgnoredPercentage: 0.25,
+    // errorGroupCommentsPercentage: 0.2 // distributed among other score percentages
   },
   rowDataEnricher: null
 };

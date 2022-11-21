@@ -36,44 +36,46 @@ export const ErrorsInboxSummaryCols = [
       {
         Header: 'Total # of Error Groups',
         accessor: 'entityCount',
-        Cell: row => cellRenderer(row),
-        filterable: false
-      },
-      {
-        Header: 'Assigned Error Groups',
-        accessor: 'assignedErrorGroupCount',
-        Cell: row => cellRenderer(row),
+        Cell: row => cellRenderer(row, ErrorsInboxListCols),
         filterable: false
       },
       {
         Header: '% Assigned',
         accessor: 'errorGroupAssignedPercentage',
-        Cell: row => cellRenderer(row),
+        Cell: row => cellRenderer(row, ErrorsInboxListCols),
         filterable: false
       },
       {
-        Header: '% ~Unresolved',
-        accessor: 'errorGroupUnresolvedPercentage',
-        Cell: row => cellRenderer(row),
+        Header: '% Resolved',
+        accessor: 'errorGroupResolvedPercentage',
+        Cell: row => cellRenderer(row, ErrorsInboxListCols),
         filterable: false
       },
       {
         Header: '% Ignored',
         accessor: 'errorGroupIgnoredPercentage',
-        Cell: row => cellRenderer(row),
+        Cell: row => cellRenderer(row, ErrorsInboxListCols),
         filterable: false
       },
       {
-        Header: '% w/ Comments',
-        accessor: 'errorGroupCommentsPercentage',
-        Cell: row => cellRenderer(row),
+        Header: 'Overall Score %',
+        accessor: 'overallScore',
+        Cell: row => cellRenderer(row, ErrorsInboxListCols),
         filterable: false
-      // },
-      // {
-      //   Header: 'Overall Score %',
-      //   accessor: 'overallScore',
-      //   Cell: row => cellRenderer(row),
-      //   filterable: false
+      }
+    ]
+  }
+];
+
+export const ErrorsInboxListCols = [
+  {
+    Header: 'Errors Group Info',
+    columns: [
+      { Header: 'Name', accessor: 'name' },
+      {
+        Header: 'Error Group Assigned',
+        accessor: 'isErrorGroupAssigned',
+        Cell: row => cellRenderer(row)
       }
     ]
   }
