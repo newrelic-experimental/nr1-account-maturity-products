@@ -105,9 +105,10 @@ export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
 
 function renderPopup(tableData, popupColHeaders, trigger) {
   const contentStyle = {
-    maxWidth: '1500x',
+    maxWidth: '1500px',
     width: '90%'
   };
+
   return (
     <Popup
       trigger={trigger}
