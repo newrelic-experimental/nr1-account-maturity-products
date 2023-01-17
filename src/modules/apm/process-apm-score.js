@@ -41,6 +41,8 @@ export function createAPMTableData(
       docAgentLatestVersion
     );
 
+    apmRow.apmAppLoggingEnabledPercentage = account.getAppLoggingEnabledPercent();
+
     apmRow.LIST = createAPMApplicationList(
       account.apmApps,
       docAgentLatestVersion

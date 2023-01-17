@@ -445,6 +445,24 @@ class Account {
     );
   }
 
+  getAppLoggingEnabled() {
+    let total = 0;
+    if (!this.apmApps) {
+      return total;
+    }
+
+    for (const app of this.apmApps.values()) {
+      if (app.appLoggingEnabled) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getAppLoggingEnabledPercent() {
+    return Math.round((this.getAppLoggingEnabled() / this.getReportingApps()) * 100) || 0
+  }
+
   getReportingAppsArray() {
     const reportingArray = [];
     const nonReportingArray = [];

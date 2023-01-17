@@ -7,6 +7,7 @@ class Application {
     this.name = entity.name;
     this.guid = entity.guid;
     this.accountId = entity.accountId;
+    this.appLoggingEnabled = entity.appLoggingEnabled;
 
     this.throughput = entity.apmSummary ? entity.apmSummary.throughput : 0;
     this.reporting = entity.reporting;

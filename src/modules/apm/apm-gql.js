@@ -86,3 +86,34 @@ export const APM_ENTITIES_SUBSCRIBER_ID_GQL = {
     // nrql:  "domain IN ('APM') AND type IN ('APPLICATION') and accountId=xxxxxx"
   }
 };
+
+export const APM_ENTITIES_LOG_ATTRIBUTES_GQL = {
+  query: `query ($cursor: String, $accountId: Int!, $filter: AgentEnvironmentFilter!) {
+    actor {
+      account(id: $accountId) {
+        agentEnvironment {
+          agentSettingsAttributes(cursor: $cursor, filter: $filter) {
+            results {
+              applicationGuids
+              attributes {
+                attribute
+                value
+              }
+            }
+            nextCursor
+          }
+        }
+        dataManagement {
+          featureSettings {
+            enabled
+          }
+        }
+      }
+    }
+  }`,
+  variables: {
+    // accountId: accountId,
+    // cursor: null,
+    // filter: {equals: "newrelic.application_logging.enabled"}
+  }
+};
