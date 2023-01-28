@@ -36,25 +36,23 @@ export async function fetchAPMData(
 }
 
 function _onFulFilledHandler(event, accountMap) {
-  for (const entity of event.data.result.entityArr) {
-    const { accountId } = entity;
+  if (event.data.result.entityArr.length > 0) {
+    const { accountId } = event.data.result.entityArr[0];
     const account = accountMap.get(accountId);
+    if (!account.apmApps) account.apmApps = new Map();
 
-    const logAttr = event.data.result.logAttributes.find(
-      e => e.applicationGuids[0].split(',')[0].substring(15) === entity.guid); // eslint-disable-line prettier/prettier
+    for (const entity of event.data.result.entityArr) {
+      const logAttr = event.data.result.logAttributes.find(
+        e => e.applicationGuids[0] === entity.guid); // eslint-disable-line prettier/prettier
 
-    entity.appLoggingEnabled =
-      logAttr && logAttr.attributes.length
-        ? JSON.parse(logAttr.attributes[0].value.toLowerCase())
-        : false;
+      entity.appLoggingEnabled =
+        logAttr && logAttr.attributes.length
+          ? JSON.parse(logAttr.attributes[0].value.toLowerCase())
+          : false;
 
-    const application = new Application(entity, account);
-
-    if (!account.apmApps) {
-      account.apmApps = new Map();
+      const application = new Application(entity, account);
+      account.apmApps.set(application.guid, application);
     }
-
-    account.apmApps.set(application.guid, application);
   }
 }
 
@@ -107,7 +105,7 @@ async function _fetchEntitiesLogAttributes(
   gqlAPI,
   account,
   logAttributes = [],
-  cursor = null
+  cursor = ''
 ) {
   const accountId = account.id;
   const query = {
