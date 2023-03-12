@@ -452,15 +452,16 @@ class Account {
     }
 
     for (const app of this.apmApps.values()) {
-      if (app.appLoggingEnabled) {
+      if (app.reporting && app.appLoggingEnabled) {
         total++;
       }
     }
+
     return total;
   }
 
   getAppLoggingEnabledPercent() {
-    return Math.round((this.getAppLoggingEnabled() / this.getReportingApps()) * 100) || 0
+    return Math.round((this.getAppLoggingEnabled() / this.getReportingApps()) * 100) || 0;
   }
 
   getReportingAppsArray() {

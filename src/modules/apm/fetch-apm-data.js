@@ -9,15 +9,17 @@ export async function fetchAPMData(
   accountMap,
   gqlAPI,
   overrides = {
-    fetchEntities: _fetchEntitiesAndLogAttributes,
+    fetchEntities: _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: _onFulFilledHandler,
     poolMaxConcurreny: 50
   }
 ) {
   const options = {
-    fetchEntities: overrides.fetchEntities || _fetchEntitiesAndLogAttributes,
+    fetchEntities: overrides.fetchEntities || _fetchEntitiesWithAcctIdGQL,
     poolOnFulfilled: overrides.poolOnFulfilled || _onFulFilledHandler,
-    poolMaxConcurreny: overrides.poolMaxConcurreny || 50
+    poolMaxConcurreny: overrides.poolMaxConcurreny || 50,
+    fetchLogAttributes: _fetchEntitiesLogAttributes,
+    logAttributePoolOnFulfilled: _onLogAttributeFulFilledHandler
   };
 
   const _getEntities = function*() {
@@ -26,44 +28,75 @@ export async function fetchAPMData(
     }
   };
 
+  const _getLogForwardingAttribute = function*() {
+    for (const account of accountMap.values()) {
+      yield options.fetchLogAttributes(gqlAPI, account);
+    }
+  };
+
   const pool = new PromisePool(_getEntities(), options.poolMaxConcurreny);
+  const logAttributePool = new PromisePool(
+    _getLogForwardingAttribute(),
+    options.poolMaxConcurreny
+  );
 
   pool.addEventListener('fulfilled', event => {
     options.poolOnFulfilled(event, accountMap);
   });
 
-  await pool.start();
+  logAttributePool.addEventListener('fulfilled', event => {
+    options.logAttributePoolOnFulfilled(event, accountMap);
+  });
+
+  try {
+    await pool.start();
+  } catch (err) {
+      console.log('PromisePool error', err); // eslint-disable-line no-console, prettier/prettier
+  }
+  try {
+    await logAttributePool.start();
+  } catch (err) {
+      console.log('PromisePool error', err); // eslint-disable-line no-console, prettier/prettier
+  }
 }
 
 function _onFulFilledHandler(event, accountMap) {
-  if (event.data.result.entityArr.length > 0) {
-    const { accountId } = event.data.result.entityArr[0];
+  if (event.data.result.length > 0) {
+    const { accountId } = event.data.result[0];
     const account = accountMap.get(accountId);
     if (!account.apmApps) account.apmApps = new Map();
 
-    for (const entity of event.data.result.entityArr) {
-      const logAttr = event.data.result.logAttributes.find(
-        e => e.applicationGuids[0] === entity.guid); // eslint-disable-line prettier/prettier
+    for (const entity of event.data.result) {
+      let application = new Application(entity, account);
 
-      entity.appLoggingEnabled =
-        logAttr && logAttr.attributes.length
-          ? JSON.parse(logAttr.attributes[0].value.toLowerCase())
-          : false;
+      // if logging attribute was added to apmApps map first, merge it with "application"
+      const appLogAttribute = account.apmApps.get(application.guid);
+      if (appLogAttribute !== undefined) {
+        application = { ...application, ...appLogAttribute };
+      }
 
-      const application = new Application(entity, account);
       account.apmApps.set(application.guid, application);
     }
   }
 }
 
-async function _fetchEntitiesAndLogAttributes(gqlAPI, account) {
-  const entityArr = await _fetchEntitiesWithAcctIdGQL(gqlAPI, account);
-  const logAttributes = await _fetchEntitiesLogAttributes(gqlAPI, account);
+function _onLogAttributeFulFilledHandler(event, accountMap) {
+  if (event.data.result.length > 1) {
+    const { accountId } = event.data.result[0];
+    const account = accountMap.get(accountId);
 
-  return {
-    entityArr,
-    logAttributes
-  };
+    event.data.result.shift();
+    for (const item of event.data.result) {
+      let appLoggingEnabled = false;
+      if (item.attributes.length) {
+        appLoggingEnabled = JSON.parse(item.attributes[0].value.toLowerCase());
+        if (appLoggingEnabled) {
+          const app = account.apmApps.get(item.applicationGuids[0]);
+          app.appLoggingEnabled = appLoggingEnabled;
+        }
+      }
+    }
+  }
 }
 
 async function _fetchEntitiesWithAcctIdGQL(
@@ -108,6 +141,13 @@ async function _fetchEntitiesLogAttributes(
   cursor = ''
 ) {
   const accountId = account.id;
+
+  if (!logAttributes.length) {
+    logAttributes.push({
+      accountId: account.id
+    });
+  }
+
   const query = {
     ...APM_ENTITIES_LOG_ATTRIBUTES_GQL,
     variables: {
