@@ -87,6 +87,23 @@ export const APM_ENTITIES_SUBSCRIBER_ID_GQL = {
   }
 };
 
+export const APM_ACCOUNT_LOG_ATTRIBUTE_GQL = {
+  query: `query ($accountId: Int!) {
+    actor {
+      account(id: $accountId) {
+        dataManagement {
+          featureSettings {
+            enabled
+          }
+        }
+      }
+    }
+  }`,
+  variables: {
+    // accountId: accountId
+  }
+};
+
 export const APM_ENTITIES_LOG_ATTRIBUTES_GQL = {
   query: `query ($cursor: String, $accountId: Int!, $filter: AgentEnvironmentFilter!) {
     actor {
@@ -101,11 +118,6 @@ export const APM_ENTITIES_LOG_ATTRIBUTES_GQL = {
               }
             }
             nextCursor
-          }
-        }
-        dataManagement {
-          featureSettings {
-            enabled
           }
         }
       }
