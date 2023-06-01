@@ -93,6 +93,7 @@ export const APM_ACCOUNT_LOG_ATTRIBUTE_GQL = {
       account(id: $accountId) {
         dataManagement {
           featureSettings {
+            key
             enabled
           }
         }

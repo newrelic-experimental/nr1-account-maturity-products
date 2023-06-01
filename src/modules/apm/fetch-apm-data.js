@@ -88,8 +88,11 @@ function _onLogAttributeFulFilledHandler(event, accountMap) {
 
     event.data.result.shift();
     const featureSettings =
-      (((event.data.result[0] || []).featureSettings || [])[0] || {}).enabled ||
-      false;
+      (
+        ((event.data.result[0] || []).featureSettings || []).find(
+          feature => feature.key === 'apm_log_forwarding'
+        ) || {}
+      ).enabled || false;
 
     account.featureSettings = featureSettings;
     event.data.result.shift();
@@ -183,7 +186,10 @@ async function _fetchEntitiesLogAttributes(
 
   if (
     !response.data.actor.account ||
-    !response.data.actor.account.agentEnvironment.agentSettingsAttributes.results // eslint-disable-line prettier/prettier
+    !response.data.actor.account.agentEnvironment ||
+    !response.data.actor.account.agentEnvironment.agentSettingsAttributes ||
+    !response.data.actor.account.agentEnvironment.agentSettingsAttributes
+      .results
   ) {
     return logAttributes;
   }
