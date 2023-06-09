@@ -437,7 +437,8 @@ async function fetchDeployments(throughputList, gqlAPI) {
 
   // eslint-disable-next-line array-callback-return
   results.data.actor.entities.map(app => {
-    if (app.deployments && app.deployments.length > 0) {
+    const { results } = app.deployments;
+    if (results && results.length > 0) {
       deploymentList.push(app.applicationId);
     }
   });
