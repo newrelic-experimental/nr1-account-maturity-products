@@ -8,6 +8,7 @@ export function OverviewTable(props) {
   const { data, keys } = props;
   const columnHeaders = [...OVERVIEW_ACCOUNT_HEADER, ProductColumns];
   const isLoading = keys && keys.length < ProductColumns.columns.length;
+
   return (
     <div>
       <ReactTable
@@ -94,6 +95,12 @@ export const ProductColumns = {
     {
       Header: 'Mobile',
       accessor: 'MOBILE_SCORE',
+      Cell: row => cellRenderer(row),
+      filterable: false
+    },
+    {
+      Header: 'Errors Inbox',
+      accessor: 'ERRORS_INBOX_SCORE',
       Cell: row => cellRenderer(row),
       filterable: false
     },
