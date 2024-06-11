@@ -86,7 +86,7 @@ export const cellRenderer = function(rowData, popupColHeaders, renderFn) {
 
   function VersionCellRender(row, latestVersion) {
     const { value } = row;
-    const agentVer = semver.clean(value);
+    const agentVer = semver.clean((value || "").split(" ")[0]);
     const isLatestVersion = semver.satisfies(
       agentVer,
       `${semver.major(latestVersion)}.${semver.minor(latestVersion)}.x`

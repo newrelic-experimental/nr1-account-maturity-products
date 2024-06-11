@@ -158,7 +158,7 @@ function _computeVersionPercent(account, latestVersion) {
     return { value: 0, total: 0 };
   }
   const latestVerDeployed = infraDeployedVersions.filter(deployed => {
-    const agentVer = semver.clean(deployed.infrastructureAgentVersion);
+    const agentVer = semver.clean((deployed?.infrastructureAgentVersion || "").split(" ")[0]);
     if (!semver.valid(agentVer)) {
       return false;
     }
