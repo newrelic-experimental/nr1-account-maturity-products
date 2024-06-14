@@ -150,7 +150,9 @@ export function computeDockerLabelCount(hosts) {
 }
 
 function _computeVersionPercent(account, latestVersion) {
+  const cleanLatestVersion = (latestVersion || "").split(" ")[0];
   const { infraDeployedVersions } = account;
+  
   if (
     !infraDeployedVersions ||
     (infraDeployedVersions && infraDeployedVersions.length === 0)
@@ -165,7 +167,7 @@ function _computeVersionPercent(account, latestVersion) {
     // check if agent version  agent major and minor ver
     return semver.satisfies(
       agentVer,
-      `${semver.major(latestVersion)}.${semver.minor(latestVersion)}.x`
+      `${semver.major(cleanLatestVersion)}.${semver.minor(cleanLatestVersion)}.x`
     );
   });
   const hasLatest = latestVerDeployed.length > 0;
