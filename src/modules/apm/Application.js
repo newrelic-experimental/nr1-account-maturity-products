@@ -8,6 +8,9 @@ class Application {
     this.guid = entity.guid;
     this.accountId = entity.accountId;
 
+    this.account = account;
+    this.appLoggingEnabled = false;
+
     this.throughput = entity.apmSummary ? entity.apmSummary.throughput : 0;
     this.reporting = entity.reporting;
     this.apdexT = entity.settings ? entity.settings.apdexTarget : 0;

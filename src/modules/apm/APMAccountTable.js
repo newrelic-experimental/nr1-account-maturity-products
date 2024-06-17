@@ -82,6 +82,18 @@ export const APMSummaryCols = [
         filterable: false
       },
       {
+        Header: 'Acct Logging Enabled',
+        accessor: 'apmAccountLoggingEnabled',
+        Cell: row => cellRenderer(row, APMListCols),
+        filterable: false
+      },
+      {
+        Header: 'Logging Enabled %',
+        accessor: 'apmAppLoggingEnabledPercentage',
+        Cell: row => cellRenderer(row, APMListCols),
+        filterable: false
+      },
+      {
         Header: 'Custom Attributes',
         accessor: 'usingCustomAttributes',
         Cell: row => cellRenderer(row),
@@ -135,6 +147,11 @@ export const APMListCols = [
       {
         Header: 'Alerting Enabled',
         accessor: 'isAlerting',
+        Cell: row => cellRenderer(row)
+      },
+      {
+        Header: 'Logging Enabled',
+        accessor: 'appLoggingEnabled',
         Cell: row => cellRenderer(row)
       },
       {
