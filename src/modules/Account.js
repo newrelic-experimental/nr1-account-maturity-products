@@ -16,6 +16,7 @@ class Account {
     this.infraHosts = new Map();
     this.insightsDashboards = [];
     // this.InfraApps = new Map();
+    this.errorsInbox = new Map();
     this.workloadMap = new Map();
 
     this.kubernetesMap = new Map();
@@ -112,7 +113,6 @@ class Account {
     this.npmKentikFlowDevices = props.npmKentikFlowDevices;
     this.npmKentikVpcDevices = props.npmKentikVpcDevices;
     this.npmKtranslateSyslogDevices = props.npmKtranslateSyslogDevices;
-
   }
 
   getName() {
@@ -1955,7 +1955,7 @@ class Account {
 
   // How many devices don't have profiles -- using generic profile
   getNoKentikProviderCount() {
-    return this.npmNoKentikProvider[0].npmNoKentikProviderProfileCount;
+    return this.npmNoKentikProvider ? this.npmNoKentikProvider[0].npmNoKentikProviderProfileCount : 0;
   }
 
   getNoKentikProviderPercent() {
@@ -2011,6 +2011,54 @@ class Account {
   isKtranslateSyslogDeviceUsed() {
     const result = this.getKtranslateSyslogDeviceCount();
     return Boolean(result);;
+  }
+
+  // ERRORS-INBOX METHODS ###########################
+
+  getErrorsInboxGroupCount() {
+    return this.errorsInbox.size || 0;
+  }
+
+  getErrorGroupAssignedPercent() {
+    const result = Math.round((this.assignedErrorGroupCount / this.getErrorsInboxGroupCount()) * 100);
+    return isFinite(result) ? result : 0;
+  }
+
+  // resolved percentage
+  getErrorGroupResolvedPercent() {
+    const result = Math.round(
+      (Array.from(this.errorsInbox.values()).filter(item => item.state === 'RESOLVED' || item.state === null).length /
+        this.getErrorsInboxGroupCount()) *
+        100
+    );
+    return isFinite(result) ? result : 0;
+  }
+  
+  getErrorGroupIgnoredPercent() {
+    const result = Math.round(
+      (Array.from(this.errorsInbox.values()).filter(item => item.state === 'IGNORED').length /
+      this.getErrorsInboxGroupCount()) *
+      100
+    );
+    return isFinite(result) ? result : 0;
+  }
+
+  getAppLoggingEnabled() {
+    let total = 0;
+    if (!this.apmApps) {
+      return total;
+    }
+
+    for (const app of this.apmApps.values()) {
+      if (app.appLoggingEnabled) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+  getAppLoggingEnabledPercent() {
+    return Math.round((this.getAppLoggingEnabled() / this.getReportingApps()) * 100) || 0
   }
 }
 export { Account };
